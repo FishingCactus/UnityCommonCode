@@ -3,7 +3,7 @@
 namespace FishingCactus
 {
     public class Singleton<_INSTANCE_> : MonoBehaviour
-    where _INSTANCE_ : Singleton<_INSTANCE_>
+        where _INSTANCE_ : Singleton<_INSTANCE_>
     {
         public static _INSTANCE_ Instance
         {
