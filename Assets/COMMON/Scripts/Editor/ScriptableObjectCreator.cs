@@ -12,6 +12,11 @@ namespace FishingCactus
             T asset = ScriptableObject.CreateInstance<T>();
             string asset_name = name ?? typeof( T ).ToString();
 
+            if ( !Directory.Exists( folder ) )
+            {
+                Directory.CreateDirectory( folder );
+            }
+
             string asset_path = AssetDatabase.GenerateUniqueAssetPath( Path.Combine( folder, asset_name ) + ".asset" );
 
             AssetDatabase.CreateAsset( asset, asset_path );
