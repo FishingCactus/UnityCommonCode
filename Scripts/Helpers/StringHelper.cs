@@ -1,13 +1,16 @@
-﻿public static class StringHelper
+﻿namespace FishingCactus
 {
-    public static string Capitalize( string str )
+    public static class StringHelper
     {
-        if ( str == null )
-            return null;
+        public static string Capitalize( string str )
+        {
+            if ( str == null )
+                return null;
 
-        if ( str.Length > 1 )
-            return char.ToUpper( str[ 0 ] ) + str.Substring( 1 );
+            if ( str.Length > 1 )
+                return char.ToUpper( str[ 0 ] ) + str.Substring( 1 );
 
-        return str.ToUpper();
+            return str.ToUpper();
+        }
     }
 }
