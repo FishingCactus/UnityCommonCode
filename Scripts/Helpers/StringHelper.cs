@@ -12,5 +12,30 @@
 
             return str.ToUpper();
         }
+
+        public static string SafeFormat( string format, params object[] args )
+        {
+            if ( !string.IsNullOrEmpty( format ) )
+            {
+                return string.Format( format, args );
+            }
+
+            string result = string.Empty;
+            bool first_arg = true;
+
+            foreach( var arg in args )
+            {
+                if ( !first_arg )
+                {
+                    result += " - ";
+                }
+
+                result += arg.ToString();
+
+                first_arg = false;
+            }
+
+            return result;
+        }
     }
 }
