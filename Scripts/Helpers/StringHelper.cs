@@ -30,7 +30,10 @@
                     result += " - ";
                 }
 
-                result += arg.ToString();
+                if ( arg != null )
+                {
+                    result += arg.ToString();
+                }
 
                 first_arg = false;
             }
