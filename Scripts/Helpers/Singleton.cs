@@ -28,7 +28,7 @@ namespace FishingCactus
 
         public virtual void Awake()
         {
-            DontDestroyOnLoad( this.gameObject );
+            DontDestroyOnLoad( gameObject );
 
             if ( instance == null )
             {
