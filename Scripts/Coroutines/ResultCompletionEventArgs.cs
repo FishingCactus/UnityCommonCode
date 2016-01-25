@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using System;
 
-public class ResultCompletionEventArgs : EventArgs
+namespace FishingCactus
 {
-    public ResultCompletionEventArgs()
+    public class ResultCompletionEventArgs : EventArgs
     {
+        public ResultCompletionEventArgs()
+        {
 
+        }
+
+        public ResultCompletionEventArgs( bool is_successfull )
+        {
+            WasSuccessfull = is_successfull;
+        }
+
+        public bool WasSuccessfull = true;
     }
-
-    public ResultCompletionEventArgs( bool is_successfull )
-    {
-        WasSuccessfull = is_successfull;
-    }
-
-    public bool WasSuccessfull = true;
 }

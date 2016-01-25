@@ -1,34 +1,37 @@
 ﻿using System;
 
-public abstract class Routine : IDisposable
+namespace FishingCactus
 {
-    public virtual bool CanBeLogged
+    public abstract class Routine : IDisposable
     {
-        get { return true; }
-    }
-
-    public virtual void Execute()
-    {
-        CoroutineHelper.Get.Log( "Execute routine : " + ToString() );
-    }
-
-    public virtual void Update()
-    {
-
-    }
-
-    public virtual void Dispose()
-    {
-
-    }
-
-    public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
-
-    protected void CallOnCompleted( bool it_is_successfull )
-    {
-        if ( Completed != null )
+        public virtual bool CanBeLogged
         {
-            Completed( this, new ResultCompletionEventArgs( it_is_successfull ) );
+            get { return true; }
+        }
+
+        public virtual void Execute()
+        {
+            CoroutineHelper.Get.Log( "Execute routine : " + ToString() );
+        }
+
+        public virtual void Update()
+        {
+
+        }
+
+        public virtual void Dispose()
+        {
+
+        }
+
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
+
+        protected void CallOnCompleted( bool it_is_successfull )
+        {
+            if ( Completed != null )
+            {
+                Completed( this, new ResultCompletionEventArgs( it_is_successfull ) );
+            }
         }
     }
 }
