@@ -13,7 +13,7 @@ namespace FishingCactus
 
         public static IEnumerable< string > GetValueTable< T >()
         {
-            return Enum.GetValues( typeof( CardType ) ).Cast<T>().Select( value => value.ToString() );
+            return Enum.GetValues( typeof( T ) ).Cast<T>().Select( value => value.ToString() );
         }
     }
 }
