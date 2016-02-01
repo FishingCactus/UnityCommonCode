@@ -44,8 +44,6 @@ namespace FishingCactus
 
         void Start()
         {
-            BattleManager.Instance.BattleInfos = new BattleInfos();
-
             RefreshPanelVisibility();
         }
 
