@@ -28,10 +28,16 @@ namespace FishingCactus
 
         protected void CallOnCompleted( bool it_is_successfull )
         {
+            BeforeCallOnCompleted( it_is_successfull );
+
             if ( Completed != null )
             {
                 Completed( this, new ResultCompletionEventArgs( it_is_successfull ) );
             }
+        }
+
+        protected virtual void BeforeCallOnCompleted( bool is_successfull )
+        {
         }
     }
 }
