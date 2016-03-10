@@ -7,6 +7,11 @@ namespace FishingCactus
         private readonly List<IEnumerable<Routine>> routineList;
         private int executionCounter;
 
+        public override bool CanBeLogged
+        {
+            get { return false; }
+        }
+
         public ParallelizedMultiRoutines( List<IEnumerable<Routine>> routine_list )
         {
             routineList = routine_list;
@@ -17,7 +22,7 @@ namespace FishingCactus
         {
             base.Execute();
 
-            foreach( var routine_enumerable in routineList )
+            foreach ( var routine_enumerable in routineList )
             {
                 CoroutineHelper.Get.BeginExecute( routine_enumerable, RoutineCompleted );
             }

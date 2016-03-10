@@ -10,6 +10,11 @@ namespace FishingCactus
         {
         }
 
+        public override bool CanBeLogged
+        {
+            get { return false; }
+        }
+
         public override void Update()
         {
             Enumerator.Current.Update();

@@ -11,7 +11,10 @@ namespace FishingCactus
 
         public virtual void Execute()
         {
-            CoroutineHelper.Get.Log( "Execute routine : " + ToString() );
+            if ( CanBeLogged )
+            {
+                CoroutineHelper.Get.Log( "Execute routine : " + ToString() );
+            }
         }
 
         public virtual void Update()
