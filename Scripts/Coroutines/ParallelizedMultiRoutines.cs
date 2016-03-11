@@ -22,6 +22,12 @@ namespace FishingCactus
         {
             base.Execute();
 
+            if ( routineList.Count == 0 )
+            {
+                CallOnCompleted( true );
+                return;
+            }
+
             foreach ( var routine_enumerable in routineList )
             {
                 CoroutineHelper.Get.BeginExecute( routine_enumerable, RoutineCompleted );
