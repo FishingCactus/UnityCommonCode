@@ -15,6 +15,8 @@ namespace FishingCactus
             public LogType type;
         }
 
+        public static GUIConsole Get { get; private set; }
+
         /// <summary>
         /// The hotkey to show and hide the console window.
         /// </summary>
@@ -43,6 +45,11 @@ namespace FishingCactus
         Rect titleBarRect = new Rect( 0, 0, 10000, 20 );
         GUIContent clearLabel = new GUIContent( "Clear", "Clear the contents of the console." );
         GUIContent collapseLabel = new GUIContent( "Collapse", "Hide repeated messages." );
+
+        void Awake()
+        {
+            Get = this;
+        }
 
         void OnEnable()
         {
@@ -73,7 +80,7 @@ namespace FishingCactus
 
             if ( Input.GetKeyDown( ToggleKey ) )
             {
-                show = !show;
+                Toggle();
             }
         }
 
@@ -85,6 +92,11 @@ namespace FishingCactus
             }
 
             windowRect = GUILayout.Window( 123456, windowRect, ConsoleWindow, "Console" );
+        }
+
+        public void Toggle()
+        {
+            show = !show;
         }
 
         /// <summary>
