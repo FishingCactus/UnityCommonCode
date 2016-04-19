@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace FishingCactus
 {
@@ -15,9 +15,20 @@ namespace FishingCactus
             return list[ Random.Range( 0, list.Count ) ];
         }
 
+        public static T GetRandomItem<T>( this T[] list )
+        {
+            return list[ Random.Range( 0, list.Length ) ];
+        }
+
         public static T GetRandomItem<T>( this List<T> list, out int index )
         {
             index = Random.Range( 0, list.Count );
+            return list[ index ];
+        }
+
+        public static T GetRandomItem<T>( this T[] list, out int index )
+        {
+            index = Random.Range( 0, list.Length );
             return list[ index ];
         }
     }
