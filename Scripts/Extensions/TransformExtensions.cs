@@ -71,5 +71,13 @@ namespace FishingCactus
             transform.localPosition = source.localPosition;
             transform.localRotation = source.localRotation;
         }
+
+        public static void DestroyChildren( this Transform transform )
+        {
+            foreach ( Transform child in transform )
+            {
+                GameObject.Destroy( child.gameObject );
+            }
+        }
     }
 }
