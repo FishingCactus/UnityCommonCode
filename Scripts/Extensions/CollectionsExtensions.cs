@@ -10,14 +10,19 @@ namespace FishingCactus
             return list[ Mathf.Clamp( index, 0, list.Count - 1 ) ];
         }
 
+        public static T GetItemByIndexClamped<T>( this T[] array, int index )
+        {
+            return array[ Mathf.Clamp( index, 0, array.Length - 1 ) ];
+        }
+
         public static T GetRandomItem<T>( this List<T> list )
         {
             return list[ Random.Range( 0, list.Count ) ];
         }
 
-        public static T GetRandomItem<T>( this T[] list )
+        public static T GetRandomItem<T>( this T[] array )
         {
-            return list[ Random.Range( 0, list.Length ) ];
+            return array[ Random.Range( 0, array.Length ) ];
         }
 
         public static T GetRandomItem<T>( this List<T> list, out int index )
@@ -26,10 +31,10 @@ namespace FishingCactus
             return list[ index ];
         }
 
-        public static T GetRandomItem<T>( this T[] list, out int index )
+        public static T GetRandomItem<T>( this T[] array, out int index )
         {
-            index = Random.Range( 0, list.Length );
-            return list[ index ];
+            index = Random.Range( 0, array.Length );
+            return array[ index ];
         }
     }
 }
