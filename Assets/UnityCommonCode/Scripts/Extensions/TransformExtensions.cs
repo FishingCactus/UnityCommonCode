@@ -4,7 +4,7 @@ namespace FishingCactus
 {
     public static class TransformExtensions
     {
-        public static void SetParent( this Transform transform, Transform parent, bool reset_local_position = true, bool reset_local_rotation = true )
+        public static void SetParent( this Transform transform, Transform parent, bool reset_local_position = true, bool reset_local_rotation = true, bool reset_local_scale = false )
         {
             transform.parent = parent;
 
@@ -16,6 +16,11 @@ namespace FishingCactus
             if ( reset_local_rotation )
             {
                 transform.localRotation = Quaternion.identity;
+            }
+
+            if ( reset_local_scale )
+            {
+                transform.localScale = Vector3.one;
             }
         }
 
