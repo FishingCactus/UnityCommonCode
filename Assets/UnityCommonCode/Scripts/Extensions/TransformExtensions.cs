@@ -77,6 +77,18 @@ namespace FishingCactus
             transform.localRotation = source.localRotation;
         }
 
+        public static void Reset( this Transform transform )
+        {
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+        }
+
+        public static void ResetLocal( this Transform transform )
+        {
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+
         public static void DestroyChildren( this Transform transform )
         {
             foreach ( Transform child in transform )
