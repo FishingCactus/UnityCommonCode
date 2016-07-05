@@ -96,5 +96,13 @@ namespace FishingCactus
                 GameObject.Destroy( child.gameObject );
             }
         }
+
+        public static void DestroyImmediateChildren( this Transform transform )
+        {
+            foreach ( Transform child in transform )
+            {
+                GameObject.DestroyImmediate( child.gameObject );
+            }
+        }
     }
 }
