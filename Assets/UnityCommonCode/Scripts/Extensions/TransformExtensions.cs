@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace FishingCactus
 {
@@ -99,7 +100,9 @@ namespace FishingCactus
 
         public static void DestroyImmediateChildren( this Transform transform )
         {
-            foreach ( Transform child in transform )
+            var list = transform.Cast<Transform>().ToList();
+
+            foreach ( Transform child in list )
             {
                 GameObject.DestroyImmediate( child.gameObject );
             }
