@@ -3,16 +3,11 @@ using UnityEngine;
 
 public class TimeScaleManager : MonoBehaviour
 {
-    public static TimeScaleManager Get { get; private set; }
-
-    private float timeScaleLerpLastTime;
-    private float targetTimeScale;
-    private float lerpSpeed;
-    private Action callback;
+    public static TimeScaleManager Instance { get; private set; }
 
     void Awake()
     {
-        Get = this;
+        Instance = this;
 
         enabled = false;
     }
@@ -25,10 +20,7 @@ public class TimeScaleManager : MonoBehaviour
 
         if ( Time.timeScale == targetTimeScale )
         {
-            if ( callback != null )
-            {
-                callback();
-            }
+            RunCallback();
 
             enabled = false;
         }
@@ -36,6 +28,13 @@ public class TimeScaleManager : MonoBehaviour
 
     public void LerpTimeScale( float target_timescale, float lerp_speed, Action callback )
     {
+        if ( lerp_speed <= 0.0f )
+        {
+            Time.timeScale = target_timescale;
+            RunCallback();
+            return;
+        }
+
         timeScaleLerpLastTime = Time.realtimeSinceStartup;
         targetTimeScale = target_timescale;
         lerpSpeed = lerp_speed;
@@ -43,4 +42,17 @@ public class TimeScaleManager : MonoBehaviour
 
         enabled = true;
     }
+
+    private void RunCallback()
+    {
+        if ( callback != null )
+        {
+            callback();
+        }
+    }
+
+    private float timeScaleLerpLastTime;
+    private float targetTimeScale;
+    private float lerpSpeed;
+    private Action callback;
 }
