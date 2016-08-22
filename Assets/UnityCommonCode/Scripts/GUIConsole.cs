@@ -3,48 +3,9 @@ using UnityEngine;
 
 namespace FishingCactus
 {
-    /// <summary>
-    /// A console to display Unity's debug logs in-game.
-    /// </summary>
     public class GUIConsole : MonoBehaviour
     {
-        struct Log
-        {
-            public string message;
-            public string stackTrace;
-            public LogType type;
-        }
-
         public static GUIConsole Get { get; private set; }
-
-        /// <summary>
-        /// The hotkey to show and hide the console window.
-        /// </summary>
-        public KeyCode ToggleKey = KeyCode.BackQuote;
-        public LogType LogTypeFilter = LogType.Warning;
-
-        List<Log> logs = new List<Log>();
-        Vector2 scrollPosition;
-        bool show;
-        bool collapse;
-
-        // Visual elements:
-
-        static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>()
-    {
-        { LogType.Assert, Color.white },
-        { LogType.Error, Color.red },
-        { LogType.Exception, Color.red },
-        { LogType.Log, Color.white },
-        { LogType.Warning, Color.yellow },
-    };
-
-        const int margin = 20;
-
-        Rect windowRect = new Rect( margin, margin, Screen.width - ( margin * 2 ), Screen.height - ( margin * 2 ) );
-        Rect titleBarRect = new Rect( 0, 0, 10000, 20 );
-        GUIContent clearLabel = new GUIContent( "Clear", "Clear the contents of the console." );
-        GUIContent collapseLabel = new GUIContent( "Collapse", "Hide repeated messages." );
 
         void Awake()
         {
@@ -78,7 +39,7 @@ namespace FishingCactus
                 return;
             }
 
-            if ( Input.GetKeyDown( ToggleKey ) )
+            if ( Input.GetKeyDown( toggleKey ) )
             {
                 Toggle();
             }
@@ -99,20 +60,14 @@ namespace FishingCactus
             show = !show;
         }
 
-        /// <summary>
-        /// A window that displayss the recorded logs.
-        /// </summary>
-        /// <param name="windowID">Window ID.</param>
         void ConsoleWindow( int windowID )
         {
             scrollPosition = GUILayout.BeginScrollView( scrollPosition );
 
-            // Iterate through the recorded logs.
             for ( int i = 0; i < logs.Count; i++ )
             {
                 var log = logs[ i ];
 
-                // Combine identical messages if collapse option is chosen.
                 if ( collapse )
                 {
                     var messageSameAsPrevious = i > 0 && log.message == logs[ i - 1 ].message;
@@ -133,6 +88,11 @@ namespace FishingCactus
 
             GUILayout.BeginHorizontal();
 
+            if ( GUILayout.Button( "Hide" ) )
+            {
+                show = false;
+            }
+
             if ( GUILayout.Button( clearLabel ) )
             {
                 logs.Clear();
@@ -142,19 +102,14 @@ namespace FishingCactus
 
             GUILayout.EndHorizontal();
 
-            // Allow the window to be dragged by its title bar.
             GUI.DragWindow( titleBarRect );
         }
 
-        /// <summary>
-        /// Records a log from the log callback.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="stackTrace">Trace of where the message came from.</param>
-        /// <param name="type">Type of message (error, exception, warning, assert).</param>
         void HandleLog( string message, string stackTrace, LogType type )
         {
-            if ( type <= LogTypeFilter )
+            if ( type <= logTypeFilter
+                || type == LogType.Exception
+                )
             {
                 logs.Add( new Log()
                 {
@@ -163,6 +118,48 @@ namespace FishingCactus
                     type = type,
                 } );
             }
+
+            if ( ( type < LogType.Warning || type == LogType.Exception )
+                && showAutomaticallyOnError
+                )
+            {
+                show = true;
+            }
         }
+
+        struct Log
+        {
+            public string message;
+            public string stackTrace;
+            public LogType type;
+        }
+
+        [SerializeField]
+        private KeyCode toggleKey = KeyCode.BackQuote;
+        [SerializeField]
+        private LogType logTypeFilter = LogType.Warning;
+        [SerializeField]
+        private bool showAutomaticallyOnError = false;
+
+        private static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>()
+        {
+            { LogType.Assert, Color.white },
+            { LogType.Error, Color.red },
+            { LogType.Exception, Color.red },
+            { LogType.Log, Color.white },
+            { LogType.Warning, Color.yellow },
+        };
+
+        private const int margin = 20;
+
+        private List<Log> logs = new List<Log>();
+        private Vector2 scrollPosition;
+        private bool show;
+        private bool collapse;
+
+        private Rect windowRect = new Rect( margin, margin, Screen.width - ( margin * 2 ), Screen.height - ( margin * 2 ) );
+        private Rect titleBarRect = new Rect( 0, 0, 10000, 20 );
+        private GUIContent clearLabel = new GUIContent( "Clear", "Clear the contents of the console." );
+        private GUIContent collapseLabel = new GUIContent( "Collapse", "Hide repeated messages." );
     }
 }
