@@ -8,6 +8,13 @@ namespace FishingCactus
     {
         protected void Awake()
         {
+            enabled = Debug.isDebugBuild;
+
+            if ( !enabled )
+            {
+                return;
+            }
+
 #if UNITY_EDITOR ||  UNITY_STANDALONE
             targetFrameRate = 60.0f;
 #elif UNITY_ANDROID || UNITY_IOS
@@ -33,6 +40,11 @@ namespace FishingCactus
 
         protected void OnGUI()
         {
+            if ( !enabled )
+            {
+                return;
+            }
+
             int w = Screen.width, h = Screen.height;
 
             GUIStyle style = new GUIStyle();
