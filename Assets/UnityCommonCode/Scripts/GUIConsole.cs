@@ -10,6 +10,8 @@ namespace FishingCactus
         void Awake()
         {
             Get = this;
+
+            showAutomaticallyOnError &= Debug.isDebugBuild;
         }
 
         void OnEnable()
@@ -119,12 +121,14 @@ namespace FishingCactus
                 } );
             }
 
-            if ( ( type < LogType.Warning || type == LogType.Exception )
-                && showAutomaticallyOnError
+#if !UNITY_EDITOR
+            if ( showAutomaticallyOnError
+                && ( type < LogType.Warning || type == LogType.Exception )
                 )
             {
                 show = true;
             }
+#endif
         }
 
         struct Log
