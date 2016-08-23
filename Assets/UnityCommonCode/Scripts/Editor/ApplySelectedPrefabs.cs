@@ -1,86 +1,89 @@
 using UnityEditor;
 using UnityEngine;
 
-public class ApplySelectedPrefabs : EditorWindow
+namespace FishingCactus
 {
-    public delegate void ApplyOrRevert( GameObject go_current_gameobject, Object object_prefab_parent, ReplacePrefabOptions replace_options );
-
-    [MenuItem( "FishingCactus/Tools/Apply all selected prefabs %#a" )]
-    static void ApplyPrefabs()
+    public class ApplySelectedPrefabs : EditorWindow
     {
-        SearchPrefabConnections( ApplyToSelectedPrefabs );
-    }
+        public delegate void ApplyOrRevert( GameObject go_current_gameobject, Object object_prefab_parent, ReplacePrefabOptions replace_options );
 
-    [MenuItem( "FishingCactus/Tools/Revert all selected prefabs %#r" )]
-    static void ResetPrefabs()
-    {
-        SearchPrefabConnections( RevertToSelectedPrefabs );
-    }
-
-    //Look for connections
-    static void SearchPrefabConnections( ApplyOrRevert apply_or_revert )
-    {
-        GameObject[] gameobjects = Selection.gameObjects;
-
-        if ( gameobjects.Length > 0 )
+        [MenuItem( "FishingCactus/Tools/Apply all selected prefabs %#a" )]
+        static void ApplyPrefabs()
         {
-            GameObject goPrefabRoot;
-            GameObject goCur;
-            bool bTopHierarchyFound;
-            int iCount = 0;
-            PrefabType prefabType;
-            bool bCanApply;
+            SearchPrefabConnections( ApplyToSelectedPrefabs );
+        }
 
-            foreach ( GameObject go in gameobjects )
+        [MenuItem( "FishingCactus/Tools/Revert all selected prefabs %#r" )]
+        static void ResetPrefabs()
+        {
+            SearchPrefabConnections( RevertToSelectedPrefabs );
+        }
+
+        //Look for connections
+        static void SearchPrefabConnections( ApplyOrRevert apply_or_revert )
+        {
+            GameObject[] gameobjects = Selection.gameObjects;
+
+            if ( gameobjects.Length > 0 )
             {
-                prefabType = PrefabUtility.GetPrefabType( go );
-                //Is the selected gameobject a prefab?
-                if ( prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.DisconnectedPrefabInstance )
+                GameObject goPrefabRoot;
+                GameObject goCur;
+                bool bTopHierarchyFound;
+                int iCount = 0;
+                PrefabType prefabType;
+                bool bCanApply;
+
+                foreach ( GameObject go in gameobjects )
                 {
-                    //Prefab Root;
-                    goPrefabRoot = ( ( GameObject )PrefabUtility.GetPrefabParent( go ) ).transform.root.gameObject;
-                    goCur = go;
-                    bTopHierarchyFound = false;
-                    bCanApply = true;
-                    //We go up in the hierarchy to apply the root of the go to the prefab
-                    while ( goCur.transform.parent != null && !bTopHierarchyFound )
+                    prefabType = PrefabUtility.GetPrefabType( go );
+                    //Is the selected gameobject a prefab?
+                    if ( prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.DisconnectedPrefabInstance )
                     {
-                        //Are we still in the same prefab?
-                        if ( goPrefabRoot == ( ( GameObject )PrefabUtility.GetPrefabParent( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
+                        //Prefab Root;
+                        goPrefabRoot = ( ( GameObject )PrefabUtility.GetPrefabParent( go ) ).transform.root.gameObject;
+                        goCur = go;
+                        bTopHierarchyFound = false;
+                        bCanApply = true;
+                        //We go up in the hierarchy to apply the root of the go to the prefab
+                        while ( goCur.transform.parent != null && !bTopHierarchyFound )
                         {
-                            goCur = goCur.transform.parent.gameObject;
-                        }
-                        else
-                        {
-                            //The gameobject parent is another prefab, we stop here
-                            bTopHierarchyFound = true;
-                            if ( goPrefabRoot != ( ( GameObject )PrefabUtility.GetPrefabParent( goCur ) ) )
+                            //Are we still in the same prefab?
+                            if ( goPrefabRoot == ( ( GameObject )PrefabUtility.GetPrefabParent( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
                             {
-                                //Gameobject is part of another prefab
-                                bCanApply = false;
+                                goCur = goCur.transform.parent.gameObject;
+                            }
+                            else
+                            {
+                                //The gameobject parent is another prefab, we stop here
+                                bTopHierarchyFound = true;
+                                if ( goPrefabRoot != ( ( GameObject )PrefabUtility.GetPrefabParent( goCur ) ) )
+                                {
+                                    //Gameobject is part of another prefab
+                                    bCanApply = false;
+                                }
                             }
                         }
-                    }
 
-                    if ( apply_or_revert != null && bCanApply )
-                    {
-                        iCount++;
-                        apply_or_revert( goCur, PrefabUtility.GetPrefabParent( goCur ), ReplacePrefabOptions.ConnectToPrefab );
+                        if ( apply_or_revert != null && bCanApply )
+                        {
+                            iCount++;
+                            apply_or_revert( goCur, PrefabUtility.GetPrefabParent( goCur ), ReplacePrefabOptions.ConnectToPrefab );
+                        }
                     }
                 }
+                Debug.Log( iCount + " prefab" + ( iCount > 1 ? "s" : "" ) + " updated" );
             }
-            Debug.Log( iCount + " prefab" + ( iCount > 1 ? "s" : "" ) + " updated" );
         }
-    }
 
-    static void ApplyToSelectedPrefabs( GameObject _goCurrentGo, Object _ObjPrefabParent, ReplacePrefabOptions _eReplaceOptions )
-    {
-        PrefabUtility.ReplacePrefab( _goCurrentGo, _ObjPrefabParent, _eReplaceOptions );
-    }
+        static void ApplyToSelectedPrefabs( GameObject _goCurrentGo, Object _ObjPrefabParent, ReplacePrefabOptions _eReplaceOptions )
+        {
+            PrefabUtility.ReplacePrefab( _goCurrentGo, _ObjPrefabParent, _eReplaceOptions );
+        }
 
-    static void RevertToSelectedPrefabs( GameObject _goCurrentGo, Object _ObjPrefabParent, ReplacePrefabOptions _eReplaceOptions )
-    {
-        PrefabUtility.ReconnectToLastPrefab( _goCurrentGo );
-        PrefabUtility.RevertPrefabInstance( _goCurrentGo );
+        static void RevertToSelectedPrefabs( GameObject _goCurrentGo, Object _ObjPrefabParent, ReplacePrefabOptions _eReplaceOptions )
+        {
+            PrefabUtility.ReconnectToLastPrefab( _goCurrentGo );
+            PrefabUtility.RevertPrefabInstance( _goCurrentGo );
+        }
     }
 }
