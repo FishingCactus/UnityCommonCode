@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using UnityEngine;
 
-[assembly: AssemblyVersion( "0.3.*" )]
 public class VersionNumber : MonoBehaviour
 {
     public float ShowVersionForSeconds = -1;
