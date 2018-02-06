@@ -1,4 +1,5 @@
-﻿using Steamworks;
+﻿#if STEAM_VERSION
+using Steamworks;
 
 public class AchievementsSteam : IAchievements
 {
@@ -27,3 +28,4 @@ public class AchievementsSteam : IAchievements
         }
     }
 }
+#endif
