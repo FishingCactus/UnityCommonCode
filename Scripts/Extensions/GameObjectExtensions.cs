@@ -23,7 +23,7 @@ namespace FishingCactus
 
             if (wanted_component == null )
             {
-                Debug.LogError( string.Format( "Expected to find component of type \'{0}\' but found none in {1}.", typeof(T), game_object.name ) );
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof(T), game_object.name ) );
             }
 
             return wanted_component;
