@@ -101,7 +101,7 @@ public class BuildAutomation : EditorWindow
         return SceneArray;
     }
 
-    [MenuItem( "CactusTools/Build_as_is/BuildWindowsBaseGame" )]
+    [MenuItem("FishingCactus/Build/Build_as_is/BuildWindowsBaseGame")]
     static void BuildWindowsBaseGame()
     {
         BuildPlayerOptions options = new BuildPlayerOptions();
@@ -142,7 +142,7 @@ public class BuildAutomation : EditorWindow
         if ( ( platform & BuildPlatform.Mac ) == BuildPlatform.Mac )
         {
             options.locationPathName = BaseFolder + base_path + "Mac/Algobot.app";
-            options.target = BuildTarget.StandaloneOSXUniversal;
+            options.target = BuildTarget.StandaloneOSX;
 
             BuildPipeline.BuildPlayer( options );
         }
@@ -160,42 +160,42 @@ public class BuildAutomation : EditorWindow
     }
 
 
-    [MenuItem( "CactusTools/BuildEveryRetail" )]
+    [MenuItem("FishingCactus/Build/BuildEveryRetail")]
     static void BuildEveryRetail()
     {
         BuildAllSteamRetail();
         BuildAllRetail();
     }
 
-    [MenuItem( "CactusTools/BuildAll/BuildAllSteam" )]
+    [MenuItem("FishingCactus/Build/BuildAll/BuildAllSteam")]
     static void BuildAllSteamRetail()
     {
         DefineSteamRetail();
         Build( "Steam_Retail/", BuildType.BaseGame, BuildPlatform.Windows );
     }
 
-    [MenuItem( "CactusTools/BuildAll_Debug/BuildAllSteam" )]
+    [MenuItem("FishingCactus/Build/BuildAll_Debug/BuildAllSteam")]
     static void BuildAllSteamNonRetail()
     {
         DefineSteam();
         Build( "Steam_Debug/", BuildType.BaseGame, BuildPlatform.Windows );
     }
 
-    [MenuItem( "CactusTools/BuildAll/BuildAllDRMFree" )]
+    [MenuItem("FishingCactus/Build/BuildAll/BuildAllDRMFree")]
     static void BuildAllRetail()
     {
         DefineRetail();
         Build( "DRMFree_Retail/", BuildType.BaseGame, BuildPlatform.Windows );
     }
 
-    [MenuItem( "CactusTools/BuildAll_Debug/BuildAllDRMFree" )]
+    [MenuItem("FishingCactus/Build/BuildAll_Debug/BuildAllDRMFree")]
     static void BuildAll()
     {
         DefineNothing();
         Build( "DRMFree_Debug/", BuildType.BaseGame, BuildPlatform.Windows );
     }
 
-    [MenuItem( "CactusTools/Defines/DefineRetail" )]
+    [MenuItem("FishingCactus/Defines/DefineRetail")]
     static void DefineRetail()
     {
         BuildTargetGroup target_group = BuildTargetGroup.Standalone;
@@ -203,7 +203,7 @@ public class BuildAutomation : EditorWindow
         PlayerSettings.SetScriptingDefineSymbolsForGroup( target_group, symbols );
     }
 
-    [MenuItem( "CactusTools/Defines/DefineSteamRetail" )]
+    [MenuItem("FishingCactus/Defines/DefineSteamRetail")]
     static void DefineSteamRetail()
     {
         BuildTargetGroup target_group = BuildTargetGroup.Standalone;
@@ -211,7 +211,7 @@ public class BuildAutomation : EditorWindow
         PlayerSettings.SetScriptingDefineSymbolsForGroup( target_group, symbols );
     }
 
-    [MenuItem( "CactusTools/Defines_Debug/DefineNothing" )]
+    [MenuItem("FishingCactus/Defines/Defines_Debug/DefineNothing")]
     static void DefineNothing()
     {
         BuildTargetGroup target_group = BuildTargetGroup.Standalone;
@@ -219,7 +219,7 @@ public class BuildAutomation : EditorWindow
         PlayerSettings.SetScriptingDefineSymbolsForGroup( target_group, symbols );
     }
 
-    [MenuItem( "CactusTools/Defines_Debug/DefineSteam" )]
+    [MenuItem("FishingCactus/Defines/Defines_Debug/DefineSteam")]
     static void DefineSteam()
     {
         BuildTargetGroup target_group = BuildTargetGroup.Standalone;
