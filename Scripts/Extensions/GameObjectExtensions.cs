@@ -35,5 +35,13 @@ namespace FishingCactus
         {
             return game_object.GetComponent<T>() ?? game_object.AddComponent<T>();
         }
+
+        public static Component GetOrAddComponent(
+            this GameObject game_object,
+            System.Type component_type
+            )
+        {
+            return game_object.GetComponent( component_type ) ?? game_object.AddComponent( component_type );
+        }
     }
 }

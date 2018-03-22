@@ -42,5 +42,13 @@ namespace FishingCactus
         {
             return mono_behaviour.GetComponent<T>() ?? mono_behaviour.gameObject.AddComponent<T>();
         }
+
+        public static Component GetOrAddComponent(
+            this MonoBehaviour mono_behaviour,
+            System.Type component_type
+            )
+        {
+            return mono_behaviour.GetComponent( component_type ) ?? mono_behaviour.gameObject.AddComponent( component_type );
+        }
     }
 }
