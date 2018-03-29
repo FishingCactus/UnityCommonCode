@@ -43,7 +43,7 @@ namespace FishingCactus
         {
             float y_distance = vector.y - other_vector.y;
 
-            return y_distance* y_distance;
+            return y_distance * y_distance;
         }
     }
 }
