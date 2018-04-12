@@ -92,9 +92,7 @@ internal class ArtistsToolsWindow : EditorWindow
                     object_to_move.transform.position = next_object_position;
                     next_object_position.x += SpacingMultiplier * x_spacing;
 
-                    object_count++;
-
-                    if( object_count > grid_size )
+                    if( object_count++ >= grid_size-1 )
                     {
                         object_count = 0;
 
