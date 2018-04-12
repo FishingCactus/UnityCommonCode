@@ -25,7 +25,7 @@ internal class ArtistsToolsWindow : EditorWindow
         ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep Rotation & Scale", ItMustKeepLocalTransforms );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof(GameObject), true );
 
-        if( GUILayout.Button( "-Replace selected-" ) && ( ReplacerObject != null ) )
+        if( GUILayout.Button( "Replace selection - WARNING : No undo !" ) && ( ReplacerObject != null ) )
         {
             GameObject[] selected_object_array = Selection.gameObjects;
             GameObject[] new_object_array = new GameObject[ selected_object_array.Length ];
