@@ -51,6 +51,9 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         EnumNameTable = new List<string>();
         EnumNameTable.AddRange( System.Enum.GetNames( typeof( TEnum ) ) );
 
+        EnumNameTable.Remove( "Count" );
+        EnumNameTable.Remove( "None" );
+
         ValueTable = new TObject[EnumNameTable.Count];
     }
 }
