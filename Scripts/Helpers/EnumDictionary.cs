@@ -30,9 +30,12 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
 
         foreach( string enum_name in EnumNameTable )
         {
-            if( backup_enum_name_table.Contains( enum_name ) )
+            int
+                backup_element_index = backup_enum_name_table.IndexOf( enum_name );
+
+            if( backup_element_index != -1 )
             {
-                ValueTable[ EnumNameTable.IndexOf( enum_name ) ] = backup_value_array[ backup_enum_name_table.IndexOf( enum_name ) ];
+                ValueTable[ EnumNameTable.IndexOf( enum_name ) ] = backup_value_array[backup_element_index];
             }
         }
     }
