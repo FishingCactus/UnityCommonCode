@@ -12,31 +12,27 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         ResetTables();
     }
 
-    public TObject this[string element_name]
+    public TObject this[ TEnum enum_value ]
     {
-        get { return this[_EnumNameTable.IndexOf(element_name)]; }
-        set { this[_EnumNameTable.IndexOf(element_name)] = value; }
-    }
-
-    public TObject this[ int element_index ]
-    {
-        get { return _ValueTable[ element_index ]; }
-        set { _ValueTable[element_index] = value; }
+        get
+        {
+            return ValueTable[ EnumNameTable.IndexOf( enum_value.ToString() ) ];
+        }
     }
 
 #if UNITY_EDITOR
     public void CheckEnumSizeChange()
     {
-        TObject[] backup_value_array = _ValueTable;
-        List<string> backup_enum_name_table = _EnumNameTable;
+        TObject[] backup_value_array = ValueTable;
+        List<string> backup_enum_name_table = EnumNameTable;
 
         ResetTables();
 
-        foreach( string enum_name in _EnumNameTable )
+        foreach( string enum_name in EnumNameTable )
         {
             if( backup_enum_name_table.Contains( enum_name ) )
             {
-                _ValueTable[_EnumNameTable.IndexOf( enum_name )] = backup_value_array[backup_enum_name_table.IndexOf( enum_name )];
+                ValueTable[ EnumNameTable.IndexOf( enum_name ) ] = backup_value_array[ backup_enum_name_table.IndexOf( enum_name ) ];
             }
         }
     }
@@ -45,19 +41,19 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
     // -- PRIVATE
 
     [SerializeField]
-    private TObject[] _ValueTable;
+    private TObject[] ValueTable;
     [SerializeField]
-    public List<string> _EnumNameTable;
+    public List<string> EnumNameTable;
 
     private void ResetTables()
     {
-        _EnumNameTable = new List<string>();
-        _EnumNameTable.AddRange( System.Enum.GetNames( typeof( TEnum ) ) );
+        EnumNameTable = new List<string>();
+        EnumNameTable.AddRange( System.Enum.GetNames( typeof( TEnum ) ) );
 
-        _EnumNameTable.Remove( "Count" );
-        _EnumNameTable.Remove( "None" );
+        EnumNameTable.Remove( "Count" );
+        EnumNameTable.Remove( "None" );
 
-        _ValueTable = new TObject[_EnumNameTable.Count];
+        ValueTable = new TObject[EnumNameTable.Count];
     }
 }
 
