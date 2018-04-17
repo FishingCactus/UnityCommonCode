@@ -22,20 +22,27 @@ namespace FishingCactus
             )
         {
             if( first_value > 0
-                && second_value < 0
-                )
-            {
-                return false;
-            }
-
-            if( first_value < 0
                 && second_value > 0
                 )
             {
-                return false;
+                return true;
             }
 
-            return true;
+            if( first_value < 0
+                && second_value < 0
+                )
+            {
+                return true;
+            }
+
+            if( first_value == 0
+                && second_value == 0
+                )
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static bool SameSign(
@@ -44,20 +51,27 @@ namespace FishingCactus
             )
         {
             if( first_value > 0
-                && second_value < 0
-                )
-            {
-                return false;
-            }
-
-            if( first_value < 0
                 && second_value > 0
                 )
             {
-                return false;
+                return true;
             }
 
-            return true;
+            if( first_value < 0
+                && second_value < 0
+                )
+            {
+                return true;
+            }
+
+            if( first_value == 0
+                && second_value == 0
+                )
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
