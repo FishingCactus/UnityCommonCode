@@ -29,6 +29,20 @@ namespace FishingCactus
             return wanted_component;
         }
 
+        public static T GetSafeComponentInParent<T>(
+            this GameObject game_object
+            ) where T : MonoBehaviour
+        {
+            T wanted_component = game_object.GetComponentInParent<T>();
+
+            if( wanted_component == null )
+            {
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ) );
+            }
+
+            return wanted_component;
+        }
+
         public static T GetOrAddComponent<T>(
             this GameObject game_object
             ) where T : MonoBehaviour
