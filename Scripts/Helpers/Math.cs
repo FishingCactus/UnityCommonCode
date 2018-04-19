@@ -21,28 +21,9 @@ namespace FishingCactus
             int second_value
             )
         {
-            if( first_value > 0
-                && second_value > 0
-                )
-            {
-                return true;
-            }
-
-            if( first_value < 0
-                && second_value < 0
-                )
-            {
-                return true;
-            }
-
-            if( first_value == 0
-                && second_value == 0
-                )
-            {
-                return true;
-            }
-
-            return false;
+            return ( first_value > 0 && second_value > 0 )
+                || ( first_value < 0 && second_value < 0 )
+                || ( first_value == 0 && second_value == 0 );
         }
 
         public static bool SameSign(
@@ -50,28 +31,9 @@ namespace FishingCactus
             float second_value
             )
         {
-            if( first_value > 0
-                && second_value > 0
-                )
-            {
-                return true;
-            }
-
-            if( first_value < 0
-                && second_value < 0
-                )
-            {
-                return true;
-            }
-
-            if( first_value == 0
-                && second_value == 0
-                )
-            {
-                return true;
-            }
-
-            return false;
+            return ( first_value > 0 && second_value > 0 )
+                || ( first_value < 0 && second_value < 0 )
+                || ( first_value == 0 && second_value == 0 );
         }
     }
 }
