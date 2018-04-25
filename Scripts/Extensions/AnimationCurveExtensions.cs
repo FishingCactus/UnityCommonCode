@@ -50,17 +50,17 @@ namespace FishingCactus
                 return 0.0f;
             }
 
-            int highest_key_index = 0;
+            Keyframe highest_value_keyframe = animation_curve.keys[0];
 
-            for( int key_index = 0; key_index < animation_curve.length; key_index++ )
+            foreach( Keyframe keyframe_to_check in animation_curve.keys )
             {
-                if( animation_curve.keys[key_index].value > animation_curve.keys[highest_key_index].value )
+                if( keyframe_to_check.value > highest_value_keyframe.value )
                 {
-                    highest_key_index = key_index;
+                    highest_value_keyframe = keyframe_to_check;
                 }
             }
 
-            return animation_curve.keys[highest_key_index].time;
+            return highest_value_keyframe.time;
         }
     }
 }
