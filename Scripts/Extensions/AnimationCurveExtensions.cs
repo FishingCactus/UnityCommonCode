@@ -40,5 +40,27 @@ namespace FishingCactus
         {
             return animation_curve.keys[animation_curve.length - 1].value;
         }
+
+        public static float GetMaximumValueKeyTime(
+            this AnimationCurve animation_curve
+            )
+        {
+            if( animation_curve.length == 0 )
+            {
+                return 0.0f;
+            }
+
+            Keyframe highest_value_keyframe = animation_curve.keys[0];
+
+            foreach( Keyframe keyframe_to_check in animation_curve.keys )
+            {
+                if( keyframe_to_check.value > highest_value_keyframe.value )
+                {
+                    highest_value_keyframe = keyframe_to_check;
+                }
+            }
+
+            return highest_value_keyframe.time;
+        }
     }
 }
