@@ -102,7 +102,7 @@ namespace FishingCactus
             animator.SetInteger( parameter_id, value );
         }
 
-        public static void ToogleBooleanParameter(
+        public static void ToggleBooleanParameter(
             this Animator animator,
             string cached_parameter_name
             )
