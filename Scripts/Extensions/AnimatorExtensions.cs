@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace FishingCactus
 {
@@ -36,6 +37,100 @@ namespace FishingCactus
             }
 
             return false;
+        }
+
+        public static void SetTriggerParameter(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            animator.SetTrigger( parameter_id );
+        }
+
+        public static bool GetBooleanParameter(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            return animator.GetBool( parameter_id );
+        }
+
+        public static void SetAnimatorBooleanParameter(
+            this Animator animator,
+            string cached_parameter_name,
+            bool it_is_true
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            animator.SetBool( parameter_id, it_is_true );
+        }
+
+        public static void SetFloatParameter(
+            this Animator animator,
+            string cached_parameter_name,
+            float value
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            animator.SetFloat( parameter_id, value );
+        }
+
+        public static void SetIntegerParameter(
+            this Animator animator,
+            string cached_parameter_name,
+            int value
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            animator.SetInteger( parameter_id, value );
+        }
+
+        public static void InvertAnimatorBoolean(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{0}'", animator.name, cached_parameter_name ) );
+
+            animator.SetBool( parameter_id, !animator.GetBool( parameter_id ) );
+        }
+
+        // -- PRIVATE
+
+        private static Dictionary<string, int> ParameterIdIdMap = new Dictionary<string, int>();
+
+        private static int GetCachedAnimatorParameterId(
+            string parameter_name
+            )
+        {
+            int parameter_value;
+
+            if( !ParameterIdIdMap.TryGetValue( parameter_name, out parameter_value ) )
+            {
+                parameter_value = Animator.StringToHash( parameter_name );
+                ParameterIdIdMap.Add( parameter_name, parameter_value );
+            }
+
+            return parameter_value;
         }
     }
 }
