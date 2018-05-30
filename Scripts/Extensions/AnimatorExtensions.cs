@@ -63,7 +63,7 @@ namespace FishingCactus
             return animator.GetBool( parameter_id );
         }
 
-        public static void SetAnimatorBooleanParameter(
+        public static void SetBooleanParameter(
             this Animator animator,
             string cached_parameter_name,
             bool it_is_true
@@ -102,7 +102,7 @@ namespace FishingCactus
             animator.SetInteger( parameter_id, value );
         }
 
-        public static void InvertAnimatorBoolean(
+        public static void ToogleBooleanParameter(
             this Animator animator,
             string cached_parameter_name
             )
@@ -116,7 +116,7 @@ namespace FishingCactus
 
         // -- PRIVATE
 
-        private static Dictionary<string, int> ParameterIdIdMap = new Dictionary<string, int>();
+        private static Dictionary<string, int> ParameterNameIdMap = new Dictionary<string, int>();
 
         private static int GetCachedAnimatorParameterId(
             string parameter_name
@@ -124,10 +124,10 @@ namespace FishingCactus
         {
             int parameter_value;
 
-            if( !ParameterIdIdMap.TryGetValue( parameter_name, out parameter_value ) )
+            if( !ParameterNameIdMap.TryGetValue( parameter_name, out parameter_value ) )
             {
                 parameter_value = Animator.StringToHash( parameter_name );
-                ParameterIdIdMap.Add( parameter_name, parameter_value );
+                ParameterNameIdMap.Add( parameter_name, parameter_value );
             }
 
             return parameter_value;
