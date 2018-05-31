@@ -39,6 +39,19 @@ namespace FishingCactus
             return false;
         }
 
+        public static void ResetAllTriggerParameters(
+            this Animator animator
+            )
+        {
+            foreach( AnimatorControllerParameter parameter in animator.parameters )
+            {
+                if( parameter.type == AnimatorControllerParameterType.Trigger )
+                {
+                    animator.ResetTriggerParameter( parameter.name );
+                }
+            }
+        }
+
         public static void SetTriggerParameter(
             this Animator animator,
             string cached_parameter_name
@@ -49,6 +62,18 @@ namespace FishingCactus
             Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
 
             animator.SetTrigger( parameter_id );
+        }
+
+        public static void ResetTriggerParameter(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+
+            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
+
+            animator.ResetTrigger( parameter_id );
         }
 
         public static bool GetBooleanParameter(
