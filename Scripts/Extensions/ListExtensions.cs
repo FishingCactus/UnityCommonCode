@@ -15,14 +15,11 @@ namespace FishingCactus
             //      j ← random integer such that i ≤ j < n
             //      exchange a[i] and a[j]
 
-            int index_to_swap;
-            T backup_value;
-
             for( int index = 0; index < list.Count - 1; index++ )
             {
-                index_to_swap = Random.Range( index, list.Count );
+                int index_to_swap = Random.Range( index, list.Count );
+                T backup_value = list[index];
 
-                backup_value = list[index];
                 list[index] = list[index_to_swap];
                 list[index_to_swap] = backup_value;
             }
