@@ -3,6 +3,19 @@ using UnityEditor;
 
 public class CreateNewPrefab : EditorWindow
 {
+    // -- PRIVATE
+
+    static void CreateNew(
+        GameObject new_object,
+        string local_path
+        )
+    {
+        Object prefab = PrefabUtility.CreateEmptyPrefab( local_path );
+        PrefabUtility.ReplacePrefab( new_object, prefab, ReplacePrefabOptions.ConnectToPrefab );
+    }
+
+    // -- UNITY
+
     [MenuItem("FishingCactus/Tools/Create New Prefab")]
     static void CreatePrefab()
     {
@@ -27,18 +40,9 @@ public class CreateNewPrefab : EditorWindow
         }
     }
 
-    [MenuItem( "FishingCactus/Tools/Create New Prefab", true)]
+    [MenuItem( "FishingCactus/Tools/Create New Prefab", true )]
     static bool ValidateCreatePrefab()
     {
         return Selection.activeGameObject != null;
-    }
-
-    static void CreateNew(
-        GameObject new_object,
-        string local_path
-        )
-    {
-        Object prefab = PrefabUtility.CreateEmptyPrefab( local_path );
-        PrefabUtility.ReplacePrefab( new_object, prefab, ReplacePrefabOptions.ConnectToPrefab );
     }
 }
