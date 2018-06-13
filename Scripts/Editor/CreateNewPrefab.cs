@@ -10,7 +10,7 @@ public class CreateNewPrefab : EditorWindow
 
         foreach( GameObject go in object_table )
         {
-            string local_path = "Assets/Content/Prefabs/Temp/" + "P_" + go.name + ".prefab";
+            string local_path = "Assets/Content/Prefabs/" + "P_" + go.name + ".prefab";
 
             if( AssetDatabase.LoadAssetAtPath( local_path, typeof( GameObject ) ) )
             {
