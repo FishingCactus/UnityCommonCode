@@ -4,7 +4,7 @@ namespace FishingCactus
 {
     public static class Vector3Extensions
     {
-// -- PUBLIC
+        // -- PUBLIC
 
         public static float GetHorizontalMagnitude(
             this Vector3 vector,
