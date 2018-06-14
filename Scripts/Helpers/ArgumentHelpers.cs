@@ -2,14 +2,15 @@
 
 namespace FishingCactus 
 {
-    public class ArgumentExtensions
+    public class ArgumentHelpers
     {
         // -- PUBLIC
 
         public static bool FindArg(
             out string value,
             string name
-        ) {
+            )
+        {
             value = null;
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, name);
@@ -22,7 +23,8 @@ namespace FishingCactus
 
         public static string GetArg(
             string name
-        ) {
+            )
+        {
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, name);
 
@@ -34,7 +36,8 @@ namespace FishingCactus
 
         public static bool HasArg(
             string name
-        ) {
+            )
+        {
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, name);
 
