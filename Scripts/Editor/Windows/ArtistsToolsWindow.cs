@@ -12,6 +12,7 @@ internal class ArtistsToolsWindow : EditorWindow
     private Vector3 Offset;
     private Vector3 ScaleFactor;
     private float UniformScaleFactor;
+    private Vector2 ScrollPosition;
 
     // -- UNITY
 
@@ -23,6 +24,8 @@ internal class ArtistsToolsWindow : EditorWindow
 
     void OnGUI()
     {
+        ScrollPosition = EditorGUILayout.BeginScrollView( ScrollPosition );
+
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
         ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep Rotation & Scale", ItMustKeepLocalTransforms );
@@ -180,5 +183,7 @@ internal class ArtistsToolsWindow : EditorWindow
                 object_to_scale.transform.localScale = object_to_scale.transform.localScale * UniformScaleFactor;
             }
         }
+
+        EditorGUILayout.EndScrollView();
     }
 }
