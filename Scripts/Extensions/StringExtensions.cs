@@ -2,24 +2,17 @@ using System;
 
 public static class StringExtensions
 {
-    public static int CountOccurence( this string the_string, string find_string )
+    public static int CountOccurence( this string main, string pattern )
     {
         int count = 0;
-        int find_index;
+        int previous_index = 0;
 
-        for ( int index = 0; index < the_string.Length; index++ )
+        if ( pattern != "" )
         {
-            for ( find_index = 0; find_index < find_string.Length; find_index++ )
+            while ( ( previous_index = main.IndexOf( pattern, previous_index ) ) != -1 )
             {
-                if ( the_string[ index + find_index ] != find_string[ find_index ] )
-                {
-                    break;
-                }
-            }
-
-            if ( find_index == find_string.Length )
-            {
-                count++;
+                ++previous_index;
+                ++count;
             }
         }
 
