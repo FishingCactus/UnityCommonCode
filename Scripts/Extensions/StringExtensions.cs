@@ -7,7 +7,7 @@ public static class StringExtensions
         int count = 0;
         int previous_index = 0;
 
-        if ( pattern != "" )
+        if ( !string.IsNullOrEmpty( pattern ) )
         {
             while ( ( previous_index = main.IndexOf( pattern, previous_index ) ) != -1 )
             {
