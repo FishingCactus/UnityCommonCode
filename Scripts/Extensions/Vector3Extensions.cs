@@ -6,6 +6,16 @@ namespace FishingCactus
     {
         // -- PUBLIC
 
+        public static float GetSquaredMagnitude(
+            this Vector3 vector,
+            Vector3 other_vector
+            )
+        {
+            Vector3 distance_vector = vector - other_vector;
+
+            return distance_vector.sqrMagnitude;
+        }
+
         public static float GetHorizontalMagnitude(
             this Vector3 vector,
             Vector3 other_vector
