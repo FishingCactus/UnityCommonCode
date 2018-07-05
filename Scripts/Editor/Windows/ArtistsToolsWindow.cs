@@ -188,7 +188,6 @@ internal class ArtistsToolsWindow : EditorWindow
                 foreach( Light light_component in light_component_table )
                 {
                     light_component.range *= UniformScaleFactor;
-                    light_component.intensity *= UniformScaleFactor;
                 }
             }
         }
