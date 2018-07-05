@@ -180,11 +180,12 @@ internal class ArtistsToolsWindow : EditorWindow
 
             foreach( GameObject object_to_scale in selected_object_array )
             {
+                object_to_scale.transform.position *= UniformScaleFactor;
                 object_to_scale.transform.localScale = object_to_scale.transform.localScale * UniformScaleFactor;
 
-                Light light_component = object_to_scale.GetComponent<Light>();
+                Light[] light_component_table = object_to_scale.GetComponentsInChildren<Light>();
 
-                if( light_component != null )
+                foreach( Light light_component in light_component_table )
                 {
                     light_component.range *= UniformScaleFactor;
                     light_component.intensity *= UniformScaleFactor;
