@@ -80,7 +80,7 @@ namespace FishingCactus
             }
 
             GUI.enabled = link_property.objectReferenceValue ? true : false;
-            local_position.width = position.width - 24.0f;
+            local_position.width = position.width - InternalEditorStyle.MinimalButtonWidth;
 
             EditorGUI.BeginChangeCheck();
             SelectionIndex = EditorGUI.Popup( local_position, label, SelectionIndex, ParameterNameTable.ToArray() );
@@ -92,7 +92,7 @@ namespace FishingCactus
 
             GUI.enabled = true;
             local_position.x += local_position.width;
-            local_position.width = 24.0f;
+            local_position.width = InternalEditorStyle.MinimalButtonWidth;
 
             if( GUI.Button( local_position, "..." ) )
             {
@@ -105,15 +105,15 @@ namespace FishingCactus
                 )
             {
                 link_property.objectReferenceValue = EditorGUIUtility.GetObjectPickerObject();
-                property.serializedObject.ApplyModifiedProperties();
 
                 if( link_property.objectReferenceValue == null )
                 {
                     ParameterNameTable.Clear();
 
                     name_property.stringValue = null;
-                    property.serializedObject.ApplyModifiedProperties();
                 }
+
+                property.serializedObject.ApplyModifiedProperties();
             }
         }
     }

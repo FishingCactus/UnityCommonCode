@@ -5,6 +5,8 @@ public class InternalEditorStyle
 {
     // -- PUBLIC
 
+    public static float MinimalButtonWidth = 24.0f;
+
     public static GUIStyle Foldout
     {
         get
