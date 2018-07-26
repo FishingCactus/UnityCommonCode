@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor.Animations;
+using System.Collections.Generic;
 
 namespace FishingCactus
 {
@@ -10,7 +11,14 @@ namespace FishingCactus
 
 #if UNITY_EDITOR
         public AnimatorController LinkedAnimatorController = null;
-        public string TypeName;
+
+        public static Dictionary<string, AnimatorControllerParameterType> TypeTable = new Dictionary<string, AnimatorControllerParameterType>
+        {
+            { "BooleanAnimatorParameterLink", AnimatorControllerParameterType.Bool },
+            { "IntegerAnimatorParameterLink", AnimatorControllerParameterType.Int},
+            { "FloatAnimatorParameterLink", AnimatorControllerParameterType.Float },
+            { "TriggerAnimatorParameterLink", AnimatorControllerParameterType.Trigger}
+        };
 #endif
 
         public string ParameterName { get; }

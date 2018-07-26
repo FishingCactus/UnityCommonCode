@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -40,26 +39,6 @@ namespace FishingCactus
             SelectionIndex = ArrayUtility.FindIndex( ParameterNameTable.ToArray(), x => x.text == current_name );
         }
 
-        private AnimatorControllerParameterType GetFilterType(
-            string property_type_name
-            )
-        {
-            if( property_type_name == typeof( BooleanAnimatorParameterLink ).Name )
-            {
-                return AnimatorControllerParameterType.Bool;
-            }
-            else if( property_type_name == typeof( IntegerAnimatorParameterLink ).Name )
-            {
-                return AnimatorControllerParameterType.Int;
-            }
-            else if( property_type_name == typeof( FloatAnimatorParameterLink ).Name )
-            {
-                return AnimatorControllerParameterType.Float;
-            }
-
-            return AnimatorControllerParameterType.Trigger;
-        }
-
         // -- UNITY
 
         public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
@@ -75,7 +54,7 @@ namespace FishingCactus
                 FillParameterNameTable(
                     link_property.objectReferenceValue ? link_property.objectReferenceValue as AnimatorController : null,
                     name_property.stringValue,
-                    GetFilterType( property.type )
+                    AnimatorParameterLink.TypeTable[property.type]
                     );
             }
 
