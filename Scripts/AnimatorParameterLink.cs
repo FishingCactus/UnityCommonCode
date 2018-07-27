@@ -21,7 +21,7 @@ namespace FishingCactus
         };
 #endif
 
-        public string ParameterName { get; }
+        public string ParameterName { get { return _ParameterName; } }
 
         // -- PRIVATE
 
