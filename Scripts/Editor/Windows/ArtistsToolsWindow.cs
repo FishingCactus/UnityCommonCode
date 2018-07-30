@@ -10,6 +10,7 @@ internal class ArtistsToolsWindow : EditorWindow
     private int MinimalGridSize = 6;
     private float SpacingMultiplier = 1.5f;
     private Vector3 Offset;
+    private float PhysicsSimulationTime = 1.0f;
     private Vector3 ScaleFactor;
     private float UniformScaleFactor;
     private Vector2 ScrollPosition;
@@ -135,6 +136,26 @@ internal class ArtistsToolsWindow : EditorWindow
 
                 object_to_scale.transform.localScale = new Vector3( random_scale, random_scale, random_scale );
             }
+        }
+
+        GUILayout.Label( "Physics simulate --------------", EditorStyles.boldLabel );
+
+        PhysicsSimulationTime = EditorGUILayout.FloatField( "Simulation time:", PhysicsSimulationTime );
+
+        if( GUILayout.Button( "Simulate !" ) )
+        {
+            var step = Time.fixedDeltaTime;
+            var timer = PhysicsSimulationTime;
+            var auto_simulation_was_enabled = Physics.autoSimulation;
+            Physics.autoSimulation = false;
+
+            while ( timer > step )
+            {
+                timer -= step;
+                Physics.Simulate( step );
+            }
+            
+            Physics.autoSimulation = auto_simulation_was_enabled;
         }
 
         GUILayout.Label( "Position Offset tool --------------", EditorStyles.boldLabel );
