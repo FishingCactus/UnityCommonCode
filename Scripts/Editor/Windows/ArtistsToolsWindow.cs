@@ -3,6 +3,61 @@ using UnityEngine;
 
 internal class ArtistsToolsWindow : EditorWindow
 {
+    private class PhysicsSimulator
+    {
+        // -- PUBLIC
+
+        public bool IsRunning
+        {
+            get
+            {
+                return RemainingTime > 0.0f;
+            }
+        }
+
+        public void Start( EditorWindow parent, float duration )
+        {
+            Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
+
+            ParentWindow = parent;
+            AutoSimulationWasEnabled = Physics.autoSimulation;
+            Timer = 0.0f;
+            Physics.autoSimulation = false;
+            RemainingTime = duration;
+            EditorApplication.update += EditorUpdate;
+        }
+
+        // -- PRIVATE
+
+        private bool AutoSimulationWasEnabled;
+        private EditorWindow ParentWindow;
+        private float RemainingTime = 0.0f;
+        private float Timer = 0.0f;
+
+        private void EditorUpdate()
+        {
+            Timer += Time.deltaTime;
+
+            while ( Timer > Time.fixedDeltaTime && RemainingTime > 0.0f )
+            {
+                var step = Mathf.Min( RemainingTime, Time.fixedDeltaTime );
+                Physics.Simulate( step );
+                Timer -= step;
+                RemainingTime -= step;
+            }
+
+            if ( RemainingTime <= 0.0f )
+            {
+                Physics.Simulate( Timer );
+                RemainingTime = 0.0f;
+
+                Physics.autoSimulation = AutoSimulationWasEnabled;
+                EditorApplication.update -= EditorUpdate;
+                ParentWindow.Repaint();
+            }
+        }
+    }
+
     // -- PRIVATE
 
     private Object ReplacerObject;
@@ -10,10 +65,11 @@ internal class ArtistsToolsWindow : EditorWindow
     private int MinimalGridSize = 6;
     private float SpacingMultiplier = 1.5f;
     private Vector3 Offset;
-    private float PhysicsSimulationTime = 1.0f;
+    private float PhysicsSimulationTime = 5.0f;
     private Vector3 ScaleFactor;
     private float UniformScaleFactor;
     private Vector2 ScrollPosition;
+    private PhysicsSimulator Simulator = new PhysicsSimulator();
 
     // -- UNITY
 
@@ -142,21 +198,14 @@ internal class ArtistsToolsWindow : EditorWindow
 
         PhysicsSimulationTime = EditorGUILayout.FloatField( "Simulation time:", PhysicsSimulationTime );
 
+        GUI.enabled = !Simulator.IsRunning;
+
         if( GUILayout.Button( "Simulate !" ) )
         {
-            var step = Time.fixedDeltaTime;
-            var timer = PhysicsSimulationTime;
-            var auto_simulation_was_enabled = Physics.autoSimulation;
-            Physics.autoSimulation = false;
-
-            while ( timer > step )
-            {
-                timer -= step;
-                Physics.Simulate( step );
-            }
-            
-            Physics.autoSimulation = auto_simulation_was_enabled;
+            Simulator.Start( this, PhysicsSimulationTime );
         }
+
+        GUI.enabled = true;
 
         GUILayout.Label( "Position Offset tool --------------", EditorStyles.boldLabel );
 
