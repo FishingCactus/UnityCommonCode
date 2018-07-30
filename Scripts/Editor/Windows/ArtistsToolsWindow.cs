@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 internal class ArtistsToolsWindow : EditorWindow
@@ -15,7 +17,7 @@ internal class ArtistsToolsWindow : EditorWindow
             }
         }
 
-        public void Start( EditorWindow parent, float duration )
+        public void Start( EditorWindow parent, float duration, Transform[] transforms )
         {
             Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
 
@@ -25,6 +27,8 @@ internal class ArtistsToolsWindow : EditorWindow
             Physics.autoSimulation = false;
             RemainingTime = duration;
             EditorApplication.update += EditorUpdate;
+
+            SaveTransforms(transforms);
         }
 
         // -- PRIVATE
@@ -33,6 +37,9 @@ internal class ArtistsToolsWindow : EditorWindow
         private EditorWindow ParentWindow;
         private float RemainingTime = 0.0f;
         private float Timer = 0.0f;
+        private List<Transform> TransformToResetTable;
+        private List<Vector3> SavedLocalPositionTable;
+        private List<Quaternion> SavedLocalRotationTable;
 
         private void EditorUpdate()
         {
@@ -54,6 +61,30 @@ internal class ArtistsToolsWindow : EditorWindow
                 Physics.autoSimulation = AutoSimulationWasEnabled;
                 EditorApplication.update -= EditorUpdate;
                 ParentWindow.Repaint();
+
+                ResetTransforms();
+            }
+        }
+
+        private void SaveTransforms( Transform[] transforms )
+        {
+            TransformToResetTable = FindObjectsOfType<Transform>().Except( transforms ).ToList();
+            SavedLocalPositionTable = new List<Vector3>( TransformToResetTable.Count );
+            SavedLocalRotationTable = new List<Quaternion>( TransformToResetTable.Count );
+
+            foreach ( var transform in TransformToResetTable )
+            {
+                SavedLocalPositionTable.Add( transform.localPosition );
+                SavedLocalRotationTable.Add( transform.localRotation );
+            }
+        }
+
+        private void ResetTransforms()
+        {
+            for ( var index = 0; index < TransformToResetTable.Count; ++index )
+            {
+                TransformToResetTable[index].localPosition = SavedLocalPositionTable[index];
+                TransformToResetTable[index].localRotation = SavedLocalRotationTable[index];
             }
         }
     }
@@ -202,7 +233,7 @@ internal class ArtistsToolsWindow : EditorWindow
 
         if( GUILayout.Button( "Simulate !" ) )
         {
-            Simulator.Start( this, PhysicsSimulationTime );
+            Simulator.Start( this, PhysicsSimulationTime, Selection.transforms );
         }
 
         GUI.enabled = true;
