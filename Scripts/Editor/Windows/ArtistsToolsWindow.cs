@@ -250,7 +250,8 @@ internal class ArtistsToolsWindow : EditorWindow
         {
             foreach( var transform in Selection.transforms )
             {
-                DestroyImmediate( transform.gameObject.GetComponent<Rigidbody>() );
+                DestroyImmediate( transform.GetComponent<Rigidbody>() );
+                transform.gameObject.isStatic = true;
             }
         }
 
