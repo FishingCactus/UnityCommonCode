@@ -246,6 +246,14 @@ internal class ArtistsToolsWindow : EditorWindow
             Simulator.Start( this, PhysicsSimulationTime, Selection.transforms );
         }
 
+        if( GUILayout.Button( "Bake (-> static colliders) !" ) )
+        {
+            foreach( var transform in Selection.transforms )
+            {
+                DestroyImmediate( transform.gameObject.GetComponent<Rigidbody>() );
+            }
+        }
+
         GUI.enabled = true;
 
         GUILayout.Label( "Position Offset tool --------------", EditorStyles.boldLabel );
