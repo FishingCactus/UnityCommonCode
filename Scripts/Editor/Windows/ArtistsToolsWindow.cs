@@ -17,7 +17,11 @@ internal class ArtistsToolsWindow : EditorWindow
             }
         }
 
-        public void Start( EditorWindow parent, float duration, Transform[] transforms )
+        public void Start(
+            EditorWindow parent,
+            float duration,
+            Transform[] transforms
+            )
         {
             Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
 
@@ -45,15 +49,19 @@ internal class ArtistsToolsWindow : EditorWindow
         {
             Timer += Time.deltaTime;
 
-            while ( Timer > Time.fixedDeltaTime && RemainingTime > 0.0f )
+            while(
+                Timer > Time.fixedDeltaTime
+                && RemainingTime > 0.0f
+                )
             {
                 var step = Mathf.Min( RemainingTime, Time.fixedDeltaTime );
+
                 Physics.Simulate( step );
                 Timer -= step;
                 RemainingTime -= step;
             }
 
-            if ( RemainingTime <= 0.0f )
+            if( RemainingTime <= 0.0f )
             {
                 Physics.Simulate( Timer );
                 RemainingTime = 0.0f;
@@ -66,13 +74,15 @@ internal class ArtistsToolsWindow : EditorWindow
             }
         }
 
-        private void SaveTransforms( Transform[] transforms )
+        private void SaveTransforms(
+            Transform[] transforms
+            )
         {
             TransformToResetTable = FindObjectsOfType<Transform>().Except( transforms ).ToList();
             SavedLocalPositionTable = new List<Vector3>( TransformToResetTable.Count );
             SavedLocalRotationTable = new List<Quaternion>( TransformToResetTable.Count );
 
-            foreach ( var transform in TransformToResetTable )
+            foreach( var transform in TransformToResetTable )
             {
                 SavedLocalPositionTable.Add( transform.localPosition );
                 SavedLocalRotationTable.Add( transform.localRotation );
@@ -81,7 +91,7 @@ internal class ArtistsToolsWindow : EditorWindow
 
         private void ResetTransforms()
         {
-            for ( var index = 0; index < TransformToResetTable.Count; ++index )
+            for( var index = 0; index < TransformToResetTable.Count; ++index )
             {
                 TransformToResetTable[index].localPosition = SavedLocalPositionTable[index];
                 TransformToResetTable[index].localRotation = SavedLocalRotationTable[index];
