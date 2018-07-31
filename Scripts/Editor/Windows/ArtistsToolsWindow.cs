@@ -1,8 +1,104 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 internal class ArtistsToolsWindow : EditorWindow
 {
+    private class PhysicsSimulator
+    {
+        // -- PUBLIC
+
+        public bool IsRunning
+        {
+            get
+            {
+                return RemainingTime > 0.0f;
+            }
+        }
+
+        public void Start(
+            EditorWindow parent,
+            float duration,
+            Transform[] transforms
+            )
+        {
+            Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
+
+            ParentWindow = parent;
+            AutoSimulationWasEnabled = Physics.autoSimulation;
+            Timer = 0.0f;
+            Physics.autoSimulation = false;
+            RemainingTime = duration;
+            EditorApplication.update += EditorUpdate;
+
+            SaveTransforms(transforms);
+        }
+
+        // -- PRIVATE
+
+        private bool AutoSimulationWasEnabled;
+        private EditorWindow ParentWindow;
+        private float RemainingTime = 0.0f;
+        private float Timer = 0.0f;
+        private List<Transform> TransformToResetTable;
+        private List<Vector3> SavedLocalPositionTable;
+        private List<Quaternion> SavedLocalRotationTable;
+
+        private void EditorUpdate()
+        {
+            Timer += Time.deltaTime;
+
+            while(
+                Timer > Time.fixedDeltaTime
+                && RemainingTime > 0.0f
+                )
+            {
+                var step = Mathf.Min( RemainingTime, Time.fixedDeltaTime );
+
+                Physics.Simulate( step );
+                Timer -= step;
+                RemainingTime -= step;
+            }
+
+            if( RemainingTime <= 0.0f )
+            {
+                Physics.Simulate( Timer );
+                RemainingTime = 0.0f;
+
+                Physics.autoSimulation = AutoSimulationWasEnabled;
+                EditorApplication.update -= EditorUpdate;
+                ParentWindow.Repaint();
+
+                ResetTransforms();
+            }
+        }
+
+        private void SaveTransforms(
+            Transform[] transforms
+            )
+        {
+            TransformToResetTable = FindObjectsOfType<Transform>().Except( transforms ).ToList();
+            SavedLocalPositionTable = new List<Vector3>( TransformToResetTable.Count );
+            SavedLocalRotationTable = new List<Quaternion>( TransformToResetTable.Count );
+
+            foreach( var transform in TransformToResetTable )
+            {
+                SavedLocalPositionTable.Add( transform.localPosition );
+                SavedLocalRotationTable.Add( transform.localRotation );
+            }
+        }
+
+        private void ResetTransforms()
+        {
+            for( var index = 0; index < TransformToResetTable.Count; ++index )
+            {
+                TransformToResetTable[index].localPosition = SavedLocalPositionTable[index];
+                TransformToResetTable[index].localRotation = SavedLocalRotationTable[index];
+            }
+        }
+    }
+
     // -- PRIVATE
 
     private Object ReplacerObject;
@@ -10,9 +106,11 @@ internal class ArtistsToolsWindow : EditorWindow
     private int MinimalGridSize = 6;
     private float SpacingMultiplier = 1.5f;
     private Vector3 Offset;
+    private float PhysicsSimulationTime = 5.0f;
     private Vector3 ScaleFactor;
     private float UniformScaleFactor;
     private Vector2 ScrollPosition;
+    private PhysicsSimulator Simulator = new PhysicsSimulator();
 
     // -- UNITY
 
@@ -136,6 +234,28 @@ internal class ArtistsToolsWindow : EditorWindow
                 object_to_scale.transform.localScale = new Vector3( random_scale, random_scale, random_scale );
             }
         }
+
+        GUILayout.Label( "Physics simulate --------------", EditorStyles.boldLabel );
+
+        PhysicsSimulationTime = EditorGUILayout.FloatField( "Simulation time:", PhysicsSimulationTime );
+
+        GUI.enabled = !Simulator.IsRunning;
+
+        if( GUILayout.Button( "Simulate !" ) )
+        {
+            Simulator.Start( this, PhysicsSimulationTime, Selection.transforms );
+        }
+
+        if( GUILayout.Button( "Bake (-> static colliders) !" ) )
+        {
+            foreach( var transform in Selection.transforms )
+            {
+                DestroyImmediate( transform.GetComponent<Rigidbody>() );
+                transform.gameObject.isStatic = true;
+            }
+        }
+
+        GUI.enabled = true;
 
         GUILayout.Label( "Position Offset tool --------------", EditorStyles.boldLabel );
 
