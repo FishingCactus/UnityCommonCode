@@ -20,9 +20,16 @@ internal class ArtistsToolsWindow : EditorWindow
         public void Start(
             EditorWindow parent,
             float duration,
-            Transform[] transforms
+            Transform[] transform_table
             )
         {
+            if( transform_table == null
+                || transform_table.Length == 0
+                )
+            {
+                return;
+            }
+
             Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
 
             ParentWindow = parent;
@@ -32,7 +39,9 @@ internal class ArtistsToolsWindow : EditorWindow
             RemainingTime = duration;
             EditorApplication.update += EditorUpdate;
 
-            foreach( var transform in transforms )
+            var rigid_body_table = new List<Rigidbody>( transform_table.Length );
+
+            foreach( var transform in transform_table )
             {
                 var rigid_body = transform.GetComponent<Rigidbody>();
 
@@ -40,10 +49,12 @@ internal class ArtistsToolsWindow : EditorWindow
                 {
                     rigid_body.velocity = Vector3.zero;
                     rigid_body.angularVelocity = Vector3.zero;
+
+                    rigid_body_table.Add( rigid_body );
                 }
             }
 
-            SaveTransforms( transforms );
+            FreezeDynamicRigidBodies( rigid_body_table );
         }
 
         // -- PRIVATE
@@ -52,9 +63,7 @@ internal class ArtistsToolsWindow : EditorWindow
         private EditorWindow ParentWindow;
         private float RemainingTime = 0.0f;
         private float Timer = 0.0f;
-        private List<Transform> TransformToResetTable;
-        private List<Vector3> SavedLocalPositionTable;
-        private List<Quaternion> SavedLocalRotationTable;
+        private List<Rigidbody> RigidBodyToResetTable;
 
         private void EditorUpdate()
         {
@@ -83,33 +92,28 @@ internal class ArtistsToolsWindow : EditorWindow
                 EditorApplication.update -= EditorUpdate;
                 ParentWindow.Repaint();
 
-                ResetTransforms();
+                UnfreezeDynamicRigidBodies();
             }
         }
 
-        private void SaveTransforms(
-            Transform[] transforms
-            )
+        private void FreezeDynamicRigidBodies( List<Rigidbody> rigid_body_table )
         {
-            TransformToResetTable = FindObjectsOfType<Transform>().Except( transforms ).ToList();
-            SavedLocalPositionTable = new List<Vector3>( TransformToResetTable.Count );
-            SavedLocalRotationTable = new List<Quaternion>( TransformToResetTable.Count );
+            RigidBodyToResetTable = FindObjectsOfType<Rigidbody>()
+                .Except( rigid_body_table )
+                .Where( rb => !rb.isKinematic )
+                .ToList();
 
-            foreach( var transform in TransformToResetTable )
+            foreach( var rigid_body in RigidBodyToResetTable )
             {
-                SavedLocalPositionTable.Add( transform.localPosition );
-                SavedLocalRotationTable.Add( transform.localRotation );
+                rigid_body.isKinematic = true;
             }
         }
 
-        private void ResetTransforms()
+        private void UnfreezeDynamicRigidBodies()
         {
-            for( var index = 0; index < TransformToResetTable.Count; ++index )
+            foreach( var rigid_body in RigidBodyToResetTable )
             {
-                var transform = TransformToResetTable[index];
-
-                transform.localPosition = SavedLocalPositionTable[index];
-                transform.localRotation = SavedLocalRotationTable[index];
+                rigid_body.isKinematic = false;
             }
         }
     }
