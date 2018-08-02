@@ -63,7 +63,9 @@ internal class ArtistsToolsWindow : EditorWindow
 
             if( RemainingTime <= 0.0f )
             {
-                Physics.Simulate( Timer );
+                // :TRICKY: Physics simulation seems to have issues with really small time steps
+                //  Physics.Simulate( Timer );
+
                 RemainingTime = 0.0f;
 
                 Physics.autoSimulation = AutoSimulationWasEnabled;
