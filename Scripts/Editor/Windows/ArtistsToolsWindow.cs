@@ -32,7 +32,18 @@ internal class ArtistsToolsWindow : EditorWindow
             RemainingTime = duration;
             EditorApplication.update += EditorUpdate;
 
-            SaveTransforms(transforms);
+            foreach( var transform in transforms )
+            {
+                var rigid_body = transform.GetComponent<Rigidbody>();
+
+                if( rigid_body )
+                {
+                    rigid_body.velocity = Vector3.zero;
+                    rigid_body.angularVelocity = Vector3.zero;
+                }
+            }
+
+            SaveTransforms( transforms );
         }
 
         // -- PRIVATE
@@ -95,8 +106,10 @@ internal class ArtistsToolsWindow : EditorWindow
         {
             for( var index = 0; index < TransformToResetTable.Count; ++index )
             {
-                TransformToResetTable[index].localPosition = SavedLocalPositionTable[index];
-                TransformToResetTable[index].localRotation = SavedLocalRotationTable[index];
+                var transform = TransformToResetTable[index];
+
+                transform.localPosition = SavedLocalPositionTable[index];
+                transform.localRotation = SavedLocalRotationTable[index];
             }
         }
     }
