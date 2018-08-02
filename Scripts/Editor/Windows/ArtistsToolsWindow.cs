@@ -20,9 +20,16 @@ internal class ArtistsToolsWindow : EditorWindow
         public void Start(
             EditorWindow parent,
             float duration,
-            Transform[] transforms
+            Transform[] transform_table
             )
         {
+            if( transform_table == null
+                || transform_table.Length == 0
+                )
+            {
+                return;
+            }
+
             Debug.AssertFormat( RemainingTime == 0.0f, "Cannot start physics simulation if already running" );
 
             ParentWindow = parent;
@@ -32,7 +39,22 @@ internal class ArtistsToolsWindow : EditorWindow
             RemainingTime = duration;
             EditorApplication.update += EditorUpdate;
 
-            SaveTransforms(transforms);
+            var rigid_body_table = new List<Rigidbody>( transform_table.Length );
+
+            foreach( var transform in transform_table )
+            {
+                var rigid_body = transform.GetComponent<Rigidbody>();
+
+                if( rigid_body )
+                {
+                    rigid_body.velocity = Vector3.zero;
+                    rigid_body.angularVelocity = Vector3.zero;
+
+                    rigid_body_table.Add( rigid_body );
+                }
+            }
+
+            FreezeDynamicRigidBodies( rigid_body_table );
         }
 
         // -- PRIVATE
@@ -41,9 +63,7 @@ internal class ArtistsToolsWindow : EditorWindow
         private EditorWindow ParentWindow;
         private float RemainingTime = 0.0f;
         private float Timer = 0.0f;
-        private List<Transform> TransformToResetTable;
-        private List<Vector3> SavedLocalPositionTable;
-        private List<Quaternion> SavedLocalRotationTable;
+        private List<Rigidbody> RigidBodyToResetTable;
 
         private void EditorUpdate()
         {
@@ -63,38 +83,37 @@ internal class ArtistsToolsWindow : EditorWindow
 
             if( RemainingTime <= 0.0f )
             {
-                Physics.Simulate( Timer );
+                // :TRICKY: Physics simulation seems to have issues with really small time steps
+                //  Physics.Simulate( Timer );
+
                 RemainingTime = 0.0f;
 
                 Physics.autoSimulation = AutoSimulationWasEnabled;
                 EditorApplication.update -= EditorUpdate;
                 ParentWindow.Repaint();
 
-                ResetTransforms();
+                UnfreezeDynamicRigidBodies();
             }
         }
 
-        private void SaveTransforms(
-            Transform[] transforms
-            )
+        private void FreezeDynamicRigidBodies( List<Rigidbody> rigid_body_table )
         {
-            TransformToResetTable = FindObjectsOfType<Transform>().Except( transforms ).ToList();
-            SavedLocalPositionTable = new List<Vector3>( TransformToResetTable.Count );
-            SavedLocalRotationTable = new List<Quaternion>( TransformToResetTable.Count );
+            RigidBodyToResetTable = FindObjectsOfType<Rigidbody>()
+                .Except( rigid_body_table )
+                .Where( rb => !rb.isKinematic )
+                .ToList();
 
-            foreach( var transform in TransformToResetTable )
+            foreach( var rigid_body in RigidBodyToResetTable )
             {
-                SavedLocalPositionTable.Add( transform.localPosition );
-                SavedLocalRotationTable.Add( transform.localRotation );
+                rigid_body.isKinematic = true;
             }
         }
 
-        private void ResetTransforms()
+        private void UnfreezeDynamicRigidBodies()
         {
-            for( var index = 0; index < TransformToResetTable.Count; ++index )
+            foreach( var rigid_body in RigidBodyToResetTable )
             {
-                TransformToResetTable[index].localPosition = SavedLocalPositionTable[index];
-                TransformToResetTable[index].localRotation = SavedLocalRotationTable[index];
+                rigid_body.isKinematic = false;
             }
         }
     }
