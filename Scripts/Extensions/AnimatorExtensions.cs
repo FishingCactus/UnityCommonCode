@@ -57,11 +57,7 @@ namespace FishingCactus
             string cached_parameter_name
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
-
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.SetTrigger( parameter_id );
+            animator.SetTrigger( animator.GetCachedAnimatorParameterId( cached_parameter_name ) );
         }
 
         public static void ResetTriggerParameter(
@@ -69,11 +65,7 @@ namespace FishingCactus
             string cached_parameter_name
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
-
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.ResetTrigger( parameter_id );
+            animator.ResetTrigger( animator.GetCachedAnimatorParameterId( cached_parameter_name ) );
         }
 
         public static bool GetBooleanParameter(
@@ -81,11 +73,7 @@ namespace FishingCactus
             string cached_parameter_name
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
-
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            return animator.GetBool( parameter_id );
+            return animator.GetBool( animator.GetCachedAnimatorParameterId( cached_parameter_name ) );
         }
 
         public static void SetBooleanParameter(
@@ -94,11 +82,18 @@ namespace FishingCactus
             bool it_is_true
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+            animator.SetBool(
+                animator.GetCachedAnimatorParameterId( cached_parameter_name ),
+                it_is_true
+                );
+        }
 
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.SetBool( parameter_id, it_is_true );
+        public static float GetFloatParameter(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            return animator.GetFloat( animator.GetCachedAnimatorParameterId( cached_parameter_name ) );
         }
 
         public static void SetFloatParameter(
@@ -107,11 +102,18 @@ namespace FishingCactus
             float value
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+            animator.SetFloat(
+                animator.GetCachedAnimatorParameterId( cached_parameter_name ),
+                value
+                );
+        }
 
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.SetFloat( parameter_id, value );
+        public static float GetIntegerParameter(
+            this Animator animator,
+            string cached_parameter_name
+            )
+        {
+            return animator.GetInteger( animator.GetCachedAnimatorParameterId( cached_parameter_name ) );
         }
 
         public static void SetIntegerParameter(
@@ -120,11 +122,10 @@ namespace FishingCactus
             int value
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
-
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.SetInteger( parameter_id, value );
+            animator.SetInteger(
+                animator.GetCachedAnimatorParameterId( cached_parameter_name ),
+                value
+                );
         }
 
         public static void ToggleBooleanParameter(
@@ -132,11 +133,12 @@ namespace FishingCactus
             string cached_parameter_name
             )
         {
-            int parameter_id = GetCachedAnimatorParameterId( cached_parameter_name );
+            int parameter_id = animator.GetCachedAnimatorParameterId( cached_parameter_name );
 
-            Debug.Assert( animator.HasParameter( parameter_id ), string.Format( "Animator '{0}' has no parameters '{1}'", animator.name, cached_parameter_name ) );
-
-            animator.SetBool( parameter_id, !animator.GetBool( parameter_id ) );
+            animator.SetBool(
+                parameter_id,
+                !animator.GetBool( parameter_id )
+                );
         }
 
         // -- PRIVATE
@@ -144,6 +146,7 @@ namespace FishingCactus
         private static Dictionary<string, int> ParameterNameIdMap = new Dictionary<string, int>();
 
         private static int GetCachedAnimatorParameterId(
+            this Animator animator,
             string parameter_name
             )
         {
@@ -154,6 +157,8 @@ namespace FishingCactus
                 parameter_value = Animator.StringToHash( parameter_name );
                 ParameterNameIdMap.Add( parameter_name, parameter_value );
             }
+
+            Debug.Assert( animator.HasParameter( parameter_value ), $"Animator '{animator.name}' has no parameters '{parameter_name}'" );
 
             return parameter_value;
         }
