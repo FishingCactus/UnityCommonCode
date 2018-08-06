@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Cinemachine;
 
 internal class ArtistsToolsWindow : EditorWindow
 {
@@ -130,6 +131,26 @@ internal class ArtistsToolsWindow : EditorWindow
     private float UniformScaleFactor;
     private Vector2 ScrollPosition;
     private PhysicsSimulator Simulator = new PhysicsSimulator();
+
+    private void SetupViewCamera(
+        Transform camera_transform,
+        float field_of_view
+        )
+    {
+        var scene_view = UnityEditor.SceneView.lastActiveSceneView;
+
+        if( scene_view != null )
+        {
+            var target = scene_view.camera;
+
+            target.transform.position = camera_transform.position;
+            target.transform.rotation = camera_transform.rotation;
+
+            target.fieldOfView = field_of_view;
+            scene_view.orthographic = false;
+            scene_view.AlignViewToObject( target.transform );
+        }
+    }
 
     // -- UNITY
 
@@ -330,6 +351,33 @@ internal class ArtistsToolsWindow : EditorWindow
                 }
             }
         }
+
+        GUILayout.Label( "Camera --------------", EditorStyles.boldLabel );
+
+        CinemachineVirtualCamera cinemachine_camera = null;
+        Camera classic_camera = null;
+
+        if( Selection.gameObjects.Length == 1 )
+        {
+            cinemachine_camera = Selection.gameObjects[0].GetComponent<CinemachineVirtualCamera>();
+            classic_camera = Selection.gameObjects[0].GetComponent<Camera>();
+        }
+
+        GUI.enabled = cinemachine_camera != null || classic_camera != null;
+
+        if( GUILayout.Button( "Setup view camera" ) )
+        {
+            if( cinemachine_camera != null )
+            {
+                SetupViewCamera( cinemachine_camera.transform, cinemachine_camera.m_Lens.FieldOfView );
+            }
+            else if( classic_camera != null )
+            {
+                SetupViewCamera( classic_camera.transform, classic_camera.fieldOfView );
+            }
+        }
+
+        GUI.enabled = true;
 
         EditorGUILayout.EndScrollView();
     }
