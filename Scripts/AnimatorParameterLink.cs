@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-#if UNITY_EDITOR
-    using UnityEditor.Animations;
-#endif
 using System.Collections.Generic;
 
 namespace FishingCactus
@@ -12,8 +9,6 @@ namespace FishingCactus
         // -- PUBLIC
 
 #if UNITY_EDITOR
-        public AnimatorController LinkedAnimatorController = null;
-
         public static Dictionary<string, AnimatorControllerParameterType> TypeTable = new Dictionary<string, AnimatorControllerParameterType>
         {
             { "BooleanAnimatorParameterLink", AnimatorControllerParameterType.Bool },
@@ -29,6 +24,8 @@ namespace FishingCactus
 
         [SerializeField]
         private string _ParameterName;
+        [SerializeField]
+        private RuntimeAnimatorController LinkedAnimatorController = null;
     }
 
     [System.Serializable]
