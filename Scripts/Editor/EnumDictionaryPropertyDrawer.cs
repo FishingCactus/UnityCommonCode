@@ -34,17 +34,20 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
             float element_x = gui_rectangle.x;
             float element_width = gui_rectangle.width;
 
-            gui_rectangle.width = element_width * 0.5f;
+            gui_rectangle.y += 18.0f;
 
             for( int name_index = 0; name_index < type_property.arraySize; name_index++ )
             {
-                gui_rectangle.y += 18.0f;
+                const float label_width_percentage = 0.25f;
 
                 gui_rectangle.x = element_x;
+                gui_rectangle.width = element_width * label_width_percentage;
                 EditorGUI.LabelField(gui_rectangle, new GUIContent(type_property.GetArrayElementAtIndex(name_index).stringValue));
 
                 gui_rectangle.x += gui_rectangle.width;
+                gui_rectangle.width = element_width * ( 1.0f - label_width_percentage );
                 EditorGUI.PropertyField(gui_rectangle, values_property.GetArrayElementAtIndex(name_index), GUIContent.none );
+                gui_rectangle.y += EditorGUI.GetPropertyHeight( values_property.GetArrayElementAtIndex(name_index), GUIContent.none);
             }
 
             gui_rectangle.x = element_x;
@@ -65,9 +68,12 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
 
         if (property.isExpanded)
         {
-            SerializedProperty list_property = property.FindPropertyRelative("EnumNameTable");
+            SerializedProperty list_property = property.FindPropertyRelative("ValueTable");
 
-            height_to_use += 20.0f * list_property.arraySize;
+            foreach( SerializedProperty element_property in list_property )
+            {
+                height_to_use += EditorGUI.GetPropertyHeight(element_property, GUIContent.none);
+            }
         }
 
         return height_to_use;
