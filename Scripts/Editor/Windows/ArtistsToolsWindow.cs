@@ -167,7 +167,7 @@ internal class ArtistsToolsWindow : EditorWindow
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
         ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep Rotation & Scale", ItMustKeepLocalTransforms );
-        ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), true );
+        ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
         if( GUILayout.Button( "Replace selection - WARNING : No undo !" ) && ( ReplacerObject != null ) )
         {
