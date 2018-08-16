@@ -122,7 +122,9 @@ internal class ArtistsToolsWindow : EditorWindow
     // -- PRIVATE
 
     private Object ReplacerObject;
+    private bool ItMustKeepObjectProperties = true;
     private bool ItMustKeepLocalTransforms = true;
+    private bool ItMustMergeComponents = false;
     private int MinimalGridSize = 6;
     private float SpacingMultiplier = 1.5f;
     private Vector3 Offset;
@@ -166,7 +168,9 @@ internal class ArtistsToolsWindow : EditorWindow
 
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
-        ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep Rotation & Scale", ItMustKeepLocalTransforms );
+        ItMustKeepObjectProperties = EditorGUILayout.Toggle( "Keep object properties", ItMustKeepObjectProperties );
+        ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep rotation & scale", ItMustKeepLocalTransforms );
+        ItMustMergeComponents = EditorGUILayout.Toggle( "Merge components", ItMustMergeComponents );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
         if( GUILayout.Button( "Replace selection" ) && ( ReplacerObject != null ) )
@@ -186,10 +190,30 @@ internal class ArtistsToolsWindow : EditorWindow
 
                 instanciated_object.transform.localPosition = old_object.transform.localPosition;
 
+                if ( ItMustKeepObjectProperties )
+                {
+                    instanciated_object.SetActive(old_object.activeSelf);
+                    instanciated_object.isStatic = old_object.isStatic;
+                    instanciated_object.tag = old_object.tag;
+                    instanciated_object.layer = old_object.layer;
+                }
+
                 if( ItMustKeepLocalTransforms )
                 {
                     instanciated_object.transform.localRotation = old_object.transform.localRotation;
                     instanciated_object.transform.localScale = old_object.transform.localScale;
+                }
+
+                if ( ItMustMergeComponents )
+                {
+                    foreach( var component in old_object.GetComponents<Component>() )
+                    {
+                        if ( !instanciated_object.GetComponent( component.GetType() ) )
+                        {
+                            var new_component = instanciated_object.AddComponent( component.GetType() );
+                            EditorUtility.CopySerialized( component, new_component );
+                        }
+                    }
                 }
 
                 new_object_array[object_index] = instanciated_object;
