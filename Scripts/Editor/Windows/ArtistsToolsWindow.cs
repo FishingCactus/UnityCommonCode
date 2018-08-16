@@ -169,7 +169,7 @@ internal class ArtistsToolsWindow : EditorWindow
         ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep Rotation & Scale", ItMustKeepLocalTransforms );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
-        if( GUILayout.Button( "Replace selection - WARNING : No undo !" ) && ( ReplacerObject != null ) )
+        if( GUILayout.Button( "Replace selection" ) && ( ReplacerObject != null ) )
         {
             GameObject[] selected_object_array = Selection.gameObjects;
             GameObject[] new_object_array = new GameObject[selected_object_array.Length];
@@ -178,22 +178,24 @@ internal class ArtistsToolsWindow : EditorWindow
             {
                 GameObject instanciated_object = PrefabUtility.InstantiatePrefab( ReplacerObject ) as GameObject;
 
-                if( selected_object_array[object_index].transform.parent )
+                var old_object = selected_object_array[object_index];
+                if( old_object.transform.parent )
                 {
-                    instanciated_object.transform.parent = selected_object_array[object_index].transform.parent;
+                    instanciated_object.transform.parent = old_object.transform.parent;
                 }
 
-                instanciated_object.transform.localPosition = selected_object_array[object_index].transform.localPosition;
+                instanciated_object.transform.localPosition = old_object.transform.localPosition;
 
                 if( ItMustKeepLocalTransforms )
                 {
-                    instanciated_object.transform.localRotation = selected_object_array[object_index].transform.localRotation;
-                    instanciated_object.transform.localScale = selected_object_array[object_index].transform.localScale;
+                    instanciated_object.transform.localRotation = old_object.transform.localRotation;
+                    instanciated_object.transform.localScale = old_object.transform.localScale;
                 }
 
                 new_object_array[object_index] = instanciated_object;
 
-                DestroyImmediate( ( selected_object_array[object_index] as Object ), true );
+                Undo.DestroyObjectImmediate( old_object );
+                Undo.RegisterCreatedObjectUndo( instanciated_object, "Replaced object");
             }
 
             Selection.objects = new_object_array;
