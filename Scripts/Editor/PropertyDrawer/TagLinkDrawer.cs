@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Animations;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace FishingCactus
@@ -13,7 +11,8 @@ namespace FishingCactus
         public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
         {
             SerializedProperty tag_name_property = property.FindPropertyRelative( "_TagName" );
-            tag_name_property.stringValue = EditorGUILayout.TagField( label, tag_name_property.stringValue );
+
+            tag_name_property.stringValue = EditorGUI.TagField( position, label, tag_name_property.stringValue );
         }
     }
 }
