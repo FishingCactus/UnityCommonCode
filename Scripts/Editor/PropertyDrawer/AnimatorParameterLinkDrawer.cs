@@ -50,6 +50,8 @@ namespace FishingCactus
             SerializedProperty name_property = property.FindPropertyRelative( "_ParameterName" );
             RuntimeAnimatorController linked_controller = controller_link_property.objectReferenceValue as AnimatorController;
 
+            local_position.width *= 0.95f;
+
             if( LastUsedAnimationController != null
                 && linked_controller == null
                 )
