@@ -40,7 +40,7 @@ namespace FishingCactus
                     if ( prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.DisconnectedPrefabInstance )
                     {
                         //Prefab Root;
-                        goPrefabRoot = ( ( GameObject )PrefabUtility.GetPrefabParent( go ) ).transform.root.gameObject;
+                        goPrefabRoot = ( ( GameObject )PrefabUtility.GetCorrespondingObjectFromSource( go ) ).transform.root.gameObject;
                         goCur = go;
                         bTopHierarchyFound = false;
                         bCanApply = true;
@@ -48,7 +48,7 @@ namespace FishingCactus
                         while ( goCur.transform.parent != null && !bTopHierarchyFound )
                         {
                             //Are we still in the same prefab?
-                            if ( goPrefabRoot == ( ( GameObject )PrefabUtility.GetPrefabParent( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
+                            if ( goPrefabRoot == ( ( GameObject )PrefabUtility.GetCorrespondingObjectFromSource( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
                             {
                                 goCur = goCur.transform.parent.gameObject;
                             }
@@ -56,7 +56,7 @@ namespace FishingCactus
                             {
                                 //The gameobject parent is another prefab, we stop here
                                 bTopHierarchyFound = true;
-                                if ( goPrefabRoot != ( ( GameObject )PrefabUtility.GetPrefabParent( goCur ) ) )
+                                if ( goPrefabRoot != ( ( GameObject )PrefabUtility.GetCorrespondingObjectFromSource( goCur ) ) )
                                 {
                                     //Gameobject is part of another prefab
                                     bCanApply = false;
@@ -67,7 +67,7 @@ namespace FishingCactus
                         if ( apply_or_revert != null && bCanApply )
                         {
                             iCount++;
-                            apply_or_revert( goCur, PrefabUtility.GetPrefabParent( goCur ), ReplacePrefabOptions.ConnectToPrefab );
+                            apply_or_revert( goCur, PrefabUtility.GetCorrespondingObjectFromSource( goCur ), ReplacePrefabOptions.ConnectToPrefab );
                         }
                     }
                 }
