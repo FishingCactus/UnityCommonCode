@@ -19,6 +19,19 @@ namespace FishingCactus
             SearchPrefabConnections( RevertToSelectedPrefabs );
         }
 
+        // -- PRIVATE
+
+        private static Object GetCorrespondingObjectOrPrefabParent(
+            GameObject object_to_use
+            )
+        {
+            #if UNITY_2018_2_OR_NEWER
+                return PrefabUtility.GetCorrespondingObjectFromSource( object_to_use );
+            #else
+                return PrefabUtility.GetPrefabParent( object_to_use );
+            #endif
+        }
+
         //Look for connections
         static void SearchPrefabConnections( ApplyOrRevert apply_or_revert )
         {
@@ -40,7 +53,7 @@ namespace FishingCactus
                     if ( prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.DisconnectedPrefabInstance )
                     {
                         //Prefab Root;
-                        goPrefabRoot = ( ( GameObject )PrefabUtility.GetPrefabParent( go ) ).transform.root.gameObject;
+                        goPrefabRoot = ( ( GameObject )GetCorrespondingObjectOrPrefabParent( go ) ).transform.root.gameObject;
                         goCur = go;
                         bTopHierarchyFound = false;
                         bCanApply = true;
@@ -48,7 +61,7 @@ namespace FishingCactus
                         while ( goCur.transform.parent != null && !bTopHierarchyFound )
                         {
                             //Are we still in the same prefab?
-                            if ( goPrefabRoot == ( ( GameObject )PrefabUtility.GetPrefabParent( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
+                            if ( goPrefabRoot == ( ( GameObject )GetCorrespondingObjectOrPrefabParent( goCur.transform.parent.gameObject ) ).transform.root.gameObject )
                             {
                                 goCur = goCur.transform.parent.gameObject;
                             }
@@ -56,7 +69,7 @@ namespace FishingCactus
                             {
                                 //The gameobject parent is another prefab, we stop here
                                 bTopHierarchyFound = true;
-                                if ( goPrefabRoot != ( ( GameObject )PrefabUtility.GetPrefabParent( goCur ) ) )
+                                if ( goPrefabRoot != ( ( GameObject )GetCorrespondingObjectOrPrefabParent( goCur ) ) )
                                 {
                                     //Gameobject is part of another prefab
                                     bCanApply = false;
@@ -67,7 +80,7 @@ namespace FishingCactus
                         if ( apply_or_revert != null && bCanApply )
                         {
                             iCount++;
-                            apply_or_revert( goCur, PrefabUtility.GetPrefabParent( goCur ), ReplacePrefabOptions.ConnectToPrefab );
+                            apply_or_revert( goCur, GetCorrespondingObjectOrPrefabParent( goCur ), ReplacePrefabOptions.ConnectToPrefab );
                         }
                     }
                 }
