@@ -151,6 +151,13 @@ namespace FishingCactus
         {
             AnimatorController animation_controller = animator.runtimeAnimatorController as AnimatorController;
 
+            if( animation_controller == null )
+            {
+                Debug.LogWarning( $"{animator.name} : No AnimationController set." );
+
+                return;
+            }
+
             foreach( AnimatorControllerLayer layer_to_clear in animation_controller.layers )
             {
                 foreach( ChildAnimatorState state in layer_to_clear.stateMachine.states )
