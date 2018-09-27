@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
+    using UnityEditor.Animations;
+#endif
 
 namespace FishingCactus
 {
@@ -140,6 +143,30 @@ namespace FishingCactus
                 !animator.GetBool( parameter_id )
                 );
         }
+
+#if UNITY_EDITOR
+        public static void ClearAllTransitions(
+            this Animator animator
+            )
+        {
+            AnimatorController animation_controller = animator.runtimeAnimatorController as AnimatorController;
+
+            foreach( AnimatorControllerLayer layer_to_clear in animation_controller.layers )
+            {
+                foreach( ChildAnimatorState state in layer_to_clear.stateMachine.states )
+                {
+                    foreach( AnimatorStateTransition transition in state.state.transitions )
+                    {
+                        transition.hasExitTime = false;
+                        transition.exitTime = 1.0f;
+
+                        transition.hasFixedDuration = false;
+                        transition.duration = 0.0f;
+                    }
+                }
+            }
+        }
+#endif
 
         // -- PRIVATE
 
