@@ -162,22 +162,22 @@ public class EditorNodeElement : EditorElementBase
     private void CreateStyles()
     {
         StateStyleTable[(int)EditorElementState.Normal] = new GUIStyle();
-        StateStyleTable[(int)EditorElementState.Normal].normal.background = EditorGUIUtility.Load( "normal_node.png" ) as Texture2D;
+        StateStyleTable[(int)EditorElementState.Normal].normal.background = Resources.Load( "normal_node" ) as Texture2D;
         StateStyleTable[(int)EditorElementState.Normal].border = new RectOffset( 12, 12, 12, 12 );
         StateStyleTable[(int)EditorElementState.Normal].alignment = TextAnchor.MiddleCenter;
 
         StateStyleTable[(int)EditorElementState.Over] = new GUIStyle();
-        StateStyleTable[(int)EditorElementState.Over].normal.background = EditorGUIUtility.Load( "over_node.png" ) as Texture2D;
+        StateStyleTable[(int)EditorElementState.Over].normal.background = Resources.Load( "over_node" ) as Texture2D;
         StateStyleTable[(int)EditorElementState.Over].border = new RectOffset( 12, 12, 12, 12 );
         StateStyleTable[(int)EditorElementState.Over].alignment = TextAnchor.MiddleCenter;
 
         StateStyleTable[(int)EditorElementState.Selected] = new GUIStyle();
-        StateStyleTable[(int)EditorElementState.Selected].normal.background = EditorGUIUtility.Load( "selected_node.png" ) as Texture2D;
+        StateStyleTable[(int)EditorElementState.Selected].normal.background = Resources.Load( "selected_node" ) as Texture2D;
         StateStyleTable[(int)EditorElementState.Selected].border = new RectOffset( 12, 12, 12, 12 );
         StateStyleTable[(int)EditorElementState.Selected].alignment = TextAnchor.MiddleCenter;
 
         StateStyleTable[(int)EditorElementState.Disabled] = new GUIStyle();
-        StateStyleTable[(int)EditorElementState.Disabled].normal.background = EditorGUIUtility.Load( "disabled_node.png" ) as Texture2D;
+        StateStyleTable[(int)EditorElementState.Disabled].normal.background = Resources.Load( "disabled_node" ) as Texture2D;
         StateStyleTable[(int)EditorElementState.Disabled].border = new RectOffset( 12, 12, 12, 12 );
         StateStyleTable[(int)EditorElementState.Disabled].alignment = TextAnchor.MiddleCenter;
     }
