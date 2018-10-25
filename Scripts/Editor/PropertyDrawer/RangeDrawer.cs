@@ -19,6 +19,8 @@ namespace FishingCactus
             SerializedProperty minimum_value_property = property.FindPropertyRelative( "_MinimumValue" );
             SerializedProperty maximum_value_property = property.FindPropertyRelative( "_MaximumValue" );
 
+            EditorGUI.BeginChangeCheck();
+
             local_rectangle.width *= 0.4f;
             EditorGUI.LabelField( local_rectangle, $"{label.text}" );
 
@@ -41,6 +43,36 @@ namespace FishingCactus
             local_rectangle.x += local_rectangle.width;
             local_rectangle.width = position.width * 0.05f;
             EditorGUI.LabelField( local_rectangle, maximum_value_property.propertyType == SerializedPropertyType.Integer ? " [" : " ]" );
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                switch( minimum_value_property.propertyType )
+                {
+                    case SerializedPropertyType.Float:
+                    {
+                        if( minimum_value_property.floatValue > maximum_value_property.floatValue )
+                        {
+                            minimum_value_property.floatValue = maximum_value_property.floatValue - 0.1f;
+                        }
+                    }
+                    break;
+
+                    case SerializedPropertyType.Integer:
+                    {
+                        if (minimum_value_property.intValue > maximum_value_property.intValue )
+                        {
+                            minimum_value_property.intValue = maximum_value_property.intValue - 1;
+                        }
+                    }
+                    break;
+
+                    default:
+                    {
+                        Debug.LogWarning( $"{property.name} : Range parameter type {minimum_value_property.propertyType.ToString()} not supported." );
+                    }
+                    break;
+                }
+            }
         }
     }
 }
