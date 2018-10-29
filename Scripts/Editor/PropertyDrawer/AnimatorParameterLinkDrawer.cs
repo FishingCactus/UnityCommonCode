@@ -43,7 +43,11 @@ namespace FishingCactus
 
         // -- UNITY
 
-        public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
+        public override void OnGUI(
+            Rect position,
+            SerializedProperty property, 
+            GUIContent label
+            )
         {
             Rect local_position = position;
             SerializedProperty controller_link_property = property.FindPropertyRelative( "LinkedAnimatorController" );
