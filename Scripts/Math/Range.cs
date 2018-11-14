@@ -7,8 +7,17 @@ namespace FishingCactus
     {
         // -- PUBLIC
 
-        public T MinimumValue { get; private set; }
-        public T MaximumValue { get; private set; }
+        public T MinimumValue
+        {
+            get { return _MinimumValue; }
+            private set { _MinimumValue = value; }
+        }
+
+        public T MaximumValue
+        {
+            get { return _MaximumValue; }
+            private set { _MaximumValue = value; }
+        }
 
         public abstract T GetRandomValue();
 
