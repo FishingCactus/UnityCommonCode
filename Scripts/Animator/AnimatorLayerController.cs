@@ -5,15 +5,29 @@ public class AnimatorLayerController
 {
     // -- PUBLIC
 
+    public enum State
+    {
+        Disabled = 0,
+        Enabling,
+        Enabled,
+        Disabling
+    }
+
+    public int LayerIndex { get; private set; }
+    public string LayerName { get { return _LayerName; } }
+    
+    public bool CanBeEnabled { get {  return InternalState == State.Disabled || InternalState == State.Disabling; } }
+    public bool CanBeDisabled { get { return InternalState == State.Enabled || InternalState == State.Enabling; } }
+
+    public Coroutine UpdateRoutine;
+
     public void Setup(
         Animator linked_animator
         )
     {
         LinkedAnimator = linked_animator;
 
-        Debug.Assert( !string.IsNullOrEmpty( LayerName), "AnimatorLayerController  : no layer name." );
-
-        LayerIndex = LinkedAnimator.GetLayerIndex( LayerName );
+        LayerIndex = LinkedAnimator.GetLayerIndex( _LayerName );
 
         LayerWeight = 0.0f;
         LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
@@ -37,54 +51,55 @@ public class AnimatorLayerController
         }
     }
 
-    public void Update(
-        float delta_time
-        )
+    public bool UpdateWeight()
     {
+        if( InternalState == State.Disabled
+            || InternalState == State.Enabled
+            )
+        {
+            return true;
+        }
+
+        float frame_speed = EnablingSpeed * Time.deltaTime;
+
         switch( InternalState )
         {
             case State.Enabling:
             {
-                LayerWeight += EnablingSpeed * Time.deltaTime;
+                LayerWeight = Mathf.Min( 1.0f, LayerWeight + frame_speed );
+                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
 
                 if( LayerWeight >= 1.0f )
                 {
-                    LayerWeight = 1.0f;
                     InternalState = State.Enabled;
-                }
 
-                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
+                    return true;
+                }
             }
             break;
 
             case State.Disabling:
             {
-                LayerWeight -= DisablingSpeed * Time.deltaTime;
+                LayerWeight = Mathf.Max( 0.0f, LayerWeight - frame_speed );
+                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
 
                 if( LayerWeight <= 0.0f )
                 {
-                    LayerWeight = 0.0f;
                     InternalState = State.Disabled;
-                }
 
-                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
+                    return true;
+                }
             }
             break;
         }
+
+        return false;
     }
 
     // -- PRIVATE
 
-    private enum State
-    {
-        Disabled = 0,
-        Enabling,
-        Enabled,
-        Disabling
-    }
-
     [SerializeField]
-    private string LayerName;
+    private string _LayerName;
     [SerializeField]
     private float EnablingSpeed = 1.0f;
     [SerializeField]
@@ -92,7 +107,5 @@ public class AnimatorLayerController
 
     private Animator LinkedAnimator;
     private State InternalState;
-    private int LayerIndex;
     private float LayerWeight;
-    private Coroutine UpdateRoutine;
 }
