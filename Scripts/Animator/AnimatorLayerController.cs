@@ -19,8 +19,6 @@ public class AnimatorLayerController
     public bool CanBeEnabled { get {  return InternalState == State.Disabled || InternalState == State.Disabling; } }
     public bool CanBeDisabled { get { return InternalState == State.Enabled || InternalState == State.Enabling; } }
 
-    public Coroutine UpdateRoutine;
-
     public void Setup(
         Animator linked_animator
         )
@@ -51,7 +49,9 @@ public class AnimatorLayerController
         }
     }
 
-    public bool UpdateWeight()
+    public bool UpdateWeight(
+        float delta_time
+        )
     {
         if( InternalState == State.Disabled
             || InternalState == State.Enabled
@@ -60,7 +60,7 @@ public class AnimatorLayerController
             return true;
         }
 
-        float frame_speed = EnablingSpeed * Time.deltaTime;
+        float frame_speed = EnablingSpeed * delta_time;
 
         switch( InternalState )
         {

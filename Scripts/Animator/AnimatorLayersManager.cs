@@ -32,12 +32,18 @@ public class AnimatorLayersManager : MonoBehaviour
         {
             if( layer_controller.LayerIndex == layer_index )
             {
-                if( layer_controller.UpdateRoutine != null )
+                if( it_must_enable_layer 
+                    && layer_controller.CanBeEnabled
+                    )
                 {
-                    StopCoroutine( layer_controller.UpdateRoutine );
+                    layer_controller.Enable();
                 }
-                    
-                layer_controller.UpdateRoutine = StartCoroutine( LayerUpdateRoutine( layer_controller, it_must_enable_layer ) );
+                else if( !it_must_enable_layer
+                    && layer_controller.CanBeDisabled
+                    )
+                {
+                    layer_controller.Disable();
+                }
 
                 return;
             }
@@ -53,36 +59,6 @@ public class AnimatorLayersManager : MonoBehaviour
     [SerializeField]
     private List<AnimatorLayerController> LayerControllerTable = new List<AnimatorLayerController>();
 
-    private IEnumerator LayerUpdateRoutine(
-        AnimatorLayerController layer_to_update,
-        bool it_must_enable_layer
-        )
-    {
-        if( it_must_enable_layer )
-        {
-            if( !layer_to_update.CanBeEnabled )
-            {
-                yield break;
-            }
-
-            layer_to_update.Enable();
-        }
-        else
-        {
-            if( !layer_to_update.CanBeDisabled )
-            {
-                yield break;
-            }
-
-            layer_to_update.Disable();
-        }
-
-        while( !layer_to_update.UpdateWeight() )
-        {
-            yield return null;
-        }        
-    }
-
     // -- UNITY
 
     private void Awake()
@@ -90,6 +66,14 @@ public class AnimatorLayersManager : MonoBehaviour
         foreach( AnimatorLayerController layer_controller in LayerControllerTable )
         {
             layer_controller.Setup( LinkedAnimator );
+        }
+    }
+
+    private void LateUpdate()
+    {
+        foreach( AnimatorLayerController layer_controller in LayerControllerTable )
+        {
+            layer_controller.UpdateWeight( Time.deltaTime );
         }
     }
 }
