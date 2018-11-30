@@ -32,15 +32,11 @@ public class AnimatorLayersManager : MonoBehaviour
         {
             if( layer_controller.LayerIndex == layer_index )
             {
-                if( it_must_enable_layer 
-                    && layer_controller.CanBeEnabled
-                    )
+                if( it_must_enable_layer )
                 {
                     layer_controller.Enable();
                 }
-                else if( !it_must_enable_layer
-                    && layer_controller.CanBeDisabled
-                    )
+                else
                 {
                     layer_controller.Disable();
                 }

@@ -35,7 +35,7 @@ public class AnimatorLayerController
 
     public void Enable()
     {
-        if( InternalState == State.Disabled )
+        if( CanBeEnabled )
         {
             InternalState = State.Enabling;
         }
@@ -43,7 +43,7 @@ public class AnimatorLayerController
 
     public void Disable()
     {
-        if( InternalState == State.Enabled )
+        if( CanBeDisabled )
         {
             InternalState = State.Disabling;
         }
