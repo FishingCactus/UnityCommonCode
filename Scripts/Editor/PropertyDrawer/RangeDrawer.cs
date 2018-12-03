@@ -7,7 +7,19 @@ namespace FishingCactus
     [CustomPropertyDrawer(typeof(FloatRange), true)]
     public class RangeDrawer : PropertyDrawer
     {
+        // -- PRIVATE
+
+        private bool PropertyIsExpanded = false;
+        private float OneLineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
         // -- UNITY
+
+        public override float GetPropertyHeight(
+            SerializedProperty property, GUIContent label
+            )
+        {
+            return PropertyIsExpanded ? 3.0f * OneLineHeight : OneLineHeight;
+        }
 
         public override void OnGUI(
             Rect position, 
@@ -21,28 +33,35 @@ namespace FishingCactus
 
             EditorGUI.BeginChangeCheck();
 
-            local_rectangle.width *= 0.4f;
-            EditorGUI.LabelField( local_rectangle, $"{label.text}" );
+            local_rectangle.height = EditorGUIUtility.singleLineHeight;
 
-            local_rectangle.x += local_rectangle.width;
-            local_rectangle.width = position.width * 0.05f;
-            EditorGUI.LabelField( local_rectangle, "[" );
+            if( maximum_value_property.propertyType == SerializedPropertyType.Integer )
+            {
+                PropertyIsExpanded = EditorGUI.Foldout( 
+                    local_rectangle, 
+                    PropertyIsExpanded,
+                    $"{label.text}   [{minimum_value_property.intValue};{maximum_value_property.intValue}[" 
+                    );
+            }
+            else
+            {
+                PropertyIsExpanded = EditorGUI.Foldout(
+                    local_rectangle,
+                    PropertyIsExpanded,
+                    $"{label.text}   [{minimum_value_property.floatValue};{maximum_value_property.floatValue}]" 
+                    );
+            }
 
-            local_rectangle.x += local_rectangle.width;
-            local_rectangle.width = position.width * 0.20f;
-            EditorGUI.PropertyField( local_rectangle, minimum_value_property, new GUIContent( "" ) );
+            if( PropertyIsExpanded )
+            {
+                local_rectangle = EditorGUI.IndentedRect( local_rectangle );
 
-            local_rectangle.x += local_rectangle.width;
-            local_rectangle.width = position.width * 0.05f;
-            EditorGUI.LabelField( local_rectangle, " ;" );
+                local_rectangle.y += OneLineHeight;
+                EditorGUI.PropertyField( local_rectangle, minimum_value_property );
 
-            local_rectangle.x += local_rectangle.width;
-            local_rectangle.width = position.width * 0.20f;
-            EditorGUI.PropertyField( local_rectangle, maximum_value_property, new GUIContent( "" ) );
-
-            local_rectangle.x += local_rectangle.width;
-            local_rectangle.width = position.width * 0.05f;
-            EditorGUI.LabelField( local_rectangle, maximum_value_property.propertyType == SerializedPropertyType.Integer ? " [" : " ]" );
+                local_rectangle.y += OneLineHeight;
+                EditorGUI.PropertyField( local_rectangle, maximum_value_property );
+            }
 
             if (EditorGUI.EndChangeCheck())
             {
