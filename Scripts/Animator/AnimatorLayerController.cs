@@ -59,14 +59,12 @@ public class AnimatorLayerController
         {
             return true;
         }
-
-        float frame_speed = EnablingSpeed * delta_time;
-
+        
         switch( InternalState )
         {
             case State.Enabling:
             {
-                LayerWeight = Mathf.Min( 1.0f, LayerWeight + frame_speed );
+                LayerWeight = Mathf.Min( 1.0f, LayerWeight + EnablingSpeed * delta_time );
                 LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
 
                 if( LayerWeight >= 1.0f )
@@ -80,7 +78,7 @@ public class AnimatorLayerController
 
             case State.Disabling:
             {
-                LayerWeight = Mathf.Max( 0.0f, LayerWeight - frame_speed );
+                LayerWeight = Mathf.Max( 0.0f, LayerWeight - DisablingSpeed * delta_time );
                 LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
 
                 if( LayerWeight <= 0.0f )
