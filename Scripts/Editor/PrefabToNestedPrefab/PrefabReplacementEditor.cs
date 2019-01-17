@@ -72,31 +72,28 @@ public class PrefabReplacementEditor : EditorWindow
         {
             foreach( var go in ActiveGameObjects )
             {
-                GameObject instanciated_game_object = PrefabUtility.InstantiatePrefab(new_game_object) as GameObject;
-                instanciated_game_object.transform.SetParent(go.transform.parent);
-                instanciated_game_object.transform.position = go.transform.position;
-                instanciated_game_object.transform.localScale = go.transform.localScale;
-                instanciated_game_object.transform.rotation = go.transform.rotation;
-                if( replace )
-                {
-                    DestroyImmediate(go);
-                }
+                SwapPrefabs( go, new_game_object, replace );
             }
         }
         else if( ActiveGameObject != null )
         {
-            GameObject instanciated_game_object = PrefabUtility.InstantiatePrefab(new_game_object) as GameObject;
-            instanciated_game_object.transform.SetParent(ActiveGameObject.transform.parent);
-            instanciated_game_object.transform.position = ActiveGameObject.transform.position;
-            instanciated_game_object.transform.localScale = ActiveGameObject.transform.localScale;
-            instanciated_game_object.transform.rotation = ActiveGameObject.transform.rotation;
-            if( replace )
-            {
-                DestroyImmediate(ActiveGameObject);
-            }
+            SwapPrefabs( ActiveGameObject, new_game_object, replace );
         }
 
         return false;
+    }
+
+    private void SwapPrefabs( GameObject old_prefab, GameObject new_prefab, bool replace )
+    {
+        GameObject instanciated_game_object = PrefabUtility.InstantiatePrefab( new_prefab ) as GameObject;
+        instanciated_game_object.transform.SetParent( old_prefab.transform.parent );
+        instanciated_game_object.transform.position = old_prefab.transform.position;
+        instanciated_game_object.transform.localScale = old_prefab.transform.localScale;
+        instanciated_game_object.transform.rotation = old_prefab.transform.rotation;
+        if ( replace )
+        {
+            DestroyImmediate( old_prefab );
+        }
     }
 
     private void SearchPrefab( string search_input, string search_label )
