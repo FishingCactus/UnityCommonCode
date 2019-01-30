@@ -18,7 +18,7 @@ public class AnimatorLayersManager : MonoBehaviour
             }
         }
 
-        Debug.LogError( $"{LinkedAnimator.name} has no layer called {layer_name}." );
+        Debug.LogError( $"AnimatorLayersManager : {LinkedAnimator.name} has no layer called {layer_name} setup." );
 
         return -1;
     }

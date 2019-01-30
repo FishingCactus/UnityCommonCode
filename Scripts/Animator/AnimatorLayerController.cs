@@ -37,7 +37,16 @@ public class AnimatorLayerController
     {
         if( CanBeEnabled )
         {
-            InternalState = State.Enabling;
+            if( EnablingSpeed == 0.0f )
+            {
+                LayerWeight = 1.0f;
+                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
+                InternalState = State.Enabled;
+            }
+            else
+            {
+                InternalState = State.Enabling;
+            }
         }
     }
 
@@ -45,7 +54,16 @@ public class AnimatorLayerController
     {
         if( CanBeDisabled )
         {
-            InternalState = State.Disabling;
+            if( DisablingSpeed == 0.0f )
+            {
+                LayerWeight = 0.0f;
+                LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
+                InternalState = State.Disabled;
+            }
+            else
+            {
+                InternalState = State.Disabling;
+            }
         }
     }
 
