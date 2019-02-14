@@ -24,5 +24,20 @@ namespace FishingCactus
                 list[index_to_swap] = backup_value;
             }
         }
+
+        public static void MoveDown<T>(
+            this List<T> list,
+            int index
+            )
+        {
+            if( index > 0 
+                && list.Count > 1
+                )
+            {
+                T first_item = list[index - 1];
+                list.RemoveAt( index - 1 );
+                list.Insert( index, first_item );
+            }
+        }
     }
 }
