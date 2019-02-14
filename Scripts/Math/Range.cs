@@ -10,13 +10,13 @@ namespace FishingCactus
         public T MinimumValue
         {
             get { return _MinimumValue; }
-            private set { _MinimumValue = value; }
+            protected set { _MinimumValue = value; }
         }
 
         public T MaximumValue
         {
             get { return _MaximumValue; }
-            private set { _MaximumValue = value; }
+            protected set { _MaximumValue = value; }
         }
 
         public abstract T GetRandomValue();
@@ -34,6 +34,15 @@ namespace FishingCactus
     {
         // -- PUBLIC
 
+        public IntegerRange(
+            int minimum_value,
+            int maximum_value
+            )
+        {
+            MinimumValue = minimum_value;
+            MaximumValue = maximum_value;
+        }
+
         public override int GetRandomValue()
         {
             return Random.Range( MinimumValue, MaximumValue );
@@ -44,6 +53,15 @@ namespace FishingCactus
     public class FloatRange : Range<float>
     {
         // -- PUBLIC
+
+        public FloatRange( 
+            float minimum_value,
+            float maximum_value
+            )
+        {
+            MinimumValue = minimum_value;
+            MaximumValue = maximum_value;
+        }
 
         public override float GetRandomValue()
         {
