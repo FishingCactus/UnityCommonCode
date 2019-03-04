@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-public class EditorTimeScaler : MonoBehaviour
+public class DebugTimeScaler : MonoBehaviour
 {
-#if UNITY_EDITOR
     // -- PUBLIC
 
     [Range(0.01f, 2.0f)]
@@ -24,5 +23,4 @@ public class EditorTimeScaler : MonoBehaviour
         Time.timeScale = TimeScale;
         Time.fixedDeltaTime = InitialFixedDeltaTime * TimeScale;
     }
-#endif
 }

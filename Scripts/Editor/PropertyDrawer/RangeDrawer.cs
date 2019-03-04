@@ -71,8 +71,8 @@ namespace FishingCactus
                     {
                         if( minimum_value_property.floatValue > maximum_value_property.floatValue )
                         {
-                            minimum_value_property.floatValue = maximum_value_property.floatValue - 0.1f;
-                        }
+                            maximum_value_property.floatValue = minimum_value_property.floatValue  + 1.0f;
+                        }                        
                     }
                     break;
 
@@ -80,7 +80,7 @@ namespace FishingCactus
                     {
                         if (minimum_value_property.intValue > maximum_value_property.intValue )
                         {
-                            minimum_value_property.intValue = maximum_value_property.intValue - 1;
+                            maximum_value_property.intValue = minimum_value_property.intValue + 1;
                         }
                     }
                     break;
