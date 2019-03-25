@@ -26,6 +26,7 @@ public class AnimatorLayerController
         LinkedAnimator = linked_animator;
 
         LayerIndex = LinkedAnimator.GetLayerIndex( _LayerName );
+        Debug.Assert( LayerIndex != -1, $"No layer '{_LayerName}' found in '{linked_animator.name}'." );
 
         LayerWeight = 0.0f;
         LinkedAnimator.SetLayerWeight( LayerIndex, LayerWeight );
