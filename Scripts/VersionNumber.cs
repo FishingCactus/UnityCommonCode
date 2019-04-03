@@ -8,7 +8,7 @@ public class VersionNumber : MonoBehaviour
     {
         get
         {
-            if ( Version == null )
+            if ( VersionInformation == null )
             {
                 if( ItMustAddCompanyName )
                 {
