@@ -19,7 +19,7 @@ public class VersionNumber : MonoBehaviour
                     VersionInformation = $"{Application.productName} - {Application.version}";
                 }
             }
-            return Version;
+            return VersionInformation;
         }
     }
 
