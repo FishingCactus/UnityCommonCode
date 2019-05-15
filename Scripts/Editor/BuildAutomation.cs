@@ -195,6 +195,15 @@ public class BuildAutomation : EditorWindow
         Build( "DRMFree_Debug/", BuildType.BaseGame, BuildPlatform.Windows );
     }
 
+    [MenuItem( "FishingCactus/Build/Create Version Folder", false, 100 )]
+    static void CreateBuildVersionFolder()
+    {
+        string folder_path = Path.Combine( Application.dataPath, $"../_Builds/v.{Application.version}" );
+        Directory.CreateDirectory( folder_path );
+
+        Debug.Log( $"Build Folder created : {folder_path}" );
+    }
+
     [MenuItem( "FishingCactus/Defines/DefineRetail" )]
     static void DefineRetail()
     {
