@@ -433,19 +433,25 @@ internal class ArtistsToolsWindow : EditorWindow
             HEU_HoudiniAssetRoot[] roots = FindObjectsOfType<HEU_HoudiniAssetRoot>();
             foreach( HEU_HoudiniAssetRoot root in roots )
             {
-                Scene currentAssetScene = root.gameObject.scene;
+                GameObject rootGameObject = root.gameObject;
+                Scene currentAssetScene = rootGameObject.scene;
+                bool assetIsInSelection = Selection.Contains( rootGameObject );
 
                 int index = 0;
                 while( index < HoudiniHDASaver_Data.Count && HoudiniHDASaver_Data[index].scene != currentAssetScene ) index++;
                 if( index == HoudiniHDASaver_Data.Count )
                 {
-                    HoudiniHDASaver_Data.Add( new HoudiniHdaSaver_DataContainer( currentAssetScene, root ) );
+                    HoudiniHDASaver_Data.Add( new HoudiniHdaSaver_DataContainer( currentAssetScene, root, assetIsInSelection ) );
                 }
                 else
                 {
                     HoudiniHDASaver_Data[index].HoudiniRootAssets.Add( root );
-                    HoudiniHDASaver_Data[index].HoudiniRootAssetsToogle.Add( true );
+                    HoudiniHDASaver_Data[index].HoudiniRootAssetsToogle.Add( assetIsInSelection );
                 }
+            }
+            foreach( HoudiniHdaSaver_DataContainer dataContainer in HoudiniHDASaver_Data)
+            {
+                dataContainer.ToogleScene = dataContainer.HoudiniRootAssetsToogle.Any( x => x );
             }
         };
         Action Rename = () =>
@@ -454,7 +460,7 @@ internal class ArtistsToolsWindow : EditorWindow
             int affectedAssetsCount = 0;
             foreach( HoudiniHdaSaver_DataContainer data in HoudiniHDASaver_Data )
             {
-                if( data.Toogle )
+                if( data.ToogleScene )
                 {
                     consoleLog += data.RenameGameObjects();
                     affectedAssetsCount+=data.HoudiniRootAssets.Count;
@@ -468,7 +474,7 @@ internal class ArtistsToolsWindow : EditorWindow
             int savedAssetsCount = 0;
             foreach( HoudiniHdaSaver_DataContainer data in HoudiniHDASaver_Data )
             {
-                if( data.Toogle )
+                if( data.ToogleScene )
                 {
                     consoleLog += data.SaveHoudiniAssets();
                     savedAssetsCount+=data.HoudiniRootAssets.Count;
@@ -534,17 +540,18 @@ internal class ArtistsToolsWindow : EditorWindow
     }
     private class HoudiniHdaSaver_DataContainer
     {
-        public bool Toogle = false;
+        public bool ToogleScene = false;
+        public bool ToogleAllAsset = false;
         public Scene scene;
         public List<HEU_HoudiniAssetRoot> HoudiniRootAssets = new List<HEU_HoudiniAssetRoot>();
         public List<bool> HoudiniRootAssetsToogle = new List<bool>();
         public string FileSaveNameBase = "";
 
-        public HoudiniHdaSaver_DataContainer( Scene asset_scene, HEU_HoudiniAssetRoot asset )
+        public HoudiniHdaSaver_DataContainer( Scene asset_scene, HEU_HoudiniAssetRoot asset, bool asset_toggle )
         {
             scene = asset_scene;
             HoudiniRootAssets.Add( asset );
-            HoudiniRootAssetsToogle.Add( true );
+            HoudiniRootAssetsToogle.Add( asset_toggle );
             FileSaveNameBase = asset.name;
         }
 
@@ -590,16 +597,21 @@ internal class ArtistsToolsWindow : EditorWindow
         {
             EditorGUILayout.BeginVertical();
             {
-                Toogle = EditorGUILayout.BeginToggleGroup( scene.name, Toogle );
-                if( Toogle )
+                ToogleScene = EditorGUILayout.BeginToggleGroup( scene.name, ToogleScene );
+                if( ToogleScene )
                 {
                     using( new GUILayout.HorizontalScope() )
                     {
                         GUILayout.Space( 30f );
+                        bool toggleJustChange = false;
                         using( new GUILayout.VerticalScope() )
                         {
                             EditorGUILayout.BeginHorizontal( GUILayout.Height( 20f ) );
                             {
+                                EditorGUI.BeginChangeCheck();
+                                ToogleAllAsset = EditorGUILayout.ToggleLeft( "All", ToogleAllAsset );
+                                toggleJustChange = EditorGUI.EndChangeCheck();
+
                                 GUILayout.Space( 50f );
                                 if( GUILayout.Button( "Save", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 50 ) } ) )
                                 {
@@ -618,7 +630,7 @@ internal class ArtistsToolsWindow : EditorWindow
 
                             for( int i = 0; i < HoudiniRootAssets.Count; i++ )
                             {
-                                HoudiniRootAssetsToogle[i] = EditorGUILayout.ToggleLeft( HoudiniRootAssets[i].name, HoudiniRootAssetsToogle[i] );
+                                HoudiniRootAssetsToogle[i] = EditorGUILayout.ToggleLeft( HoudiniRootAssets[i].name, toggleJustChange ? ToogleAllAsset : HoudiniRootAssetsToogle[i] );
                             }
                         }
                     }
