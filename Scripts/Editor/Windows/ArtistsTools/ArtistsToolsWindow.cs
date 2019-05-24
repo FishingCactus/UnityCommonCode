@@ -1,4 +1,17 @@
-﻿using System.Collections.Generic;
+﻿//Uncomment the #define line to enable to code using Houdini
+//It prevents errors when importing the script in projects were Houdini is not installed
+#define USING_HOUDINI
+
+#if USING_HOUDINI
+using System;
+using UnityEngine.SceneManagement;
+using System.IO;
+using HoudiniEngineUnity;
+#endif
+using Random = UnityEngine.Random;
+using Object = UnityEngine.Object;
+
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -165,7 +178,9 @@ internal class ArtistsToolsWindow : EditorWindow
     void OnGUI()
     {
         ScrollPosition = EditorGUILayout.BeginScrollView( ScrollPosition );
-
+#if USING_HOUDINI
+        HoudiniHdaSaver_Draw();
+#endif
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
         ItMustKeepObjectProperties = EditorGUILayout.Toggle( "Keep object properties", ItMustKeepObjectProperties );
@@ -173,7 +188,7 @@ internal class ArtistsToolsWindow : EditorWindow
         ItMustMergeComponents = EditorGUILayout.Toggle( "Merge components", ItMustMergeComponents );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
-        if( GUILayout.Button( "Replace selection" ) && ( ReplacerObject != null ) )
+        if( GUILayout.Button( "Replace selection" ) && (ReplacerObject != null) )
         {
             GameObject[] selected_object_array = Selection.gameObjects;
             GameObject[] new_object_array = new GameObject[selected_object_array.Length];
@@ -190,9 +205,9 @@ internal class ArtistsToolsWindow : EditorWindow
 
                 instanciated_object.transform.localPosition = old_object.transform.localPosition;
 
-                if ( ItMustKeepObjectProperties )
+                if( ItMustKeepObjectProperties )
                 {
-                    instanciated_object.SetActive(old_object.activeSelf);
+                    instanciated_object.SetActive( old_object.activeSelf );
                     instanciated_object.isStatic = old_object.isStatic;
                     instanciated_object.tag = old_object.tag;
                     instanciated_object.layer = old_object.layer;
@@ -204,11 +219,11 @@ internal class ArtistsToolsWindow : EditorWindow
                     instanciated_object.transform.localScale = old_object.transform.localScale;
                 }
 
-                if ( ItMustMergeComponents )
+                if( ItMustMergeComponents )
                 {
                     foreach( var component in old_object.GetComponents<Component>() )
                     {
-                        if ( !instanciated_object.GetComponent( component.GetType() ) )
+                        if( !instanciated_object.GetComponent( component.GetType() ) )
                         {
                             var new_component = instanciated_object.AddComponent( component.GetType() );
                             EditorUtility.CopySerialized( component, new_component );
@@ -219,7 +234,7 @@ internal class ArtistsToolsWindow : EditorWindow
                 new_object_array[object_index] = instanciated_object;
 
                 Undo.DestroyObjectImmediate( old_object );
-                Undo.RegisterCreatedObjectUndo( instanciated_object, "Replaced object");
+                Undo.RegisterCreatedObjectUndo( instanciated_object, "Replaced object" );
             }
 
             Selection.objects = new_object_array;
@@ -407,4 +422,229 @@ internal class ArtistsToolsWindow : EditorWindow
 
         EditorGUILayout.EndScrollView();
     }
+
+#if USING_HOUDINI
+    #region HoudiniHDASaver
+    private void HoudiniHdaSaver_Draw()
+    {
+        Action RefreshLists = () =>
+        {
+            HoudiniHDASaver_Data.Clear();
+            HEU_HoudiniAssetRoot[] roots = FindObjectsOfType<HEU_HoudiniAssetRoot>();
+            foreach( HEU_HoudiniAssetRoot root in roots )
+            {
+                Scene currentAssetScene = root.gameObject.scene;
+
+                int index = 0;
+                while( index < HoudiniHDASaver_Data.Count && HoudiniHDASaver_Data[index].scene != currentAssetScene ) index++;
+                if( index == HoudiniHDASaver_Data.Count )
+                {
+                    HoudiniHDASaver_Data.Add( new HoudiniHdaSaver_DataContainer( currentAssetScene, root ) );
+                }
+                else
+                {
+                    HoudiniHDASaver_Data[index].HoudiniRootAssets.Add( root );
+                    HoudiniHDASaver_Data[index].HoudiniRootAssetsToogle.Add( true );
+                }
+            }
+        };
+        Action Rename = () =>
+        {
+            string consoleLog = string.Empty;
+            int affectedAssetsCount = 0;
+            foreach( HoudiniHdaSaver_DataContainer data in HoudiniHDASaver_Data )
+            {
+                if( data.Toogle )
+                {
+                    consoleLog += data.RenameGameObjects();
+                    affectedAssetsCount+=data.HoudiniRootAssets.Count;
+                }
+            }
+            Debug.Log( $"Rename Houdini Assets : ({affectedAssetsCount} assets renamed) {Environment.NewLine}{consoleLog}" );
+        };
+        Action SaveAll = () =>
+        {
+            string consoleLog = string.Empty;
+            int savedAssetsCount = 0;
+            foreach( HoudiniHdaSaver_DataContainer data in HoudiniHDASaver_Data )
+            {
+                if( data.Toogle )
+                {
+                    consoleLog += data.SaveHoudiniAssets();
+                    savedAssetsCount+=data.HoudiniRootAssets.Count;
+                }
+            }
+            Debug.Log( $"Save All Houdini Assets : ({savedAssetsCount} saved) {Environment.NewLine}{consoleLog}" );
+        };
+
+        GUILayout.Space( 10f );
+        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
+
+        EditorGUILayout.BeginVertical();
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                GUILayout.FlexibleSpace();
+                HoudiniHdaSaver_WindowToogle = GUILayout.Toggle( HoudiniHdaSaver_WindowToogle, "= Houdini Save HDA Helper =", EditorStyles.boldLabel, GUILayout.ExpandWidth( true ) );
+                GUILayout.FlexibleSpace();
+            }
+            EditorGUILayout.EndHorizontal();
+
+            if( HoudiniHdaSaver_WindowToogle )
+            {
+                EditorGUILayout.BeginHorizontal();
+                {
+                    if( GUILayout.Button( "Refresh from opened scenes" ) || !HoudiniHdaSaver_IsInit )
+                    {
+                        RefreshLists.Invoke();
+                        HoudiniHdaSaver_IsInit = true;
+                    }
+                    if( GUILayout.Button( "Rename All" ) )
+                    {
+                        Rename.Invoke();
+                    }
+                    if( GUILayout.Button( "Save All" ) )
+                    {
+                        SaveAll.Invoke();
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label( "Save Folder Path :", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 120 ) } );
+                    HoudiniHdaSaver_FolderPath = GUILayout.TextField( HoudiniHdaSaver_FolderPath );
+                    if( GUILayout.Button( "...", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 30 ) } ) )
+                    {
+                        HoudiniHdaSaver_FolderPath = EditorUtility.OpenFolderPanel( "Select Houdini HDA save folder...", HoudiniHdaSaver_FolderPath, "" );
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+
+                foreach( HoudiniHdaSaver_DataContainer data in HoudiniHDASaver_Data )
+                {
+                    data.DrawGui();
+                }
+            }
+        }
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
+        GUILayout.Space( 10f );
+    }
+    private class HoudiniHdaSaver_DataContainer
+    {
+        public bool Toogle = false;
+        public Scene scene;
+        public List<HEU_HoudiniAssetRoot> HoudiniRootAssets = new List<HEU_HoudiniAssetRoot>();
+        public List<bool> HoudiniRootAssetsToogle = new List<bool>();
+        public string FileSaveNameBase = "";
+
+        public HoudiniHdaSaver_DataContainer( Scene asset_scene, HEU_HoudiniAssetRoot asset )
+        {
+            scene = asset_scene;
+            HoudiniRootAssets.Add( asset );
+            HoudiniRootAssetsToogle.Add( true );
+            FileSaveNameBase = asset.name;
+        }
+
+        public string RenameGameObjects()
+        {
+            string consoleLog = "";
+            for( int i = 0; i < HoudiniRootAssets.Count; i++ )
+            {
+                if( HoudiniRootAssetsToogle[i] )
+                {
+                    consoleLog += HoudiniRootAssets[i].gameObject.name + "=>";
+                    HoudiniRootAssets[i].gameObject.name = FileSaveNameBase + (i + 1);
+                    consoleLog += HoudiniRootAssets[i].gameObject.name + Environment.NewLine;
+                }
+            }
+            return consoleLog;
+        }
+
+        public string SaveHoudiniAssets()
+        {
+            string consoleLog = "";
+            if( !string.IsNullOrEmpty( HoudiniHdaSaver_FolderPath ) )
+            {
+                string folderPath = Path.Combine( HoudiniHdaSaver_FolderPath, scene.name );
+                if( !Directory.Exists( folderPath ) )
+                {
+                    Directory.CreateDirectory( folderPath );
+                }
+                for( int i = 0; i < HoudiniRootAssets.Count; i++ )
+                {
+                    if( HoudiniRootAssetsToogle[i] )
+                    {
+                        string path = Path.Combine( folderPath, HoudiniRootAssets[i].gameObject.name + ".preset" );
+                        consoleLog += path + Environment.NewLine;
+                        HEU_AssetPresetUtility.SaveAssetPresetToFile( HoudiniRootAssets[i]._houdiniAsset, path );
+                    }
+                }
+            }
+            return consoleLog;
+        }
+
+        public void DrawGui()
+        {
+            EditorGUILayout.BeginVertical();
+            {
+                Toogle = EditorGUILayout.BeginToggleGroup( scene.name, Toogle );
+                if( Toogle )
+                {
+                    using( new GUILayout.HorizontalScope() )
+                    {
+                        GUILayout.Space( 30f );
+                        using( new GUILayout.VerticalScope() )
+                        {
+                            EditorGUILayout.BeginHorizontal( GUILayout.Height( 20f ) );
+                            {
+                                GUILayout.Space( 50f );
+                                if( GUILayout.Button( "Save", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 50 ) } ) )
+                                {
+                                    string consoleLog = SaveHoudiniAssets();
+                                    Debug.Log( $"Save Houdini Assets for scene [{scene.name}]: ({HoudiniRootAssets.Count} assets renamed) {Environment.NewLine}{consoleLog}" );
+
+                                }
+                                if( GUILayout.Button( "Rename", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 70 ) } ) )
+                                {
+                                    string consoleLog = RenameGameObjects();
+                                    Debug.Log( $"Rename Houdini Assets for scene [{scene.name}]: ({HoudiniRootAssets.Count} assets renamed) {Environment.NewLine}{consoleLog}" );
+                                }
+                                FileSaveNameBase = GUILayout.TextField( FileSaveNameBase, new GUILayoutOption[] { GUILayout.ExpandWidth( true ), GUILayout.MinWidth( 140 ) } );
+                            }
+                            EditorGUILayout.EndHorizontal();
+
+                            for( int i = 0; i < HoudiniRootAssets.Count; i++ )
+                            {
+                                HoudiniRootAssetsToogle[i] = EditorGUILayout.ToggleLeft( HoudiniRootAssets[i].name, HoudiniRootAssetsToogle[i] );
+                            }
+                        }
+                    }
+                }
+                EditorGUILayout.EndToggleGroup();
+            }
+            EditorGUILayout.EndVertical();
+        }
+        private Texture2D MakeTex( int width, int height, Color col )
+        {
+            Color[] pix = new Color[width * height];
+
+            for( int i = 0; i < pix.Length; i++ )
+                pix[i] = col;
+
+            Texture2D result = new Texture2D( width, height );
+            result.SetPixels( pix );
+            result.Apply();
+
+            return result;
+        }
+    }
+    private static List<HoudiniHdaSaver_DataContainer> HoudiniHDASaver_Data = new List<HoudiniHdaSaver_DataContainer>();
+    private static bool HoudiniHdaSaver_IsInit = false;
+    private static bool HoudiniHdaSaver_WindowToogle = false;
+    private static string HoudiniHdaSaver_FolderPath = "";
+    #endregion
+#endif
 }
