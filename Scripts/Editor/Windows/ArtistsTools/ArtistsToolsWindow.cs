@@ -590,7 +590,7 @@ internal class ArtistsToolsWindow : EditorWindow
                 {
                     affectedRow++;
                     log += HoudiniRootAssets[i].gameObject.name + "=>";
-                    HoudiniRootAssets[i].gameObject.name = FileSaveNameBase + (affectedRow);
+                    HoudiniRootAssets[i].gameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
                     log += HoudiniRootAssets[i].gameObject.name + Environment.NewLine;
                 }
             }
