@@ -459,8 +459,9 @@ internal class ArtistsToolsWindow : EditorWindow
             {
                 if( data.ToogleScene )
                 {
-                    consoleLog += data.RenameGameObjects();
-                    affectedAssetsCount+=data.HoudiniRootAssets.Count;
+                    string log = string.Empty;
+                    affectedAssetsCount += data.RenameGameObjects( out log );
+                    consoleLog += log;
                 }
             }
             Debug.Log( $"Houdini HDA Save Helper : Rename All ({affectedAssetsCount} assets renamed) {Environment.NewLine}{consoleLog}" );
@@ -473,8 +474,9 @@ internal class ArtistsToolsWindow : EditorWindow
             {
                 if( data.ToogleScene )
                 {
-                    consoleLog += data.SaveHoudiniAssets();
-                    savedAssetsCount+=data.HoudiniRootAssets.Count;
+                    string log = string.Empty;
+                    savedAssetsCount += data.SaveHoudiniAssets( out log );
+                    consoleLog += log;
                 }
             }
             Debug.Log( $"Houdini HDA Save Helper : Save All ({savedAssetsCount} assets saved) {Environment.NewLine}{consoleLog}" );
@@ -578,24 +580,28 @@ internal class ArtistsToolsWindow : EditorWindow
             FileSaveNameBase = asset.name;
         }
 
-        public string RenameGameObjects()
+        public int RenameGameObjects(out string consoleLog)
         {
-            string consoleLog = "";
+            string log = string.Empty;
+            int affectedRow = 0;
             for( int i = 0; i < HoudiniRootAssets.Count; i++ )
             {
                 if( HoudiniRootAssetsToogle[i] )
                 {
-                    consoleLog += HoudiniRootAssets[i].gameObject.name + "=>";
-                    HoudiniRootAssets[i].gameObject.name = FileSaveNameBase + (i + 1);
-                    consoleLog += HoudiniRootAssets[i].gameObject.name + Environment.NewLine;
+                    affectedRow++;
+                    log += HoudiniRootAssets[i].gameObject.name + "=>";
+                    HoudiniRootAssets[i].gameObject.name = FileSaveNameBase + (affectedRow);
+                    log += HoudiniRootAssets[i].gameObject.name + Environment.NewLine;
                 }
             }
-            return consoleLog;
+            consoleLog = log;
+            return affectedRow;
         }
 
-        public string SaveHoudiniAssets()
+        public int SaveHoudiniAssets( out string consoleLog )
         {
-            string consoleLog = "";
+            string log = "";
+            int affectedRow = 0;
             if( !string.IsNullOrEmpty( HoudiniHdaSaver_FolderPath ) )
             {
                 string folderPath = Path.Combine( HoudiniHdaSaver_FolderPath, scene.name );
@@ -607,13 +613,15 @@ internal class ArtistsToolsWindow : EditorWindow
                 {
                     if( HoudiniRootAssetsToogle[i] )
                     {
+                        affectedRow++;
                         string path = Path.Combine( folderPath, HoudiniRootAssets[i].gameObject.name + ".preset" );
-                        consoleLog += path + Environment.NewLine;
+                        log += path + Environment.NewLine;
                         HEU_AssetPresetUtility.SaveAssetPresetToFile( HoudiniRootAssets[i]._houdiniAsset, path );
                     }
                 }
             }
-            return consoleLog;
+            consoleLog = log;
+            return affectedRow;
         }
 
         public void DrawGui()
@@ -638,13 +646,15 @@ internal class ArtistsToolsWindow : EditorWindow
                                 GUILayout.Space( 50f );
                                 if( GUILayout.Button( "Save", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 50 ) } ) )
                                 {
-                                    string consoleLog = SaveHoudiniAssets();
-                                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({HoudiniRootAssets.Count} assets saved) {Environment.NewLine}{consoleLog}" );
+                                    string consoleLog = string.Empty;
+                                    int affectedRecords = SaveHoudiniAssets( out consoleLog );
+                                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({affectedRecords} assets saved) {Environment.NewLine}{consoleLog}" );
                                 }
                                 if( GUILayout.Button( "Rename", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 70 ) } ) )
                                 {
-                                    string consoleLog = RenameGameObjects();
-                                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({HoudiniRootAssets.Count} assets renamed) {Environment.NewLine}{consoleLog}" );
+                                    string consoleLog = string.Empty;
+                                    int affectedRecords = RenameGameObjects(out consoleLog );
+                                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({affectedRecords} assets renamed) {Environment.NewLine}{consoleLog}" );
                                 }
                                 FileSaveNameBase = GUILayout.TextField( FileSaveNameBase, new GUILayoutOption[] { GUILayout.ExpandWidth( true ), GUILayout.MinWidth( 140 ) } );
                             }
