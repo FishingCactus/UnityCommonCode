@@ -1,18 +1,22 @@
 ﻿#if USING_HOUDINI
 using HoudiniEngineUnity;
-#endif
+
 using UnityEngine.SceneManagement;
 using System.IO;
 using System;
-using UnityEditor;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+#endif
+using UnityEditor;
+using UnityEngine;
 
 namespace FishingCactus
 {
     public class HoudiniHdaSaver : EditorWindow
     {
+        private static readonly string HoudiniHdaSaverHelperVersion = "28/05/2019";
+        private static bool IsWindowToogle = false;
+
         public static void Draw()
         {
             EditorGUILayout.BeginVertical();
@@ -29,7 +33,6 @@ namespace FishingCactus
             EditorGUILayout.EndVertical();
         }
 
-#if USING_HOUDINI
         private static void DrawHeader()
         {
             EditorGUILayout.BeginHorizontal();
@@ -64,9 +67,13 @@ namespace FishingCactus
             EditorGUILayout.EndHorizontal();
         }
 
+#if USING_HOUDINI
         private static void DrawToolActions()
         {
-            EditorGUILayout.HelpBox( $"The save functionnality is disabled if the save folder path is empty !{Environment.NewLine}The \"Refresh List\r button will tick automatically selected Houdini Root Object in the project hierarchy.", MessageType.Info );
+            EditorGUILayout.HelpBox( 
+                $"The save functionnality is disabled if the save folder path is empty !{Environment.NewLine}" +
+                $"The \"Refresh List\" button will tick automatically selected Houdini Root Object in the project hierarchy.{Environment.NewLine}" +
+                $"The \"Bake\" buttons will save, bake and delete the asset root in scene.", MessageType.Info );
 
             EditorGUILayout.BeginHorizontal();
             {
@@ -82,6 +89,10 @@ namespace FishingCactus
                 if( GUILayout.Button( "Save All" ) )
                 {
                     SaveAll();
+                }
+                if( GUILayout.Button( "Bake All" ) )
+                {
+
                 }
             }
             EditorGUILayout.EndHorizontal();
@@ -123,22 +134,6 @@ namespace FishingCactus
             }
         }
 
-        private static void RenameAll()
-        {
-            string consoleLog = string.Empty;
-            int affectedAssetsCount = 0;
-            foreach( SceneHoudiniRoot data in HoudiniHDASaver_Data )
-            {
-                if( data.ToogleScene )
-                {
-                    string log = string.Empty;
-                    affectedAssetsCount += data.RenameGameObjects( out log );
-                    consoleLog += log;
-                }
-            }
-            Debug.Log( $"Houdini HDA Save Helper : Rename All ({affectedAssetsCount} assets renamed) {Environment.NewLine}{consoleLog}" );
-        }
-
         private static void RefreshLists()
         {
             HoudiniHDASaver_Data.Clear();
@@ -165,6 +160,22 @@ namespace FishingCactus
             {
                 dataContainer.ToogleScene = dataContainer.HoudiniRootAssetsToogle.Any( x => x );
             }
+        }
+
+        private static void RenameAll()
+        {
+            string consoleLog = string.Empty;
+            int affectedAssetsCount = 0;
+            foreach( SceneHoudiniRoot data in HoudiniHDASaver_Data )
+            {
+                if( data.ToogleScene )
+                {
+                    string log = string.Empty;
+                    affectedAssetsCount += data.RenameGameObjects( out log );
+                    consoleLog += log;
+                }
+            }
+            Debug.Log( $"Houdini HDA Save Helper : Rename All ({affectedAssetsCount} assets renamed) {Environment.NewLine}{consoleLog}" );
         }
 
         private static void SaveAll()
@@ -219,8 +230,6 @@ namespace FishingCactus
             return path;
         }
 
-        private static readonly string HoudiniHdaSaverHelperVersion = "28/05/2019";
-        private static bool IsWindowToogle = false;
         private static bool IsFolderPathValidFlag = true;
         private static bool IsWindowInit = false;
         private static string StaticFolderPath = string.Empty;
