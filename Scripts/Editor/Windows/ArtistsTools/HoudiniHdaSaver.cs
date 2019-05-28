@@ -193,9 +193,7 @@ namespace FishingCactus
 
         private static string CreateFullPath( string folder_path, string file_name, string file_extension = ".preset" )
         {
-            string path = $"{folder_path}{Path.DirectorySeparatorChar}{file_name}.preset";
-            Debug.Log( $"CreateFullPath : {path}" );
-            return path;
+            return $"{folder_path}{Path.DirectorySeparatorChar}{file_name}.preset"; ;
         }
         private static string CheckFolderPathValidity( string folder_path, string scene_path, bool allow_create = true )
         {
@@ -218,7 +216,6 @@ namespace FishingCactus
                     path = null;
                 }
             }
-            Debug.Log( $"CheckFolderPathValidity : {path}" );
             return path;
         }
 
