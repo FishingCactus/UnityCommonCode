@@ -92,7 +92,7 @@ namespace FishingCactus
                 }
                 if( GUILayout.Button( "Bake All" ) )
                 {
-                    BakeAll();
+
                 }
             }
             EditorGUILayout.EndHorizontal();
