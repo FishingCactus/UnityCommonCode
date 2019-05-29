@@ -286,9 +286,10 @@ namespace FishingCactus
                     {
                         HEU_HoudiniAssetRoot asset = AssetToggleCollection[i].RootAsset;
                         affectedRow++;
-                        log += asset.gameObject.name + " => ";
-                        asset.gameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
-                        log += asset.gameObject.name + Environment.NewLine;
+                        GameObject assetGameObject = asset.gameObject;
+                        log += assetGameObject.name + " => ";
+                        assetGameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
+                        log += assetGameObject.name + Environment.NewLine;
                     }
                 }
                 console_log = log;
@@ -314,10 +315,10 @@ namespace FishingCactus
                         {
                             if( AssetToggleCollection[index].IsToggle )
                             {
-                                HEU_HoudiniAsset asset = AssetToggleCollection[index].RootAsset._houdiniAsset;
-                                string fullpath = CreateFullPath( folderPath, asset.gameObject.name );
-                                HEU_AssetPresetUtility.SaveAssetPresetToFile( asset, fullpath );
-                                log += folderPath + Environment.NewLine;
+                                HEU_HoudiniAssetRoot assetRoot = AssetToggleCollection[index].RootAsset;
+                                string fullpath = CreateFullPath( folderPath, assetRoot.gameObject.name );
+                                HEU_AssetPresetUtility.SaveAssetPresetToFile( assetRoot._houdiniAsset, fullpath );
+                                log += fullpath + Environment.NewLine;
                                 affectedRow++;
                             }
                         }
