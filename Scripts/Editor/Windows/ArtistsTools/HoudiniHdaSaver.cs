@@ -70,7 +70,7 @@ namespace FishingCactus
 #if USING_HOUDINI
         private static void DrawToolActions()
         {
-            EditorGUILayout.HelpBox( 
+            EditorGUILayout.HelpBox(
                 $"Buttons will act only for thicked assets{Environment.NewLine}" +
                 $"The save functionnality won't do anything if the save folder path is empty !{Environment.NewLine}" +
                 $"The \"Refresh List\" button will tick automatically selected Houdini Root Object in the project hierarchy.{Environment.NewLine}" +
@@ -139,9 +139,9 @@ namespace FishingCactus
 
         private static void DrawDataListContent()
         {
-            foreach( SceneHoudiniRoot data in HoudiniHDASaver_Data )
+            for( int index = HoudiniHDASaver_Data.Count - 1; index >= 0; index-- )
             {
-                data.DrawGui();
+                HoudiniHDASaver_Data[index].DrawGui();
             }
         }
 
@@ -163,7 +163,7 @@ namespace FishingCactus
                 }
                 else
                 {
-                    HoudiniHDASaver_Data[index].AddToSceneRootAssetCollection( root , assetIsInSelection );
+                    HoudiniHDASaver_Data[index].AddToSceneRootAssetCollection( root, assetIsInSelection );
                 }
             }
         }
@@ -227,6 +227,10 @@ namespace FishingCactus
                         bakedAssetsCount += result;
                         consoleLog += log;
                     }
+                    if( data.IsSceneEmpty() )
+                    {
+                        HoudiniHDASaver_Data.Remove( data );
+                    }
                 }
             }
             Debug.Log( $"Houdini HDA Save Helper : Ball All ({bakedAssetsCount} assets baked) {Environment.NewLine}{consoleLog}" );
@@ -256,10 +260,9 @@ namespace FishingCactus
                 FileSaveNameBase = asset.name;
             }
 
-            public void ClearSceneRootAssetsCollection()
+            public bool IsSceneEmpty()
             {
-                ToogleScene = false;
-                AssetToggleCollection.Clear();
+                return AssetToggleCollection.Count == 0;
             }
 
             public void AddToSceneRootAssetCollection( HEU_HoudiniAssetRoot asset, bool is_toggle )
@@ -283,7 +286,7 @@ namespace FishingCactus
                     {
                         HEU_HoudiniAssetRoot asset = AssetToggleCollection[i].RootAsset;
                         affectedRow++;
-                        log += asset.gameObject.name + "=>";
+                        log += asset.gameObject.name + " => ";
                         asset.gameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
                         log += asset.gameObject.name + Environment.NewLine;
                     }
@@ -352,6 +355,10 @@ namespace FishingCactus
                         }
                     }
                     DeleteTaggedAssetsGamesObject();
+                    if( IsSceneEmpty() )
+                    {
+                        HoudiniHDASaver_Data.Remove( this );
+                    }
                     EditorSceneManager.SaveScene( scene );
                 }
                 else
@@ -396,7 +403,7 @@ namespace FishingCactus
                 int siblingIndex = assetRoot.transform.GetSiblingIndex();
                 asset._bakedEvent.AddListener( ( instance, success, outputList ) =>
                 {
-                    if(success)
+                    if( success )
                     {
                         outputList[0].name = $"{assetGameObject.name}_baked";
                         outputList[0].transform.SetSiblingIndex( siblingIndex );
@@ -409,7 +416,7 @@ namespace FishingCactus
 
             private void DeleteTaggedAssetsGamesObject()
             {
-                for( int index = AssetToggleCollection.Count-1; index > 0; index-- )
+                for( int index = AssetToggleCollection.Count - 1; index >= 0; index-- )
                 {
                     if( AssetToggleCollection[index].ToDeleteFlag )
                     {
@@ -458,8 +465,8 @@ namespace FishingCactus
                 else
                 {
                     Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({methodReturn} assets baked) {Environment.NewLine}{consoleLog}" );
+                    IsSceneEmpty();
                 }
-                
             }
 
             private string CreateFullPath( string folder_path, string file_name, string file_extension = "preset" )
@@ -555,7 +562,7 @@ namespace FishingCactus
                 public bool IsToggle;
                 public bool ToDeleteFlag;
 
-                public RootAssetToggle( HEU_HoudiniAssetRoot asset, bool is_toggle)
+                public RootAssetToggle( HEU_HoudiniAssetRoot asset, bool is_toggle )
                 {
                     RootAsset = asset;
                     IsToggle = is_toggle;
