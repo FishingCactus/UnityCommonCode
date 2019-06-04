@@ -360,7 +360,6 @@ namespace FishingCactus
                     {
                         HoudiniHDASaver_Data.Remove( this );
                     }
-                    EditorSceneManager.SaveScene( scene );
                 }
                 else
                 {
