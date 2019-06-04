@@ -14,7 +14,7 @@ namespace FishingCactus
 {
     public class HoudiniHdaSaver : EditorWindow
     {
-        private static readonly string HoudiniHdaSaverHelperVersion = "29/05/2019";
+        private static readonly string HoudiniHdaSaverHelperVersion = "31/05/2019";
         private static bool IsWindowToogle = false;
 
         public static void Draw()
@@ -280,16 +280,41 @@ namespace FishingCactus
             {
                 string log = string.Empty;
                 int affectedRow = 0;
-                for( int i = 0; i < AssetToggleCollection.Count; i++ )
+                for( int level0Index = 0; level0Index < AssetToggleCollection.Count; level0Index++ )
                 {
-                    if( AssetToggleCollection[i].IsToggle )
+                    if( AssetToggleCollection[level0Index].IsToggle )
                     {
-                        HEU_HoudiniAssetRoot asset = AssetToggleCollection[i].RootAsset;
+                        //rename root (level 0)
+                        HEU_HoudiniAssetRoot asset = AssetToggleCollection[level0Index].RootAsset;
                         affectedRow++;
-                        GameObject assetGameObject = asset.gameObject;
-                        log += assetGameObject.name + " => ";
-                        assetGameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
-                        log += assetGameObject.name + Environment.NewLine;
+                        GameObject level0GameObject = asset.gameObject;
+                        log += level0GameObject.name + " => ";
+                        level0GameObject.name = FileSaveNameBase + (affectedRow.ToString( "D2" ));
+                        log += level0GameObject.name + Environment.NewLine;
+
+                        //rename level 1
+                        Transform level0Transform = level0GameObject.transform;
+                        for( int level1Index = 0; level1Index < level0Transform.childCount; level1Index++ )
+                        {
+                            GameObject level1GameObject = level0Transform.GetChild( level1Index ).gameObject;
+                            if( level1GameObject .GetComponent<HEU_HoudiniAsset>() == null) // ignore HDA_Data
+                            {
+                                log += level1GameObject.name + " => ";
+                                level1GameObject.name = $"{level0GameObject.name}_{(level1Index + 1).ToString( "D2" )}";
+                                log += level1GameObject.name + Environment.NewLine;
+
+                                //rename level 2
+                                Transform level1Transform = level1GameObject.transform;
+                                for( int level2Index = 0; level2Index < level1Transform.childCount; level2Index++ )
+                                {
+                                    GameObject level2GameObject = level1Transform.GetChild( level2Index ).gameObject;
+                                    log += level2GameObject.name + " => ";
+                                    level2GameObject.name = $"{level1GameObject.name}_instance{(level2Index + 1).ToString( "D2" )}";
+                                    log += level2GameObject.name + Environment.NewLine;
+                                }
+                            }
+                        }
+                        log += Environment.NewLine;
                     }
                 }
                 console_log = log;
