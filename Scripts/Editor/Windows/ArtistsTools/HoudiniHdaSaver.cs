@@ -1,8 +1,7 @@
-﻿#if USING_HOUDINI
+﻿#if FC_USING_HOUDINI
 using HoudiniEngineUnity;
 
 using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
 using System.IO;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,8 @@ namespace FishingCactus
 {
     public class HoudiniHdaSaver : EditorWindow
     {
-        private static readonly string HoudiniHdaSaverHelperVersion = "31/05/2019";
+        private static readonly string HoudiniHdaSaverHelperVersion = "06/06/2019";
+        private const string HoudiniDefineTag = "FC_USING_HOUDINI";
         private static bool IsWindowToogle = false;
 
         public static void Draw()
@@ -22,7 +22,7 @@ namespace FishingCactus
             EditorGUILayout.BeginVertical();
             {
                 DrawHeader();
-#if USING_HOUDINI
+#if FC_USING_HOUDINI
                 if( IsWindowToogle )
                 {
                     DrawToolActions();
@@ -46,28 +46,28 @@ namespace FishingCactus
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
 
-#if USING_HOUDINI
+#if FC_USING_HOUDINI
             bool use_houdini_define = true;
 #else
             bool use_houdini_define = false;
 #endif
-            GUILayout.Label( $"USING_HOUDINI is { (use_houdini_define ? "" : "not ") }defined in player settings." );
-            GUI.enabled = !EditorUtils.IsDefined( "USING_HOUDINI", BuildTargetGroup.Standalone );
+            GUILayout.Label( $"{HoudiniDefineTag} is { (use_houdini_define ? "" : "not ") }defined in player settings." );
+            GUI.enabled = !EditorUtils.IsDefined( HoudiniDefineTag, BuildTargetGroup.Standalone );
             if( GUILayout.Button( "Add" ) )
             {
-                EditorUtils.AddDefineIfNecessary( "USING_HOUDINI", BuildTargetGroup.Standalone );
+                EditorUtils.AddDefineIfNecessary( HoudiniDefineTag, BuildTargetGroup.Standalone );
             }
             GUI.enabled = !GUI.enabled;
             if( GUILayout.Button( "Remove" ) )
             {
-                EditorUtils.RemoveDefineIfNecessary( "USING_HOUDINI", BuildTargetGroup.Standalone );
+                EditorUtils.RemoveDefineIfNecessary( HoudiniDefineTag, BuildTargetGroup.Standalone );
             }
             GUI.enabled = true;
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
         }
 
-#if USING_HOUDINI
+#if FC_USING_HOUDINI
         private static void DrawToolActions()
         {
             EditorGUILayout.HelpBox(
@@ -156,7 +156,7 @@ namespace FishingCactus
                 bool assetIsInSelection = Selection.Contains( rootGameObject );
 
                 int index = 0;
-                while( index < HoudiniHDASaver_Data.Count && HoudiniHDASaver_Data[index].scene != currentAssetScene ) index++;
+                while( index < HoudiniHDASaver_Data.Count && HoudiniHDASaver_Data[index].Scene != currentAssetScene ) index++;
                 if( index == HoudiniHDASaver_Data.Count )
                 {
                     HoudiniHDASaver_Data.Add( new SceneHoudiniRoot( currentAssetScene, root, assetIsInSelection ) );
@@ -250,12 +250,12 @@ namespace FishingCactus
 
             public bool ToogleScene = false;
             public bool ToogleAllAsset = false;
-            public Scene scene;
+            public Scene Scene;
             public string FileSaveNameBase = string.Empty;
 
             public SceneHoudiniRoot( Scene asset_scene, HEU_HoudiniAssetRoot asset, bool asset_toggle )
             {
-                scene = asset_scene;
+                Scene = asset_scene;
                 AddToSceneRootAssetCollection( asset, asset_toggle );
                 FileSaveNameBase = asset.name;
             }
@@ -297,7 +297,7 @@ namespace FishingCactus
                         for( int level1Index = 0; level1Index < level0Transform.childCount; level1Index++ )
                         {
                             GameObject level1GameObject = level0Transform.GetChild( level1Index ).gameObject;
-                            if( level1GameObject .GetComponent<HEU_HoudiniAsset>() == null) // ignore HDA_Data
+                            if( level1GameObject.GetComponent<HEU_HoudiniAsset>() == null ) // ignore HDA_Data
                             {
                                 log += level1GameObject.name + " => ";
                                 level1GameObject.name = $"{level0GameObject.name}_{(level1Index + 1).ToString( "D2" )}";
@@ -332,7 +332,7 @@ namespace FishingCactus
                 int affectedRow = -1;
                 if( ToogleScene )
                 {
-                    string folderPath = CheckFolderPathValidity( StaticFolderPath, scene.name );
+                    string folderPath = CheckFolderPathValidity( StaticFolderPath, Scene.name );
                     if( !string.IsNullOrEmpty( folderPath ) )
                     {
                         affectedRow = 0;
@@ -367,7 +367,7 @@ namespace FishingCactus
             {
                 string log = string.Empty;
                 int bakeCount = -1;
-                string folderPath = CheckFolderPathValidity( StaticFolderPath, scene.name );
+                string folderPath = CheckFolderPathValidity( StaticFolderPath, Scene.name );
                 if( !string.IsNullOrEmpty( folderPath ) )
                 {
                     bakeCount = 0;
@@ -394,140 +394,11 @@ namespace FishingCactus
                 return bakeCount;
             }
 
-            // -- PRIVATE
-
-            private List<RootAssetToggle> AssetToggleCollection = new List<RootAssetToggle>();
-
-            private bool BakeAsset( int index, string folder_path, out string console_log )
-            {
-                string log = string.Empty;
-                bool result = false;
-                if( AssetToggleCollection[index].IsToggle )
-                {
-                    HEU_HoudiniAssetRoot assetRoot = AssetToggleCollection[index].RootAsset;
-                    string assetName = assetRoot.name;
-
-                    //Save
-                    string fullpath = CreateFullPath( folder_path, assetName );
-                    HEU_AssetPresetUtility.SaveAssetPresetToFile( assetRoot._houdiniAsset, fullpath );
-                    log += fullpath;
-
-                    //Bake
-                    BakeAsset( assetRoot, index );
-
-                    result = true;
-                }
-                console_log = log;
-                return result;
-            }
-
-            private void BakeAsset( HEU_HoudiniAssetRoot assetRoot, int index )
-            {
-                GameObject assetGameObject = assetRoot.gameObject;
-                HEU_HoudiniAsset asset = assetRoot._houdiniAsset;
-                int siblingIndex = assetRoot.transform.GetSiblingIndex();
-                asset._bakedEvent.AddListener( ( instance, success, outputList ) =>
-                {
-                    if( success )
-                    {
-                        outputList[0].name = $"{assetGameObject.name}_baked";
-                        outputList[0].transform.SetSiblingIndex( siblingIndex );
-                        AssetToggleCollection[index].ToDeleteFlag = true;
-                    }
-                } );
-                SceneManager.SetActiveScene( assetGameObject.scene );
-                asset.BakeToNewStandalone();
-            }
-
-            private void DeleteTaggedAssetsGamesObject()
-            {
-                for( int index = AssetToggleCollection.Count - 1; index >= 0; index-- )
-                {
-                    if( AssetToggleCollection[index].ToDeleteFlag )
-                    {
-                        DestroyImmediate( AssetToggleCollection[index].RootAsset.gameObject );
-                        AssetToggleCollection.RemoveAt( index );
-                    }
-                }
-            }
-
-            private void ButtonSaveClicked()
-            {
-                string consoleLog = string.Empty;
-                int methodReturn = SaveAll( out consoleLog );
-                if( methodReturn == -1 )
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Save Failed !{Environment.NewLine}{consoleLog}" );
-                }
-                else
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({methodReturn} assets saved) {Environment.NewLine}{consoleLog}" );
-                }
-            }
-
-            private void ButtonRenameClicked()
-            {
-                string consoleLog = string.Empty;
-                int methodReturn = RenameAll( out consoleLog );
-                if( methodReturn == -1 )
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Rename Failed !{Environment.NewLine}{consoleLog}" );
-                }
-                else
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({methodReturn} assets renamed) {Environment.NewLine}{consoleLog}" );
-                }
-            }
-
-            private void ButtonBakeClicked()
-            {
-                string consoleLog = string.Empty;
-                int methodReturn = BakeAll( out consoleLog );
-                if( methodReturn == -1 )
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Bake Failed !{Environment.NewLine}{consoleLog}" );
-                }
-                else
-                {
-                    Debug.Log( $"Houdini HDA Save Helper : Scene [{scene.name}]: ({methodReturn} assets baked) {Environment.NewLine}{consoleLog}" );
-                    IsSceneEmpty();
-                }
-            }
-
-            private string CreateFullPath( string folder_path, string file_name, string file_extension = "preset" )
-            {
-                return $"{folder_path}{Path.DirectorySeparatorChar}{file_name}.{file_extension}"; ;
-            }
-
-            private string CheckFolderPathValidity( string folder_path, string scene_path, bool allow_create = true )
-            {
-                string path = null;
-                if( !string.IsNullOrEmpty( folder_path ) && !string.IsNullOrEmpty( scene_path ) && Directory.Exists( folder_path ) )
-                {
-                    char separator = Path.DirectorySeparatorChar;
-                    path = $"{ folder_path.TrimEnd( separator )}{separator}{scene_path.TrimEnd( separator )}";
-                    if( allow_create && !Directory.Exists( path ) )
-                    {
-                        Directory.CreateDirectory( path );
-                    }
-                    if( Directory.Exists( path ) )
-                    {
-                        IsFolderPathValidFlag = true;
-                    }
-                    else
-                    {
-                        IsFolderPathValidFlag = false;
-                        path = null;
-                    }
-                }
-                return path;
-            }
-
             public void DrawGui()
             {
                 EditorGUILayout.BeginVertical();
                 {
-                    ToogleScene = EditorGUILayout.BeginToggleGroup( scene.name, ToogleScene );
+                    ToogleScene = EditorGUILayout.BeginToggleGroup( Scene.name, ToogleScene );
                     if( ToogleScene )
                     {
                         using( new GUILayout.HorizontalScope() )
@@ -579,9 +450,138 @@ namespace FishingCactus
                 EditorGUILayout.EndVertical();
             }
 
+            // -- PRIVATE
+
+            private List<RootAssetToggle> AssetToggleCollection = new List<RootAssetToggle>();
+
+            private bool BakeAsset( int index, string folder_path, out string console_log )
+            {
+                string log = string.Empty;
+                bool result = false;
+                if( AssetToggleCollection[index].IsToggle )
+                {
+                    HEU_HoudiniAssetRoot assetRoot = AssetToggleCollection[index].RootAsset;
+                    string assetName = assetRoot.name;
+
+                    //Save
+                    string fullpath = CreateFullPath( folder_path, assetName );
+                    HEU_AssetPresetUtility.SaveAssetPresetToFile( assetRoot._houdiniAsset, fullpath );
+                    log += fullpath;
+
+                    //Bake
+                    BakeAsset( assetRoot, index );
+
+                    result = true;
+                }
+                console_log = log;
+                return result;
+            }
+
+            private void BakeAsset( HEU_HoudiniAssetRoot asset_root, int index )
+            {
+                GameObject assetGameObject = asset_root.gameObject;
+                HEU_HoudiniAsset asset = asset_root._houdiniAsset;
+                int siblingIndex = asset_root.transform.GetSiblingIndex();
+                asset._bakedEvent.AddListener( ( instance, success, outputList ) =>
+                {
+                    if( success )
+                    {
+                        outputList[0].name = $"{assetGameObject.name}_baked";
+                        outputList[0].transform.SetSiblingIndex( siblingIndex );
+                        AssetToggleCollection[index].ToDeleteFlag = true;
+                    }
+                } );
+                SceneManager.SetActiveScene( assetGameObject.scene );
+                asset.BakeToNewStandalone();
+            }
+
+            private void DeleteTaggedAssetsGamesObject()
+            {
+                for( int index = AssetToggleCollection.Count - 1; index >= 0; index-- )
+                {
+                    if( AssetToggleCollection[index].ToDeleteFlag )
+                    {
+                        DestroyImmediate( AssetToggleCollection[index].RootAsset.gameObject );
+                        AssetToggleCollection.RemoveAt( index );
+                    }
+                }
+            }
+
+            private void ButtonSaveClicked()
+            {
+                string consoleLog = string.Empty;
+                int methodReturn = SaveAll( out consoleLog );
+                if( methodReturn == -1 )
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Save Failed !{Environment.NewLine}{consoleLog}" );
+                }
+                else
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Scene [{Scene.name}]: ({methodReturn} assets saved) {Environment.NewLine}{consoleLog}" );
+                }
+            }
+
+            private void ButtonRenameClicked()
+            {
+                string consoleLog = string.Empty;
+                int methodReturn = RenameAll( out consoleLog );
+                if( methodReturn == -1 )
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Rename Failed !{Environment.NewLine}{consoleLog}" );
+                }
+                else
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Scene [{Scene.name}]: ({methodReturn} assets renamed) {Environment.NewLine}{consoleLog}" );
+                }
+            }
+
+            private void ButtonBakeClicked()
+            {
+                string consoleLog = string.Empty;
+                int methodReturn = BakeAll( out consoleLog );
+                if( methodReturn == -1 )
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Bake Failed !{Environment.NewLine}{consoleLog}" );
+                }
+                else
+                {
+                    Debug.Log( $"Houdini HDA Save Helper : Scene [{Scene.name}]: ({methodReturn} assets baked) {Environment.NewLine}{consoleLog}" );
+                    IsSceneEmpty();
+                }
+            }
+
+            private string CreateFullPath( string folder_path, string file_name, string file_extension = "preset" )
+            {
+                return $"{folder_path}{Path.DirectorySeparatorChar}{file_name}.{file_extension}"; ;
+            }
+
+            private string CheckFolderPathValidity( string folder_path, string scene_path, bool allow_create = true )
+            {
+                string path = null;
+                if( !string.IsNullOrEmpty( folder_path ) && !string.IsNullOrEmpty( scene_path ) && Directory.Exists( folder_path ) )
+                {
+                    char separator = Path.DirectorySeparatorChar;
+                    path = $"{ folder_path.TrimEnd( separator )}{separator}{scene_path.TrimEnd( separator )}";
+                    if( allow_create && !Directory.Exists( path ) )
+                    {
+                        Directory.CreateDirectory( path );
+                    }
+                    if( Directory.Exists( path ) )
+                    {
+                        IsFolderPathValidFlag = true;
+                    }
+                    else
+                    {
+                        IsFolderPathValidFlag = false;
+                        path = null;
+                    }
+                }
+                return path;
+            }
+
             // -- INNER CLASSES
 
-            public class RootAssetToggle
+            private class RootAssetToggle
             {
                 public HEU_HoudiniAssetRoot RootAsset;
                 public bool IsToggle;

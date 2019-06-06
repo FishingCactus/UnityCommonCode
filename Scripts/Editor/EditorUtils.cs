@@ -6,52 +6,54 @@ namespace FishingCactus
 {
     public static class EditorUtils
     {
-        public static void AddDefineIfNecessary( string _define, BuildTargetGroup _buildTargetGroup )
+        // PUBLIC
+
+        public static void AddDefineIfNecessary( string define, BuildTargetGroup build_target_group )
         {
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( _buildTargetGroup );
+            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( build_target_group );
 
-            if( defines == null ) { defines = _define; }
-            else if( defines.Length == 0 ) { defines = _define; }
-            else { if( defines.IndexOf( _define, 0 ) < 0 ) { defines += ";" + _define; } }
+            if( defines == null ) { defines = define; }
+            else if( defines.Length == 0 ) { defines = define; }
+            else { if( defines.IndexOf( define, 0 ) < 0 ) { defines += ";" + define; } }
 
-            PlayerSettings.SetScriptingDefineSymbolsForGroup( _buildTargetGroup, defines );
+            PlayerSettings.SetScriptingDefineSymbolsForGroup( build_target_group, defines );
         }
 
-        public static void RemoveDefineIfNecessary( string _define, BuildTargetGroup _buildTargetGroup )
+        public static void RemoveDefineIfNecessary( string define, BuildTargetGroup build_target_group )
         {
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( _buildTargetGroup );
+            string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( build_target_group );
 
-            if( defines.StartsWith( _define + ";" ) )
+            if( defines.StartsWith( define + ";" ) )
             {
                 // First of multiple defines.
-                defines = defines.Remove( 0, _define.Length + 1 );
+                defines = defines.Remove( 0, define.Length + 1 );
             }
-            else if( defines.StartsWith( _define ) )
+            else if( defines.StartsWith( define ) )
             {
                 // The only define.
-                defines = defines.Remove( 0, _define.Length );
+                defines = defines.Remove( 0, define.Length );
             }
-            else if( defines.EndsWith( ";" + _define ) )
+            else if( defines.EndsWith( ";" + define ) )
             {
                 // Last of multiple defines.
-                defines = defines.Remove( defines.Length - _define.Length - 1, _define.Length + 1 );
+                defines = defines.Remove( defines.Length - define.Length - 1, define.Length + 1 );
             }
             else
             {
                 // Somewhere in the middle or not defined.
-                var index = defines.IndexOf( _define, 0, System.StringComparison.Ordinal );
-                if( index >= 0 ) { defines = defines.Remove( index, _define.Length + 1 ); }
+                var index = defines.IndexOf( define, 0, System.StringComparison.Ordinal );
+                if( index >= 0 ) { defines = defines.Remove( index, define.Length + 1 ); }
             }
 
-            PlayerSettings.SetScriptingDefineSymbolsForGroup( _buildTargetGroup, defines );
+            PlayerSettings.SetScriptingDefineSymbolsForGroup( build_target_group, defines );
         }
 
-        public static bool IsDefined( string _define, BuildTargetGroup _buildTargetGroup )
+        public static bool IsDefined( string define, BuildTargetGroup build_target_group )
         {
             bool found = false;
-            string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( _buildTargetGroup ).Split( ';' );
+            string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup( build_target_group ).Split( ';' );
             int index = 0;
-            for( ; index < defines.Length && !defines[index].Equals( _define ); index++ ) ;
+            for( ; index < defines.Length && !defines[index].Equals( define ); index++ ) ;
             if( index != defines.Length )
             {
                 found = true;
