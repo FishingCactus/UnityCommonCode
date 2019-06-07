@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Random = UnityEngine.Random;
+using Object = UnityEngine.Object;
+
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Cinemachine;
+using FishingCactus;
 
 internal class ArtistsToolsWindow : EditorWindow
 {
@@ -166,6 +170,8 @@ internal class ArtistsToolsWindow : EditorWindow
     {
         ScrollPosition = EditorGUILayout.BeginScrollView( ScrollPosition );
 
+        DrawHoudiniHdaSaverHelper();
+
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
         ItMustKeepObjectProperties = EditorGUILayout.Toggle( "Keep object properties", ItMustKeepObjectProperties );
@@ -173,7 +179,7 @@ internal class ArtistsToolsWindow : EditorWindow
         ItMustMergeComponents = EditorGUILayout.Toggle( "Merge components", ItMustMergeComponents );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
-        if( GUILayout.Button( "Replace selection" ) && ( ReplacerObject != null ) )
+        if( GUILayout.Button( "Replace selection" ) && (ReplacerObject != null) )
         {
             GameObject[] selected_object_array = Selection.gameObjects;
             GameObject[] new_object_array = new GameObject[selected_object_array.Length];
@@ -190,9 +196,9 @@ internal class ArtistsToolsWindow : EditorWindow
 
                 instanciated_object.transform.localPosition = old_object.transform.localPosition;
 
-                if ( ItMustKeepObjectProperties )
+                if( ItMustKeepObjectProperties )
                 {
-                    instanciated_object.SetActive(old_object.activeSelf);
+                    instanciated_object.SetActive( old_object.activeSelf );
                     instanciated_object.isStatic = old_object.isStatic;
                     instanciated_object.tag = old_object.tag;
                     instanciated_object.layer = old_object.layer;
@@ -204,11 +210,11 @@ internal class ArtistsToolsWindow : EditorWindow
                     instanciated_object.transform.localScale = old_object.transform.localScale;
                 }
 
-                if ( ItMustMergeComponents )
+                if( ItMustMergeComponents )
                 {
                     foreach( var component in old_object.GetComponents<Component>() )
                     {
-                        if ( !instanciated_object.GetComponent( component.GetType() ) )
+                        if( !instanciated_object.GetComponent( component.GetType() ) )
                         {
                             var new_component = instanciated_object.AddComponent( component.GetType() );
                             EditorUtility.CopySerialized( component, new_component );
@@ -219,7 +225,7 @@ internal class ArtistsToolsWindow : EditorWindow
                 new_object_array[object_index] = instanciated_object;
 
                 Undo.DestroyObjectImmediate( old_object );
-                Undo.RegisterCreatedObjectUndo( instanciated_object, "Replaced object");
+                Undo.RegisterCreatedObjectUndo( instanciated_object, "Replaced object" );
             }
 
             Selection.objects = new_object_array;
@@ -406,5 +412,14 @@ internal class ArtistsToolsWindow : EditorWindow
         GUI.enabled = true;
 
         EditorGUILayout.EndScrollView();
+    }
+
+    private void DrawHoudiniHdaSaverHelper()
+    {
+        GUILayout.Space( 10f );
+        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
+        HoudiniHdaSaver.Draw();
+        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
+        GUILayout.Space( 10f );
     }
 }
