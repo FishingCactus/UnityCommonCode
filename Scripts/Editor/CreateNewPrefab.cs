@@ -72,8 +72,7 @@ public class CreateNewPrefab : EditorWindow
 
     static void CreateNew( GameObject new_object, string local_path )
     {
-        Object prefab = PrefabUtility.CreateEmptyPrefab( local_path );
-        PrefabUtility.ReplacePrefab( new_object, prefab, ReplacePrefabOptions.ConnectToPrefab );
+        PrefabUtility.SaveAsPrefabAsset(new_object, local_path);
     }
 
     static void CreateVariant( GameObject new_object, string local_path)
@@ -118,5 +117,4 @@ public class CreateNewPrefab : EditorWindow
     {
         CreatePrefabs( false, true );
     }
-
 }

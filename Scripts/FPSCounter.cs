@@ -78,9 +78,11 @@ namespace FishingCactus
         [Serializable]
         private struct FpsColor : IComparable<FpsColor>
         {
+            #pragma warning disable 0649
             [Range( 0.0f, 1.0f )]
             public float TargetFrameRatePercentage;
             public Color TextColor;
+            #pragma warning restore
 
             [HideInInspector, NonSerialized]
             public float FPS;
@@ -91,9 +93,10 @@ namespace FishingCactus
             }
         }
 
+        #pragma warning disable 0649
         [SerializeField]
         private List<FpsColor> fpsColors;
-
+        #pragma warning restore
         private float deltaTime = 0.0f;
         private float targetFrameRate;
     }

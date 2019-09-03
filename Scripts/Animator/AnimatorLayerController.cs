@@ -115,8 +115,10 @@ public class AnimatorLayerController
 
     // -- PRIVATE
 
+    #pragma warning disable 0649
     [SerializeField]
     private string _LayerName;
+    #pragma warning restore
     [SerializeField]
     private float EnablingSpeed = 1.0f;
     [SerializeField]

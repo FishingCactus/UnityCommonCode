@@ -133,8 +133,8 @@ public class BuildAutomation : EditorWindow
 
         if ( ( platform & BuildPlatform.Linux ) == BuildPlatform.Linux )
         {
-            options.locationPathName = BaseFolder + base_path + "Linux/Algobot.x86";
-            options.target = BuildTarget.StandaloneLinuxUniversal;
+            options.locationPathName = BaseFolder + base_path + "Linux/Algobot.x64";
+            options.target = BuildTarget.StandaloneLinux64;
 
             BuildPipeline.BuildPlayer( options );
         }
