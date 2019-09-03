@@ -22,13 +22,14 @@ namespace FishingCactus
 
         // -- PRIVATE
 
+        #pragma warning disable 0649
         [SerializeField]
         private string _ParameterName;
 
         #pragma warning disable 0414
         [SerializeField]
         private RuntimeAnimatorController LinkedAnimatorController = null;
-        #pragma warning restore 0414
+        #pragma warning restore
     }
 
     [System.Serializable]
