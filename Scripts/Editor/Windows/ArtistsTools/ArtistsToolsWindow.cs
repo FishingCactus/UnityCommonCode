@@ -411,6 +411,28 @@ internal class ArtistsToolsWindow : EditorWindow
 
         GUI.enabled = true;
 
+        GUILayout.Label( "Remove Meshcollider Tool -------------- " , EditorStyles.boldLabel );
+
+        if( GUILayout.Button( "Remove meshcolliders without a mesh !" ) )
+        {
+            GameObject[] selected_object_array = Selection.gameObjects;
+
+            foreach( GameObject mesh_collider_object in selected_object_array )
+            {
+                MeshCollider mesh_collider = mesh_collider_object.GetComponent<MeshCollider>();
+
+                if( mesh_collider == null )
+                {
+                    continue;
+                }
+
+                if( mesh_collider.sharedMesh == null )
+                {
+                    DestroyImmediate( mesh_collider );
+                }
+            }
+        }
+
         EditorGUILayout.EndScrollView();
     }
 
