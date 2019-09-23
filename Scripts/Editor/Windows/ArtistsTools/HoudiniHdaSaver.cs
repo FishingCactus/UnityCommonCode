@@ -88,6 +88,10 @@ namespace FishingCactus
                 {
                     ButtonRefreshListsClicked();
                 }
+                if( GUILayout.Button( "Sort All" ) )
+                {
+                    ButtonSortAllClicked();
+                }
                 if( GUILayout.Button( "Rename All" ) )
                 {
                     ButtonRenameAllClicked();
@@ -166,6 +170,18 @@ namespace FishingCactus
                     HoudiniHDASaver_Data[index].AddToSceneRootAssetCollection( root, assetIsInSelection );
                 }
             }
+        }
+
+        private static void ButtonSortAllClicked()
+        {
+            foreach( SceneHoudiniRoot data in HoudiniHDASaver_Data )
+            {
+                if( data.ToogleScene )
+                {
+                    data.SortAll();
+                }
+            }
+            Debug.Log( $"Houdini HDA Save Helper : Sort All assets sorted)" );
         }
 
         private static void ButtonRenameAllClicked()
@@ -394,6 +410,15 @@ namespace FishingCactus
                 return bakeCount;
             }
 
+            public void SortAll( )
+            {
+                AssetToggleCollection.Sort();
+                for( int i = 0; i < AssetToggleCollection.Count; i++ )
+                {
+                    AssetToggleCollection[i].RootAsset.transform.SetSiblingIndex( i );
+                }
+            }
+
             public void DrawGui()
             {
                 EditorGUILayout.BeginVertical();
@@ -421,6 +446,10 @@ namespace FishingCactus
                                     if( GUILayout.Button( "Bake", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 50 ) } ) )
                                     {
                                         ButtonBakeClicked();
+                                    }
+                                    if( GUILayout.Button( "Sort", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 50 ) } ) )
+                                    {
+                                        ButtonSortClicked();
                                     }
                                     if( GUILayout.Button( "Rename", new GUILayoutOption[] { GUILayout.ExpandWidth( false ), GUILayout.Width( 70 ) } ) )
                                     {
@@ -550,6 +579,12 @@ namespace FishingCactus
                 }
             }
 
+            private void ButtonSortClicked()
+            {
+                SortAll();
+                Debug.Log( $"Houdini HDA Save Helper : Scene [{Scene.name}]: assets sorted" );
+            }
+
             private string CreateFullPath( string folder_path, string file_name, string file_extension = "preset" )
             {
                 return $"{folder_path}{Path.DirectorySeparatorChar}{file_name}.{file_extension}"; ;
@@ -581,7 +616,7 @@ namespace FishingCactus
 
             // -- INNER CLASSES
 
-            private class RootAssetToggle
+            private class RootAssetToggle : IComparable<RootAssetToggle>
             {
                 public HEU_HoudiniAssetRoot RootAsset;
                 public bool IsToggle;
@@ -592,6 +627,11 @@ namespace FishingCactus
                     RootAsset = asset;
                     IsToggle = is_toggle;
                     ToDeleteFlag = false;
+                }
+
+                public int CompareTo( RootAssetToggle other )
+                {
+                    return string.Compare( RootAsset.gameObject.name, other.RootAsset.gameObject.name );
                 }
             }
         }
