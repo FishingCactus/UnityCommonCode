@@ -129,6 +129,8 @@ internal class ArtistsToolsWindow : EditorWindow
     private bool ItMustKeepObjectProperties = true;
     private bool ItMustKeepLocalTransforms = true;
     private bool ItMustMergeComponents = false;
+    private bool IncludeChildren = true;
+    private bool AllMeshColliders = false;
     private int MinimalGridSize = 6;
     private float SpacingMultiplier = 1.5f;
     private Vector3 Offset;
@@ -410,6 +412,49 @@ internal class ArtistsToolsWindow : EditorWindow
         }
 
         GUI.enabled = true;
+
+        GUILayout.Label( "Remove Meshcollider Tool -------------- " , EditorStyles.boldLabel );
+
+        IncludeChildren = EditorGUILayout.Toggle( "Include children", IncludeChildren );
+        AllMeshColliders = EditorGUILayout.Toggle( "Remove all mesh colliders" , AllMeshColliders );
+
+        if( GUILayout.Button( "Remove meshcolliders !" ) )
+        {
+            GameObject[] selected_object_array = Selection.gameObjects;
+
+            if( IncludeChildren )
+            {
+                foreach( GameObject mesh_collider_object in selected_object_array )
+                {
+                    MeshCollider[] mesh_collider_array = mesh_collider_object.GetComponentsInChildren<MeshCollider>();
+
+                    foreach( MeshCollider mesh_collider in mesh_collider_array )
+                    {
+                        if( mesh_collider.sharedMesh == null || AllMeshColliders )
+                        {
+                            Undo.DestroyObjectImmediate( mesh_collider );
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            foreach( GameObject mesh_collider_object in selected_object_array )
+            {
+                MeshCollider mesh_collider = mesh_collider_object.GetComponent<MeshCollider>();
+
+                if ( mesh_collider == null)
+                {
+                    continue;
+                }
+
+                if( mesh_collider.sharedMesh == null || AllMeshColliders )
+                {
+                    Undo.DestroyObjectImmediate( mesh_collider );
+                }
+            }            
+        }
 
         EditorGUILayout.EndScrollView();
     }
