@@ -34,7 +34,7 @@ namespace FishingCactus
             {
                 instance = this as _INSTANCE_;
             }
-            else
+            else if(instance != this)
             {
                 Destroy( gameObject );
             }
