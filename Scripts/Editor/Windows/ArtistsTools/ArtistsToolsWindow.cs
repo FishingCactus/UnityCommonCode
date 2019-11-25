@@ -172,8 +172,6 @@ internal class ArtistsToolsWindow : EditorWindow
     {
         ScrollPosition = EditorGUILayout.BeginScrollView( ScrollPosition );
 
-        DrawHoudiniHdaSaverHelper();
-
         GUILayout.Label( "Replace Tool --------------", EditorStyles.boldLabel );
 
         ItMustKeepObjectProperties = EditorGUILayout.Toggle( "Keep object properties", ItMustKeepObjectProperties );
@@ -457,14 +455,5 @@ internal class ArtistsToolsWindow : EditorWindow
         }
 
         EditorGUILayout.EndScrollView();
-    }
-
-    private void DrawHoudiniHdaSaverHelper()
-    {
-        GUILayout.Space( 10f );
-        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
-        HoudiniHdaSaver.Draw();
-        EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
-        GUILayout.Space( 10f );
     }
 }
