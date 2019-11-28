@@ -4,7 +4,7 @@ public class DebugTimeScaler : MonoBehaviour
 {
     // -- PUBLIC
 
-    [Range(0.01f, 2.0f)]
+    [Range(0.01f, 10.0f)]
     public float TimeScale = 1.0f;
 
     // -- PRIVATE

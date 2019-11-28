@@ -14,12 +14,44 @@ public class InternalEditorStyle
             if( CustomFoldoutStyle == null )
             {
                 CustomFoldoutStyle = new GUIStyle( EditorStyles.foldout );
-                CustomFoldoutStyle.fontStyle = FontStyle.Bold;
+                CustomFoldoutStyle.fontStyle = FontStyle.Normal;
 
                 SetTextsColor( CustomFoldoutStyle, GroupColor );
             }
 
             return CustomFoldoutStyle;
+        }
+    }
+
+    public static GUIStyle BoldFoldout
+    {
+        get
+        {
+            if( CustomBoldFoldoutStyle == null )
+            {
+                CustomBoldFoldoutStyle = new GUIStyle( EditorStyles.foldout );
+                CustomBoldFoldoutStyle.fontStyle = FontStyle.Bold;
+
+                SetTextsColor( CustomBoldFoldoutStyle, GroupColor );
+            }
+
+            return CustomBoldFoldoutStyle;
+        }
+    }
+
+    public static GUIStyle DebugFoldout
+    {
+        get
+        {
+            if( CustomDebugFoldoutStyle == null )
+            {
+                CustomDebugFoldoutStyle = new GUIStyle( EditorStyles.foldout );
+                CustomDebugFoldoutStyle.fontStyle = FontStyle.Bold;
+
+                SetTextsColor( CustomDebugFoldoutStyle, Color.red );
+            }
+
+            return CustomDebugFoldoutStyle;
         }
     }
 
@@ -30,7 +62,7 @@ public class InternalEditorStyle
             if ( CustomGroupStyle == null )
             {
                 CustomGroupStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomGroupStyle.fontStyle = FontStyle.Italic;
+                CustomGroupStyle.fontStyle = FontStyle.Bold;
 
                 SetTextsColor( CustomGroupStyle, GroupColor );
             }
@@ -46,7 +78,7 @@ public class InternalEditorStyle
             if( CustomErrorGroupStyle == null )
             {
                 CustomErrorGroupStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomErrorGroupStyle.fontStyle = FontStyle.Italic;
+                CustomErrorGroupStyle.fontStyle = FontStyle.Bold;
 
                 SetTextsColor( CustomErrorGroupStyle, Color.red );
             }
@@ -66,7 +98,7 @@ public class InternalEditorStyle
                 CustomSubGroupStyle.fontSize = 10;
                 CustomSubGroupStyle.fontStyle = FontStyle.Italic;
 
-                SetTextsColor( CustomSubGroupStyle, SubGroupColor );
+                SetTextsColor( CustomSubGroupStyle, GroupColor );
             }
 
             return CustomSubGroupStyle;
@@ -130,6 +162,8 @@ public class InternalEditorStyle
     // -- PRIVATE
 
     private static GUIStyle CustomFoldoutStyle;
+    private static GUIStyle CustomBoldFoldoutStyle;
+    private static GUIStyle CustomDebugFoldoutStyle;
     private static GUIStyle CustomGroupStyle;
     private static GUIStyle CustomErrorGroupStyle;
     private static GUIStyle CustomSubGroupStyle;
@@ -138,7 +172,6 @@ public class InternalEditorStyle
     private static GUIStyle CustomEyeButtonStyle;
 
     private static Color GroupColor = new Color( 0.25f, 0.25f, 0.5f, 1.0f );
-    private static Color SubGroupColor = new Color( 0.25f, 0.3f, 0.25f, 1.0f );
 
     private static void SetTextsColor(
         GUIStyle style_to_update,

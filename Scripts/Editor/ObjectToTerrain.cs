@@ -40,7 +40,7 @@ public class ObjectToTerrain : EditorWindow
         terrain.size = collider.bounds.size + terrain_offset;
         bounds.size = new Vector3( terrain.size.x, collider.bounds.size.y, terrain.size.z );
 
-        float[,] heights_array = new float[terrain.heightmapWidth, terrain.heightmapHeight];
+        float[,] heights_array = new float[terrain.heightmapResolution, terrain.heightmapResolution];
         Ray ray = new Ray( new Vector3( bounds.min.x, bounds.max.y + bounds.size.y, bounds.min.z ), -Vector3.up );
         RaycastHit hit = new RaycastHit();
         float mesh_height_inverse = 1 / bounds.size.y;
