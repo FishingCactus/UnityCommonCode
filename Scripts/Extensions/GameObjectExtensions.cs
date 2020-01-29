@@ -74,7 +74,7 @@ namespace FishingCactus
 
         public static T GetOrAddComponent<T>(
             this GameObject game_object
-            ) where T : MonoBehaviour
+            ) where T : Component
         {
             return game_object.GetComponent<T>() ?? game_object.AddComponent<T>();
         }
