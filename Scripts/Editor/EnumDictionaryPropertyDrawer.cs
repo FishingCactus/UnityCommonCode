@@ -3,6 +3,10 @@ using UnityEditor;
 
 public class EnumDictionaryPropertyDrawer : PropertyDrawer
 {
+    // -- FIELDS
+
+    private static float IndentationWidth = 12.0f;
+
     // -- UNITY
 
     public override void OnGUI(
@@ -29,8 +33,8 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
 
         if( property.isExpanded )
         {
-            gui_rectangle.x += 16.0f;
-            gui_rectangle.width -= 16.0f;
+            gui_rectangle.x += IndentationWidth;
+            gui_rectangle.width -= IndentationWidth;
 
             gui_rectangle.y += 18.0f;
 
@@ -57,8 +61,8 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
                 }
             }
 
-            gui_rectangle.x -= 16.0f;
-            gui_rectangle.width += 16.0f;
+            gui_rectangle.x -= IndentationWidth;
+            gui_rectangle.width += IndentationWidth;
         }
 
         EditorGUI.EndProperty();
@@ -82,6 +86,8 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
                 height_to_use += EditorGUI.GetPropertyHeight(element_property, GUIContent.none);
             }
         }
+
+        height_to_use += 4.0f;
 
         return height_to_use;
     }
