@@ -159,6 +159,20 @@ public class InternalEditorStyle
         }
     }
 
+    public static GUIStyle CenteredLabelStyle
+    {
+        get
+        {
+            if( CustomCenteredLabelStyle == null )
+            {
+                CustomCenteredLabelStyle = new GUIStyle( EditorStyles.label );
+                CustomCenteredLabelStyle.alignment = TextAnchor.MiddleCenter;
+            }
+
+            return CustomCenteredLabelStyle;
+        }
+    }
+
     // -- PRIVATE
 
     private static GUIStyle CustomFoldoutStyle;
@@ -170,6 +184,7 @@ public class InternalEditorStyle
     private static GUIStyle CustomLockerToggleStyle;
     private static GUIStyle CustomCenteredToggleStyle;
     private static GUIStyle CustomEyeButtonStyle;
+    private static GUIStyle CustomCenteredLabelStyle;
 
     private static Color GroupColor = new Color( 0.25f, 0.25f, 0.5f, 1.0f );
 
