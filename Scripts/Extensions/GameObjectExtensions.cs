@@ -76,7 +76,13 @@ namespace FishingCactus
             this GameObject game_object
             ) where T : Component
         {
-            return game_object.GetComponent<T>() ?? game_object.AddComponent<T>();
+            var component = game_object.GetComponent<T>();
+            if (component == null)
+            {
+                return game_object.AddComponent<T>();
+            }
+
+            return component;
         }
 
         public static Component GetOrAddComponent(
