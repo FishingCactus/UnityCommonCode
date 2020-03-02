@@ -3,6 +3,10 @@ using UnityEditor;
 
 public class EnumDictionaryPropertyDrawer : PropertyDrawer
 {
+    // -- FIELDS
+
+    private static float IndentationWidth = 12.0f;
+
     // -- UNITY
 
     public override void OnGUI(
@@ -29,29 +33,36 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
 
         if( property.isExpanded )
         {
-            gui_rectangle = EditorGUI.IndentedRect(gui_rectangle);
-
-            float element_x = gui_rectangle.x;
-            float element_width = gui_rectangle.width;
+            gui_rectangle.x += IndentationWidth;
+            gui_rectangle.width -= IndentationWidth;
 
             gui_rectangle.y += 18.0f;
 
             for( int name_index = 0; name_index < type_property.arraySize; name_index++ )
             {
-                const float label_width_percentage = 0.25f;
+                SerializedProperty property_to_draw = values_property.GetArrayElementAtIndex(name_index);
 
-                gui_rectangle.x = element_x;
-                gui_rectangle.width = element_width * label_width_percentage;
-                EditorGUI.LabelField(gui_rectangle, new GUIContent(type_property.GetArrayElementAtIndex(name_index).stringValue));
+                if( property_to_draw.hasChildren )
+                {
+                    EditorGUI.PropertyField( gui_rectangle, property_to_draw, new GUIContent( type_property.GetArrayElementAtIndex(name_index).stringValue ), true );
+                    gui_rectangle.y += EditorGUI.GetPropertyHeight( property_to_draw, GUIContent.none );
+                }
+                else
+                {
+                    float element_width = gui_rectangle.width;
+                    const float label_width_percentage = 0.33f;
+                    gui_rectangle.width = element_width * label_width_percentage;
+                    EditorGUI.LabelField(gui_rectangle, new GUIContent( type_property.GetArrayElementAtIndex(name_index).stringValue ) );
 
-                gui_rectangle.x += gui_rectangle.width;
-                gui_rectangle.width = element_width * ( 1.0f - label_width_percentage );
-                EditorGUI.PropertyField(gui_rectangle, values_property.GetArrayElementAtIndex(name_index), GUIContent.none );
-                gui_rectangle.y += EditorGUI.GetPropertyHeight( values_property.GetArrayElementAtIndex(name_index), GUIContent.none);
+                    gui_rectangle.x += gui_rectangle.width;
+                    gui_rectangle.width = element_width * ( 1.0f - label_width_percentage );
+                    EditorGUI.PropertyField( gui_rectangle, property_to_draw, GUIContent.none );
+                    gui_rectangle.y += EditorGUI.GetPropertyHeight( property_to_draw, GUIContent.none );
+                }
             }
 
-            gui_rectangle.x = element_x;
-            gui_rectangle.width = element_width;
+            gui_rectangle.x -= IndentationWidth;
+            gui_rectangle.width += IndentationWidth;
         }
 
         EditorGUI.EndProperty();
@@ -75,6 +86,8 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
                 height_to_use += EditorGUI.GetPropertyHeight(element_property, GUIContent.none);
             }
         }
+
+        height_to_use += 4.0f;
 
         return height_to_use;
     }
