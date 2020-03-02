@@ -29,7 +29,9 @@ namespace FishingCactus
             }
             else if(instance != this)
             {
-                Debug.LogError( $"{instance.name} is added two times." );
+                Debug.LogError( $"{instance.name} is added two times.", this );
+
+                Destroy( this );
             }
         }
     }
