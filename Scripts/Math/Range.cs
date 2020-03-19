@@ -5,7 +5,12 @@ namespace FishingCactus
     [System.Serializable]
     public abstract class Range< T >
     {
-        // -- PUBLIC
+        // -- FIELDS
+
+        [SerializeField] protected T _MinimumValue;
+        [SerializeField] protected T _MaximumValue;
+
+        // -- PROPERTIES
 
         public T MinimumValue
         {
@@ -19,20 +24,16 @@ namespace FishingCactus
             protected set { _MaximumValue = value; }
         }
 
+        // -- METHODS
+
         public abstract T GetRandomValue();
-
-        // -- PROTECTED
-
-        [SerializeField]
-        protected T _MinimumValue;
-        [SerializeField]
-        protected T _MaximumValue;
+        public abstract bool Contains( T value_to_check );
     }
 
     [System.Serializable]
     public class IntegerRange : Range< int >
     {
-        // -- PUBLIC
+        // -- METHODS
 
         public IntegerRange(
             int minimum_value,
@@ -47,12 +48,20 @@ namespace FishingCactus
         {
             return Random.Range( MinimumValue, MaximumValue );
         }
+
+        public override bool Contains(
+            int value_to_check
+            )
+        {
+            return MinimumValue <= value_to_check
+                && value_to_check < MaximumValue;
+        }
     }
 
     [System.Serializable]
     public class FloatRange : Range<float>
     {
-        // -- PUBLIC
+        // -- METHODS
 
         public FloatRange( 
             float minimum_value,
@@ -66,6 +75,14 @@ namespace FishingCactus
         public override float GetRandomValue()
         {
             return Random.Range( MinimumValue, MaximumValue );
+        }
+
+        public override bool Contains(
+            float value_to_check
+            )
+        {
+            return MinimumValue <= value_to_check
+                && value_to_check <= MaximumValue;
         }
     }
 }
