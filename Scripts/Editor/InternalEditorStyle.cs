@@ -187,6 +187,20 @@ public class InternalEditorStyle
         }
     }
 
+    public static GUIStyle BoldLabelStyle
+    {
+        get
+        {
+            if( CustomBoldLabelStyle == null )
+            {
+                CustomBoldLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                CustomBoldLabelStyle.fontStyle = FontStyle.Bold;
+            }
+
+            return CustomBoldLabelStyle;
+        }
+    }
+
     // -- PRIVATE
 
     private static GUIStyle CustomFoldoutStyle;
@@ -200,6 +214,7 @@ public class InternalEditorStyle
     private static GUIStyle CustomEyeButtonStyle;
     private static GUIStyle CustomCenteredLabelStyle;
     private static GUIStyle CustomRightLabelStyle;
+    private static GUIStyle CustomBoldLabelStyle;
 
     private static Color GroupColor = new Color( 0.25f, 0.25f, 0.5f, 1.0f );
 
