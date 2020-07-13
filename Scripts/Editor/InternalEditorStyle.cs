@@ -216,7 +216,7 @@ public class InternalEditorStyle
     private static GUIStyle CustomRightLabelStyle;
     private static GUIStyle CustomBoldLabelStyle;
 
-    private static Color GroupColor = new Color( 0.25f, 0.25f, 0.5f, 1.0f );
+    private static Color GroupColor = new Color( 0.29f, 0.69f, 1.0f, 1.0f );
 
     private static void SetTextsColor(
         GUIStyle style_to_update,
