@@ -18,6 +18,10 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         {
             return ValueTable[ EnumNameTable.IndexOf( enum_value.ToString() ) ];
         }
+        set
+        {
+            ValueTable[EnumNameTable.IndexOf( enum_value.ToString() )] = value;
+        }
     }
 
 #if UNITY_EDITOR

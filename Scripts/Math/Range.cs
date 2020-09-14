@@ -24,6 +24,9 @@ namespace FishingCactus
             protected set { _MaximumValue = value; }
         }
 
+        public abstract T Amplitude{  get; }
+        public abstract T Center{ get; }
+
         // -- METHODS
 
         public abstract T GetRandomValue();
@@ -33,6 +36,11 @@ namespace FishingCactus
     [System.Serializable]
     public class IntegerRange : Range< int >
     {
+        // -- PROPERTIES
+
+        public override int Amplitude{ get{ return _MaximumValue - _MinimumValue; } }
+        public override int Center { get { return ( _MaximumValue + _MinimumValue ) / 2; } }
+
         // -- METHODS
 
         public IntegerRange(
@@ -61,6 +69,11 @@ namespace FishingCactus
     [System.Serializable]
     public class FloatRange : Range<float>
     {
+        // -- PROPERTIES
+
+        public override float Amplitude { get { return _MaximumValue - _MinimumValue; } }
+        public override float Center { get { return (_MaximumValue + _MinimumValue) * 0.5f; } }
+
         // -- METHODS
 
         public FloatRange( 
