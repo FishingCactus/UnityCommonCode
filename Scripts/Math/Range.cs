@@ -72,7 +72,7 @@ namespace FishingCactus
         // -- PROPERTIES
 
         public override float Amplitude { get { return _MaximumValue - _MinimumValue; } }
-        public override float Center { get { return (_MaximumValue + _MinimumValue) * 0.5f; } }
+        public override float Center { get { return ( _MaximumValue + _MinimumValue ) * 0.5f; } }
 
         // -- METHODS
 
@@ -96,6 +96,43 @@ namespace FishingCactus
         {
             return MinimumValue <= value_to_check
                 && value_to_check <= MaximumValue;
+        }
+    }
+
+    [System.Serializable]
+    public class Vector3Range : Range<Vector3>
+    {
+        // -- PROPERTIES
+
+        public override Vector3 Amplitude { get { return _MaximumValue - _MinimumValue; } }
+        public override Vector3 Center { get { return ( _MaximumValue + _MinimumValue ) * 0.5f; } }
+
+        // -- METHODS
+
+        public Vector3Range( 
+            Vector3 minimum_value,
+            Vector3 maximum_value
+            )
+        {
+            MinimumValue = minimum_value;
+            MaximumValue = maximum_value;
+        }
+
+        public override Vector3 GetRandomValue()
+        {
+            return new Vector3( Random.Range( MinimumValue.x, MaximumValue.x ), Random.Range( MinimumValue.y, MaximumValue.y ), Random.Range( MinimumValue.z, MaximumValue.z ) );
+        }
+
+        public override bool Contains(
+            Vector3 value_to_check
+            )
+        {
+            return MinimumValue.x <= value_to_check.x
+                && value_to_check.x <= MaximumValue.x
+                && MinimumValue.y <= value_to_check.y
+                && value_to_check.y <= MaximumValue.y
+                && MinimumValue.z <= value_to_check.z
+                && value_to_check.z <= MaximumValue.z;
         }
     }
 }
