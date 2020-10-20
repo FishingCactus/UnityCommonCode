@@ -5,7 +5,17 @@ using System.Collections.Generic;
 public class EnumDictionary<TEnum, TObject> where TEnum : struct,
     System.IConvertible
 {
-    // -- PUBLIC
+    // -- FIELDS
+
+    [SerializeField] private TObject[] ValueTable;
+    [SerializeField] public List<string> EnumNameTable;
+
+    // --PROPERTIES
+
+    public int Count{ get{ return EnumNameTable.Count; } }
+    public TObject[] Values{ get{ return ValueTable; } }
+
+    // -- METHODS
 
     public EnumDictionary()
     {
@@ -40,13 +50,6 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         }
     }
 #endif
-
-    // -- PRIVATE
-
-    [SerializeField]
-    private TObject[] ValueTable;
-    [SerializeField]
-    public List<string> EnumNameTable;
 
     private void ResetTables()
     {
