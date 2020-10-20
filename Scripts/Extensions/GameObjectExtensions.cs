@@ -24,7 +24,7 @@ namespace FishingCactus
 
             if (wanted_component == null )
             {
-                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof(T), game_object.name ) );
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof(T), game_object.name ), game_object );
             }
 
             return wanted_component;
@@ -38,7 +38,7 @@ namespace FishingCactus
 
             if( wanted_component == null )
             {
-                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ) );
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ), game_object );
             }
 
             return wanted_component;
@@ -52,7 +52,7 @@ namespace FishingCactus
 
             if( wanted_component == null )
             {
-                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ) );
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ), game_object );
             }
 
             return wanted_component;
@@ -66,7 +66,7 @@ namespace FishingCactus
 
             if( wanted_component == null )
             {
-                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ) );
+                Debug.LogError( string.Format( "Expected to find component of type '{0}' but found none in {1}.", typeof( T ), game_object.name ), game_object );
             }
 
             return wanted_component;
@@ -76,7 +76,13 @@ namespace FishingCactus
             this GameObject game_object
             ) where T : Component
         {
-            return game_object.GetComponent<T>() ?? game_object.AddComponent<T>();
+            var component = game_object.GetComponent<T>();
+            if (component == null)
+            {
+                return game_object.AddComponent<T>();
+            }
+
+            return component;
         }
 
         public static Component GetOrAddComponent(

@@ -38,6 +38,8 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
 
             gui_rectangle.y += 18.0f;
 
+            Rect element_rectangle = gui_rectangle;
+
             for( int name_index = 0; name_index < type_property.arraySize; name_index++ )
             {
                 SerializedProperty property_to_draw = values_property.GetArrayElementAtIndex(name_index);
@@ -49,15 +51,17 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
                 }
                 else
                 {
-                    float element_width = gui_rectangle.width;
-                    const float label_width_percentage = 0.33f;
-                    gui_rectangle.width = element_width * label_width_percentage;
-                    EditorGUI.LabelField(gui_rectangle, new GUIContent( type_property.GetArrayElementAtIndex(name_index).stringValue ) );
+                    element_rectangle.x = gui_rectangle.x;
+                    element_rectangle.width = gui_rectangle.width;
 
-                    gui_rectangle.x += gui_rectangle.width;
-                    gui_rectangle.width = element_width * ( 1.0f - label_width_percentage );
-                    EditorGUI.PropertyField( gui_rectangle, property_to_draw, GUIContent.none );
-                    gui_rectangle.y += EditorGUI.GetPropertyHeight( property_to_draw, GUIContent.none );
+                    const float label_width_percentage = 0.33f;
+                    element_rectangle.width = gui_rectangle.width * label_width_percentage;
+                    EditorGUI.LabelField(element_rectangle, new GUIContent( type_property.GetArrayElementAtIndex(name_index).stringValue ) );
+
+                    element_rectangle.x += element_rectangle.width;
+                    element_rectangle.width = gui_rectangle.width * ( 1.0f - label_width_percentage );
+                    EditorGUI.PropertyField( element_rectangle, property_to_draw, GUIContent.none );
+                    element_rectangle.y += EditorGUI.GetPropertyHeight( property_to_draw, GUIContent.none );
                 }
             }
 
