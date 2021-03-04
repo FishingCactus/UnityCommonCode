@@ -26,7 +26,6 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
         EditorGUI.BeginProperty( position, label, property );
 
         gui_rectangle = position;
-        gui_rectangle.y += 10.0f;
         gui_rectangle.height = 18.0f;
 
         property.isExpanded = EditorGUI.Foldout( gui_rectangle, property.isExpanded, label, InternalEditorStyle.Foldout );
@@ -79,7 +78,7 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
         GUIContent label
         )
     {
-        float height_to_use = 28.0f;
+        float height_to_use = 18.0f;
 
         if (property.isExpanded)
         {

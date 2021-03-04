@@ -132,12 +132,13 @@ internal class ArtistsToolsWindow : EditorWindow
     private bool IncludeChildren = true;
     private bool AllMeshColliders = false;
     private int MinimalGridSize = 6;
+    private int ObjectToSelectCount = 6;
     private float SpacingMultiplier = 1.5f;
-    private Vector3 Offset;
     private float PhysicsSimulationTime = 5.0f;
-    private Vector3 ScaleFactor;
     private float UniformScaleFactor;
     private Vector2 ScrollPosition;
+    private Vector3 Offset;
+    private Vector3 ScaleFactor;
     private PhysicsSimulator Simulator = new PhysicsSimulator();
 
     private void SetupViewCamera(
@@ -451,7 +452,24 @@ internal class ArtistsToolsWindow : EditorWindow
                 {
                     Undo.DestroyObjectImmediate( mesh_collider );
                 }
-            }            
+            }
+        }
+
+        GUILayout.Label( "Random Deselection tool --------------", EditorStyles.boldLabel );
+        ObjectToSelectCount = Mathf.Max(1, EditorGUILayout.IntField( "Count to deselect", ObjectToSelectCount ) );
+
+        if( GUILayout.Button( "Random deselect on selected !" ) )
+        {
+            List<GameObject> selected_object_list = new List<GameObject>( Selection.gameObjects );
+            int count_to_delete = Random.Range( 1, ObjectToSelectCount );
+
+            while( count_to_delete > 0 )
+            {
+                selected_object_list.RemoveAt( 0 );
+                count_to_delete--;
+            }
+
+            Selection.objects = selected_object_list.ToArray();
         }
 
         EditorGUILayout.EndScrollView();

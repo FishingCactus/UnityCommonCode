@@ -5,7 +5,17 @@ using System.Collections.Generic;
 public class EnumDictionary<TEnum, TObject> where TEnum : struct,
     System.IConvertible
 {
-    // -- PUBLIC
+    // -- FIELDS
+
+    [SerializeField] private TObject[] ValueTable;
+    [SerializeField] public List<string> EnumNameTable;
+
+    // -- PROPERTIES
+
+    public int Count{ get{ return ValueTable.Length; } }
+    public TObject[] Values{ get{ return ValueTable; } }
+
+    // -- METHODS
 
     public EnumDictionary()
     {
@@ -22,6 +32,17 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         {
             ValueTable[EnumNameTable.IndexOf( enum_value.ToString() )] = value;
         }
+    }
+
+    private void ResetTables()
+    {
+        EnumNameTable = new List<string>();
+        EnumNameTable.AddRange( System.Enum.GetNames( typeof( TEnum ) ) );
+
+        EnumNameTable.Remove( "Count" );
+        EnumNameTable.Remove( "None" );
+
+        ValueTable = new TObject[EnumNameTable.Count];
     }
 
 #if UNITY_EDITOR
@@ -44,23 +65,4 @@ public class EnumDictionary<TEnum, TObject> where TEnum : struct,
         }
     }
 #endif
-
-    // -- PRIVATE
-
-    [SerializeField]
-    private TObject[] ValueTable;
-    [SerializeField]
-    public List<string> EnumNameTable;
-
-    private void ResetTables()
-    {
-        EnumNameTable = new List<string>();
-        EnumNameTable.AddRange( System.Enum.GetNames( typeof( TEnum ) ) );
-
-        EnumNameTable.Remove( "Count" );
-        EnumNameTable.Remove( "None" );
-
-        ValueTable = new TObject[EnumNameTable.Count];
-    }
 }
-

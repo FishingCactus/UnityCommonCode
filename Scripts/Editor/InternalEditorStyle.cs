@@ -201,6 +201,22 @@ public class InternalEditorStyle
         }
     }
 
+    public static GUIStyle BoldGreenLabelStyle
+    {
+        get
+        {
+            if( CustomBoldGreenLabelStyle == null )
+            {
+                CustomBoldGreenLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                CustomBoldGreenLabelStyle.fontStyle = FontStyle.Bold;
+
+                SetTextsColor( CustomBoldGreenLabelStyle, new Color( 0.1f, 1.0f, 0.1f, 1.0f ) );
+            }
+
+            return CustomBoldGreenLabelStyle;
+        }
+    }
+
     // -- PRIVATE
 
     private static GUIStyle CustomFoldoutStyle;
@@ -215,6 +231,7 @@ public class InternalEditorStyle
     private static GUIStyle CustomCenteredLabelStyle;
     private static GUIStyle CustomRightLabelStyle;
     private static GUIStyle CustomBoldLabelStyle;
+    private static GUIStyle CustomBoldGreenLabelStyle;
 
     private static Color GroupColor = new Color( 0.29f, 0.69f, 1.0f, 1.0f );
 
