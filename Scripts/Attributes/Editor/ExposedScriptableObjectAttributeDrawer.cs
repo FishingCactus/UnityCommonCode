@@ -89,9 +89,7 @@ namespace FishingCactus
             GUIContent label
             )
         {
-            float total_height = 0.0f;
-
-            total_height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+            float total_height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
             if( property.objectReferenceValue == null
                 || !property.isExpanded
