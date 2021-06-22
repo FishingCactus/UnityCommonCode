@@ -5,7 +5,21 @@ namespace FishingCactus
 {
     public static class ListExtensions
     {
-        // -- PUBLIC
+        // -- PROPERTIES
+
+        public static T LastValue<T>(
+            this List<T> list
+            )
+        {
+            if( list.Count == 0 )
+            {
+                return default;
+            }
+
+            return list[ list.Count  - 1 ];
+        }
+
+        // -- METHODS
 
         public static void Shuffle<T>(
             this List<T> list
@@ -30,7 +44,7 @@ namespace FishingCactus
             int index
             )
         {
-            if( index > 0 
+            if( index > 0
                 && list.Count > 1
                 )
             {

@@ -17,6 +17,11 @@ namespace FishingCactus
             }
         }
 
+        public static bool HasInstance
+        {
+            get{ return instance != null; }
+        }
+
         private static _INSTANCE_ instance;
 
         public virtual void Awake()
