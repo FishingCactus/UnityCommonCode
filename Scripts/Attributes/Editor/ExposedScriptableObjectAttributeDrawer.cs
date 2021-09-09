@@ -10,6 +10,13 @@ namespace FishingCactus
 
         private readonly float IndentationSize = 12.0f;
 
+        // -- PROPERTIES
+
+        ExposedScriptableObjectAttribute scriptable_attribute
+        {
+            get{ return ( ExposedScriptableObjectAttribute )attribute; }
+        }
+
         // -- UNITY
 
         public override void OnGUI(
@@ -35,9 +42,13 @@ namespace FishingCactus
             var property_is_expanded = EditorGUI.Foldout( header_position, property.isExpanded, label, true, InternalEditorStyle.Foldout );
             GUI.enabled = true;
 
-            header_position.x += header_position.width;
-            header_position.width = property_position.width - EditorGUIUtility.labelWidth + IndentationSize;
-            EditorGUI.PropertyField( header_position, property, GUIContent.none, true );
+            if( scriptable_attribute.ItMustDisplayObjectSelector )
+            {
+                header_position.x += header_position.width;
+                header_position.width = property_position.width - EditorGUIUtility.labelWidth + IndentationSize;
+
+                EditorGUI.PropertyField( header_position, property, GUIContent.none, true );
+            }
 
             if( property.objectReferenceValue == null)
             {
