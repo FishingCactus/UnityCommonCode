@@ -187,6 +187,52 @@ public class InternalEditorStyle
         }
     }
 
+    public static GUIStyle ItalicLabelStyle
+    {
+        get
+        {
+            if( CustomItalicLabelStyle == null )
+            {
+                CustomItalicLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                CustomItalicLabelStyle.fontStyle = FontStyle.Italic;
+            }
+
+            return CustomItalicLabelStyle;
+        }
+    }
+
+    public static GUIStyle ItalicWarningLabelStyle
+    {
+        get
+        {
+            if( CustomItalicWarningLabelStyle == null )
+            {
+                CustomItalicWarningLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                CustomItalicWarningLabelStyle.fontStyle = FontStyle.Italic;
+
+                SetTextsColor( CustomItalicWarningLabelStyle, new Color( 0.8f, 0.8f, 0.2f, 1.0f ) );
+            }
+
+            return CustomItalicWarningLabelStyle;
+        }
+    }
+
+    public static GUIStyle ItalicErrorLabelStyle
+    {
+        get
+        {
+            if( CustomItalicErrorLabelStyle == null )
+            {
+                CustomItalicErrorLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                CustomItalicErrorLabelStyle.fontStyle = FontStyle.Italic;
+
+                SetTextsColor( CustomItalicErrorLabelStyle, Color.red );
+            }
+
+            return CustomItalicErrorLabelStyle;
+        }
+    }
+
     public static GUIStyle BoldLabelStyle
     {
         get
@@ -210,7 +256,7 @@ public class InternalEditorStyle
                 CustomBoldGreenLabelStyle = new GUIStyle( EditorStyles.boldLabel );
                 CustomBoldGreenLabelStyle.fontStyle = FontStyle.Bold;
 
-                SetTextsColor( CustomBoldGreenLabelStyle, new Color( 0.1f, 1.0f, 0.1f, 1.0f ) );
+                SetTextsColor( CustomBoldGreenLabelStyle, new Color( 0.2f, 0.8f, 0.2f, 1.0f ) );
             }
 
             return CustomBoldGreenLabelStyle;
@@ -231,6 +277,10 @@ public class InternalEditorStyle
     private static GUIStyle CustomCenteredLabelStyle;
     private static GUIStyle CustomRightLabelStyle;
     private static GUIStyle CustomBoldLabelStyle;
+    private static GUIStyle CustomItalicLabelStyle;
+    private static GUIStyle CustomItalicErrorLabelStyle;
+    private static GUIStyle CustomItalicWarningLabelStyle;
+
     private static GUIStyle CustomBoldGreenLabelStyle;
 
     private static Color GroupColor = new Color( 0.29f, 0.69f, 1.0f, 1.0f );
