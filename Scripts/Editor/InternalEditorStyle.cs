@@ -281,20 +281,20 @@ public class InternalEditorStyle
 
     // -- PRIVATE
 
+    private static GUIStyle BlackBoldLabelStyle;
+
     private static GUIStyle BlueFoldoutStyle;
     private static GUIStyle BlueBoldFoldoutStyle;
     private static GUIStyle BlueGroupLabelStyle;
     private static GUIStyle BlueSubGroupLabelStyle;
 
-    private static GUIStyle RedBoldFoldoutStyle;
-    private static GUIStyle RedGroupLabelStyle;
-    private static GUIStyle RedItalicLabelStyle;
-
     private static GUIStyle GreenBoldLabelStyle;
 
     private static GUIStyle OrangeItalicLabelStyle;
 
-    private static GUIStyle BlackBoldLabelStyle;
+    private static GUIStyle RedBoldFoldoutStyle;
+    private static GUIStyle RedGroupLabelStyle;
+    private static GUIStyle RedItalicLabelStyle;
 
     private static GUIStyle LockerToggleStyle;
     private static GUIStyle CenteredToggleStyle;
