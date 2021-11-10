@@ -7,101 +7,165 @@ public class InternalEditorStyle
 
     public static float MinimalButtonWidth = 24.0f;
 
-    public static GUIStyle Foldout
+    public static GUIStyle BlackBoldLabel
     {
         get
         {
-            if( CustomFoldoutStyle == null )
+            if( BlackBoldLabelStyle == null )
             {
-                CustomFoldoutStyle = new GUIStyle( EditorStyles.foldout );
-                CustomFoldoutStyle.fontStyle = FontStyle.Normal;
+                BlackBoldLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                BlackBoldLabelStyle.fontStyle = FontStyle.Bold;
 
-                SetTextsColor( CustomFoldoutStyle, GroupColor );
+                SetTextsColor( BlackBoldLabelStyle, Color.black );
             }
 
-            return CustomFoldoutStyle;
+            return BlackBoldLabelStyle;
         }
     }
 
-    public static GUIStyle BoldFoldout
+    public static GUIStyle BlueFoldout
     {
         get
         {
-            if( CustomBoldFoldoutStyle == null )
+            if( BlueFoldoutStyle == null )
             {
-                CustomBoldFoldoutStyle = new GUIStyle( EditorStyles.foldout );
-                CustomBoldFoldoutStyle.fontStyle = FontStyle.Bold;
+                BlueFoldoutStyle = new GUIStyle( EditorStyles.foldout );
+                BlueFoldoutStyle.fontStyle = FontStyle.Normal;
 
-                SetTextsColor( CustomBoldFoldoutStyle, GroupColor );
+                SetTextsColor( BlueFoldoutStyle, BlueColor );
             }
 
-            return CustomBoldFoldoutStyle;
+            return BlueFoldoutStyle;
         }
     }
 
-    public static GUIStyle DebugFoldout
+    public static GUIStyle BlueBoldFoldout
     {
         get
         {
-            if( CustomDebugFoldoutStyle == null )
+            if( BlueBoldFoldoutStyle == null )
             {
-                CustomDebugFoldoutStyle = new GUIStyle( EditorStyles.foldout );
-                CustomDebugFoldoutStyle.fontStyle = FontStyle.Bold;
+                BlueBoldFoldoutStyle = new GUIStyle( EditorStyles.foldout );
+                BlueBoldFoldoutStyle.fontStyle = FontStyle.Bold;
 
-                SetTextsColor( CustomDebugFoldoutStyle, Color.red );
+                SetTextsColor( BlueBoldFoldoutStyle, BlueColor );
             }
 
-            return CustomDebugFoldoutStyle;
+            return BlueBoldFoldoutStyle;
         }
     }
 
-    public static GUIStyle Group
+    public static GUIStyle BlueGroupLabel
     {
         get
         {
-            if ( CustomGroupStyle == null )
+            if ( BlueGroupLabelStyle == null )
             {
-                CustomGroupStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomGroupStyle.fontStyle = FontStyle.Bold;
+                BlueGroupLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                BlueGroupLabelStyle.fontStyle = FontStyle.Bold;
 
-                SetTextsColor( CustomGroupStyle, GroupColor );
+                SetTextsColor( BlueGroupLabelStyle, BlueColor );
             }
 
-            return CustomGroupStyle;
+            return BlueGroupLabelStyle;
         }
     }
 
-    public static GUIStyle ErrorGroup
+    public static GUIStyle BlueSubGroupLabel
     {
         get
         {
-            if( CustomErrorGroupStyle == null )
+            if( BlueSubGroupLabelStyle == null )
             {
-                CustomErrorGroupStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomErrorGroupStyle.fontStyle = FontStyle.Bold;
+                BlueSubGroupLabelStyle = new GUIStyle( EditorStyles.boldLabel );
 
-                SetTextsColor( CustomErrorGroupStyle, Color.red );
+                BlueSubGroupLabelStyle.fontSize = 10;
+                BlueSubGroupLabelStyle.fontStyle = FontStyle.Italic;
+
+                SetTextsColor( BlueSubGroupLabelStyle, BlueColor );
             }
 
-            return CustomErrorGroupStyle;
+            return BlueSubGroupLabelStyle;
         }
     }
 
-    public static GUIStyle SubGroup
+    public static GUIStyle GreenBoldLabel
     {
         get
         {
-            if( CustomSubGroupStyle == null )
+            if( GreenBoldLabelStyle == null )
             {
-                CustomSubGroupStyle = new GUIStyle( EditorStyles.boldLabel );
+                GreenBoldLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                GreenBoldLabelStyle.fontStyle = FontStyle.Bold;
 
-                CustomSubGroupStyle.fontSize = 10;
-                CustomSubGroupStyle.fontStyle = FontStyle.Italic;
-
-                SetTextsColor( CustomSubGroupStyle, GroupColor );
+                SetTextsColor( GreenBoldLabelStyle, GreenColor );
             }
 
-            return CustomSubGroupStyle;
+            return GreenBoldLabelStyle;
+        }
+    }
+
+    public static GUIStyle OrangeItalicLabel
+    {
+        get
+        {
+            if( OrangeItalicLabelStyle == null )
+            {
+                OrangeItalicLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                OrangeItalicLabelStyle.fontStyle = FontStyle.Italic;
+
+                SetTextsColor( OrangeItalicLabelStyle, OrangeColor );
+            }
+
+            return OrangeItalicLabelStyle;
+        }
+    }
+
+    public static GUIStyle RedBoldFoldout
+    {
+        get
+        {
+            if( RedBoldFoldoutStyle == null )
+            {
+                RedBoldFoldoutStyle = new GUIStyle( EditorStyles.foldout );
+                RedBoldFoldoutStyle.fontStyle = FontStyle.Bold;
+
+                SetTextsColor( RedBoldFoldoutStyle, RedColor );
+            }
+
+            return RedBoldFoldoutStyle;
+        }
+    }
+
+    public static GUIStyle RedGroupLabel
+    {
+        get
+        {
+            if( RedGroupLabelStyle == null )
+            {
+                RedGroupLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                RedGroupLabelStyle.fontStyle = FontStyle.Bold;
+
+                SetTextsColor( RedGroupLabelStyle, RedColor );
+            }
+
+            return RedGroupLabelStyle;
+        }
+    }
+
+    public static GUIStyle RedItalicLabel
+    {
+        get
+        {
+            if( RedItalicLabelStyle == null )
+            {
+                RedItalicLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                RedItalicLabelStyle.fontStyle = FontStyle.Italic;
+
+                SetTextsColor( RedItalicLabelStyle, RedColor );
+            }
+
+            return RedItalicLabelStyle;
         }
     }
 
@@ -109,24 +173,24 @@ public class InternalEditorStyle
     {
         get
         {
-            if( CustomSubGroupStyle == null )
+            if( LockerToggleStyle == null )
             {
-                CustomLockerToggleStyle = new GUIStyle( EditorStyles.toggle );
+                LockerToggleStyle = new GUIStyle( EditorStyles.toggle );
 
-                CustomLockerToggleStyle.alignment = TextAnchor.MiddleCenter;
+                LockerToggleStyle.alignment = TextAnchor.MiddleCenter;
 
-                CustomLockerToggleStyle.normal.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
-                CustomLockerToggleStyle.hover.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
-                CustomLockerToggleStyle.focused.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
-                CustomLockerToggleStyle.active.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
+                LockerToggleStyle.normal.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
+                LockerToggleStyle.hover.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
+                LockerToggleStyle.focused.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
+                LockerToggleStyle.active.background = EditorGUIUtility.IconContent( "LockIcon-On" ).image as Texture2D;
 
-                CustomLockerToggleStyle.onFocused.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
-                CustomLockerToggleStyle.onNormal.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
-                CustomLockerToggleStyle.onHover.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
-                CustomLockerToggleStyle.onActive.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
+                LockerToggleStyle.onFocused.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
+                LockerToggleStyle.onNormal.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
+                LockerToggleStyle.onHover.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
+                LockerToggleStyle.onActive.background = EditorGUIUtility.IconContent( "LockIcon" ).image as Texture2D;
             }
 
-            return CustomLockerToggleStyle;
+            return LockerToggleStyle;
         }
     }
 
@@ -134,13 +198,13 @@ public class InternalEditorStyle
     {
         get
         {
-            if( CustomCenteredToggleStyle == null )
+            if( CenteredToggleStyle == null )
             {
-                CustomCenteredToggleStyle = new GUIStyle( EditorStyles.toggle );
-                CustomCenteredToggleStyle.alignment = TextAnchor.MiddleCenter;
+                CenteredToggleStyle = new GUIStyle( EditorStyles.toggle );
+                CenteredToggleStyle.alignment = TextAnchor.MiddleCenter;
             }
 
-            return CustomCenteredToggleStyle;
+            return CenteredToggleStyle;
         }
     }
 
@@ -148,142 +212,103 @@ public class InternalEditorStyle
     {
         get
         {
-            if( CustomEyeButtonStyle == null )
+            if( EyeButtonStyle == null )
             {
-                CustomEyeButtonStyle = new GUIStyle( EditorStyles.miniButton );
-                CustomEyeButtonStyle.alignment = TextAnchor.UpperCenter;
-                CustomEyeButtonStyle.normal.background = null;
+                EyeButtonStyle = new GUIStyle( EditorStyles.miniButton );
+                EyeButtonStyle.alignment = TextAnchor.UpperCenter;
+                EyeButtonStyle.normal.background = null;
             }
 
-            return CustomEyeButtonStyle;
+            return EyeButtonStyle;
         }
     }
 
-    public static GUIStyle CenteredLabelStyle
+    public static GUIStyle CenteredLabel
     {
         get
         {
-            if( CustomCenteredLabelStyle == null )
+            if( CenteredLabelStyle == null )
             {
-                CustomCenteredLabelStyle = new GUIStyle( EditorStyles.label );
-                CustomCenteredLabelStyle.alignment = TextAnchor.MiddleCenter;
+                CenteredLabelStyle = new GUIStyle( EditorStyles.label );
+                CenteredLabelStyle.alignment = TextAnchor.MiddleCenter;
             }
 
-            return CustomCenteredLabelStyle;
+            return CenteredLabelStyle;
         }
     }
 
-    public static GUIStyle RightLabelStyle
+    public static GUIStyle RightLabel
     {
         get
         {
-            if( CustomRightLabelStyle == null )
+            if( RightLabelStyle == null )
             {
-                CustomRightLabelStyle = new GUIStyle( EditorStyles.label );
-                CustomRightLabelStyle.alignment = TextAnchor.MiddleRight;
+                RightLabelStyle = new GUIStyle( EditorStyles.label );
+                RightLabelStyle.alignment = TextAnchor.MiddleRight;
             }
 
-            return CustomRightLabelStyle;
+            return RightLabelStyle;
         }
     }
 
-    public static GUIStyle ItalicLabelStyle
+    public static GUIStyle ItalicLabel
     {
         get
         {
-            if( CustomItalicLabelStyle == null )
+            if( ItalicLabelStyle == null )
             {
-                CustomItalicLabelStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomItalicLabelStyle.fontStyle = FontStyle.Italic;
+                ItalicLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                ItalicLabelStyle.fontStyle = FontStyle.Italic;
             }
 
-            return CustomItalicLabelStyle;
+            return ItalicLabelStyle;
         }
     }
 
-    public static GUIStyle ItalicWarningLabelStyle
+    public static GUIStyle BoldLabel
     {
         get
         {
-            if( CustomItalicWarningLabelStyle == null )
+            if( BoldLabelStyle == null )
             {
-                CustomItalicWarningLabelStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomItalicWarningLabelStyle.fontStyle = FontStyle.Italic;
-
-                SetTextsColor( CustomItalicWarningLabelStyle, new Color( 0.8f, 0.8f, 0.2f, 1.0f ) );
+                BoldLabelStyle = new GUIStyle( EditorStyles.boldLabel );
+                BoldLabelStyle.fontStyle = FontStyle.Bold;
             }
 
-            return CustomItalicWarningLabelStyle;
-        }
-    }
-
-    public static GUIStyle ItalicErrorLabelStyle
-    {
-        get
-        {
-            if( CustomItalicErrorLabelStyle == null )
-            {
-                CustomItalicErrorLabelStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomItalicErrorLabelStyle.fontStyle = FontStyle.Italic;
-
-                SetTextsColor( CustomItalicErrorLabelStyle, Color.red );
-            }
-
-            return CustomItalicErrorLabelStyle;
-        }
-    }
-
-    public static GUIStyle BoldLabelStyle
-    {
-        get
-        {
-            if( CustomBoldLabelStyle == null )
-            {
-                CustomBoldLabelStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomBoldLabelStyle.fontStyle = FontStyle.Bold;
-            }
-
-            return CustomBoldLabelStyle;
-        }
-    }
-
-    public static GUIStyle BoldGreenLabelStyle
-    {
-        get
-        {
-            if( CustomBoldGreenLabelStyle == null )
-            {
-                CustomBoldGreenLabelStyle = new GUIStyle( EditorStyles.boldLabel );
-                CustomBoldGreenLabelStyle.fontStyle = FontStyle.Bold;
-
-                SetTextsColor( CustomBoldGreenLabelStyle, new Color( 0.2f, 0.8f, 0.2f, 1.0f ) );
-            }
-
-            return CustomBoldGreenLabelStyle;
+            return BoldLabelStyle;
         }
     }
 
     // -- PRIVATE
 
-    private static GUIStyle CustomFoldoutStyle;
-    private static GUIStyle CustomBoldFoldoutStyle;
-    private static GUIStyle CustomDebugFoldoutStyle;
-    private static GUIStyle CustomGroupStyle;
-    private static GUIStyle CustomErrorGroupStyle;
-    private static GUIStyle CustomSubGroupStyle;
-    private static GUIStyle CustomLockerToggleStyle;
-    private static GUIStyle CustomCenteredToggleStyle;
-    private static GUIStyle CustomEyeButtonStyle;
-    private static GUIStyle CustomCenteredLabelStyle;
-    private static GUIStyle CustomRightLabelStyle;
-    private static GUIStyle CustomBoldLabelStyle;
-    private static GUIStyle CustomItalicLabelStyle;
-    private static GUIStyle CustomItalicErrorLabelStyle;
-    private static GUIStyle CustomItalicWarningLabelStyle;
+    private static GUIStyle BlueFoldoutStyle;
+    private static GUIStyle BlueBoldFoldoutStyle;
+    private static GUIStyle BlueGroupLabelStyle;
+    private static GUIStyle BlueSubGroupLabelStyle;
 
-    private static GUIStyle CustomBoldGreenLabelStyle;
+    private static GUIStyle RedBoldFoldoutStyle;
+    private static GUIStyle RedGroupLabelStyle;
+    private static GUIStyle RedItalicLabelStyle;
 
-    private static Color GroupColor = new Color( 0.29f, 0.69f, 1.0f, 1.0f );
+    private static GUIStyle GreenBoldLabelStyle;
+
+    private static GUIStyle OrangeItalicLabelStyle;
+
+    private static GUIStyle BlackBoldLabelStyle;
+
+    private static GUIStyle LockerToggleStyle;
+    private static GUIStyle CenteredToggleStyle;
+    private static GUIStyle EyeButtonStyle;
+    private static GUIStyle CenteredLabelStyle;
+    private static GUIStyle RightLabelStyle;
+    private static GUIStyle BoldLabelStyle;
+    private static GUIStyle ItalicLabelStyle;
+
+
+    private static Color BlueColor = new Color( 0.29f, 0.69f, 1.0f, 1.0f );
+    private static Color GreenColor = new Color( 0.2f, 0.8f, 0.2f, 1.0f );
+    private static Color RedColor = new Color( 1.1f, 0.2f, 0.2f, 1.0f );
+    private static Color OrangeColor = new Color( 0.8f, 0.8f, 0.2f, 1.0f );
 
     private static void SetTextsColor(
         GUIStyle style_to_update,
