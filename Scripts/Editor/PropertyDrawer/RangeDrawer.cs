@@ -9,7 +9,6 @@ namespace FishingCactus
     {
         // -- PRIVATE
 
-        private bool PropertyIsExpanded = false;
         private float OneLineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         // -- UNITY
@@ -18,12 +17,12 @@ namespace FishingCactus
             SerializedProperty property, GUIContent label
             )
         {
-            return PropertyIsExpanded ? 3.0f * OneLineHeight : OneLineHeight;
+            return property.isExpanded ? 3.0f * OneLineHeight : OneLineHeight;
         }
 
         public override void OnGUI(
-            Rect position, 
-            SerializedProperty property, 
+            Rect position,
+            SerializedProperty property,
             GUIContent label
             )
         {
@@ -37,22 +36,22 @@ namespace FishingCactus
 
             if( maximum_value_property.propertyType == SerializedPropertyType.Integer )
             {
-                PropertyIsExpanded = EditorGUI.Foldout( 
-                    local_rectangle, 
-                    PropertyIsExpanded,
-                    $"{label.text}   [{minimum_value_property.intValue};{maximum_value_property.intValue}[" 
+                property.isExpanded = EditorGUI.Foldout(
+                    local_rectangle,
+                    property.isExpanded,
+                    $"{label.text}   [{minimum_value_property.intValue};{maximum_value_property.intValue}["
                     );
             }
             else
             {
-                PropertyIsExpanded = EditorGUI.Foldout(
+                property.isExpanded = EditorGUI.Foldout(
                     local_rectangle,
-                    PropertyIsExpanded,
-                    $"{label.text}   [{minimum_value_property.floatValue};{maximum_value_property.floatValue}]" 
+                    property.isExpanded,
+                    $"{label.text}   [{minimum_value_property.floatValue};{maximum_value_property.floatValue}]"
                     );
             }
 
-            if( PropertyIsExpanded )
+            if( property.isExpanded )
             {
                 local_rectangle = EditorGUI.IndentedRect( local_rectangle );
 
@@ -72,7 +71,7 @@ namespace FishingCactus
                         if( minimum_value_property.floatValue > maximum_value_property.floatValue )
                         {
                             maximum_value_property.floatValue = minimum_value_property.floatValue  + 1.0f;
-                        }                        
+                        }
                     }
                     break;
 

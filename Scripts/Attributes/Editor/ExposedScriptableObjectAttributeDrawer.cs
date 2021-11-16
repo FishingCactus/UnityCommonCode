@@ -39,7 +39,7 @@ namespace FishingCactus
                 property.isExpanded = false;
             }
 
-            var property_is_expanded = EditorGUI.Foldout( header_position, property.isExpanded, label, true, InternalEditorStyle.Foldout );
+            var property_is_expanded = EditorGUI.Foldout( header_position, property.isExpanded, label, true, InternalEditorStyle.BlueFoldout );
             GUI.enabled = true;
 
             if( scriptable_attribute.ItMustDisplayObjectSelector )
