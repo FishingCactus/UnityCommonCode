@@ -128,6 +128,7 @@ internal class ArtistsToolsWindow : EditorWindow
     private Object ReplacerObject;
     private bool ItMustKeepObjectProperties = true;
     private bool ItMustKeepLocalTransforms = true;
+    private bool ItMustKeepLocalRotation = false;
     private bool ItMustMergeComponents = false;
     private bool IncludeChildren = true;
     private bool AllMeshColliders = false;
@@ -177,6 +178,7 @@ internal class ArtistsToolsWindow : EditorWindow
 
         ItMustKeepObjectProperties = EditorGUILayout.Toggle( "Keep object properties", ItMustKeepObjectProperties );
         ItMustKeepLocalTransforms = EditorGUILayout.Toggle( "Keep rotation & scale", ItMustKeepLocalTransforms );
+        ItMustKeepLocalRotation = EditorGUILayout.Toggle("Keep rotation", ItMustKeepLocalRotation);
         ItMustMergeComponents = EditorGUILayout.Toggle( "Merge components", ItMustMergeComponents );
         ReplacerObject = EditorGUILayout.ObjectField( "Replace selected by : ", ReplacerObject, typeof( GameObject ), false );
 
@@ -211,7 +213,12 @@ internal class ArtistsToolsWindow : EditorWindow
                     instanciated_object.transform.localScale = old_object.transform.localScale;
                 }
 
-                if( ItMustMergeComponents )
+                if ( ItMustKeepLocalRotation )
+                {
+                    instanciated_object.transform.localRotation = old_object.transform.localRotation;
+                }
+
+                if ( ItMustMergeComponents )
                 {
                     foreach( var component in old_object.GetComponents<Component>() )
                     {
@@ -287,6 +294,18 @@ internal class ArtistsToolsWindow : EditorWindow
             GameObject[] selected_object_array = Selection.gameObjects;
 
             foreach( GameObject object_to_rotate in selected_object_array )
+            {
+                float random_rotation = Random.Range( 30.0f, 120.0f );
+
+                object_to_rotate.transform.Rotate( new Vector3( 0.0f, random_rotation, 0.0f ) );
+            }
+        }
+
+        if (GUILayout.Button( "Random z rotation on selected !") )
+        {
+            GameObject[] selected_object_array = Selection.gameObjects;
+
+            foreach ( GameObject object_to_rotate in selected_object_array )
             {
                 float random_rotation = Random.Range( 30.0f, 120.0f );
 
