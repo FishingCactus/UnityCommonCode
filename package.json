@@ -1,10 +1,10 @@
 {
   "name": "com.fishingcactus.common-code",
   "version": "0.2.0",
-  "displayName": "Common Code",
+  "displayName": "FC - Common Code",
   "description": "Shared features for FC Games.",
-  "unity": "2021.2",
-  "unityRelease": "7f1",
+  "unity": "2020.3",
+  "unityRelease": "18f1",
   "author": {
     "name": "FishingCactus",
     "email": "contact@fishingcactus.com",
