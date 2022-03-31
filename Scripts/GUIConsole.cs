@@ -41,7 +41,7 @@ namespace FishingCactus
                 return;
             }
 
-            if ( Input.GetKeyDown( toggleKey ) )
+            if ( UnityEngine.Input.GetKeyDown( toggleKey ) )
             {
                 Toggle();
             }

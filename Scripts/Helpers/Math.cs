@@ -15,5 +15,25 @@ namespace FishingCactus
 
             return pos;
         }
+
+        public static bool SameSign(
+            int first_value,
+            int second_value
+            )
+        {
+            return ( first_value > 0 && second_value > 0 )
+                || ( first_value < 0 && second_value < 0 )
+                || ( first_value == 0 && second_value == 0 );
+        }
+
+        public static bool SameSign(
+            float first_value,
+            float second_value
+            )
+        {
+            return ( first_value > 0.0f && second_value > 0.0f )
+                || ( first_value < 0.0f && second_value < 0.0f )
+                || ( first_value == 0.0f && second_value == 0.0f );
+        }
     }
 }

@@ -15,5 +15,11 @@ namespace FishingCactus
         {
             return Enum.GetValues( typeof( T ) ).Cast<T>().Select( value => value.ToString() );
         }
+
+        public static T GetRandom<T>()
+        {
+            Array array = Enum.GetValues( typeof( T ) );
+            return (T)array.GetValue( UnityEngine.Random.Range( 0, array.Length ) );
+        }
     }
 }

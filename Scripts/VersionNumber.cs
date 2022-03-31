@@ -1,30 +1,44 @@
-﻿using System.Reflection;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class VersionNumber : MonoBehaviour
 {
-    public float ShowVersionForSeconds = -1;
-
-    private string version;
-    private Rect position = new Rect( 0, 0, 100, 20 );
+    // -- PUBLIC
 
     public string Version
     {
         get
         {
-            if ( version == null )
+            if ( VersionInformation == null )
             {
-                version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                if( ItMustAddCompanyName )
+                {
+                    VersionInformation = $"{Application.companyName} - {Application.productName} - {Application.version}";
+                }
+                else
+                {
+                    VersionInformation = $"{Application.productName} - {Application.version}";
+                }
             }
-            return version;
+            return VersionInformation;
         }
     }
+
+    // -- PRIVATE
+
+    [SerializeField]
+    private float ShowVersionForSeconds = -1;
+    [SerializeField]
+    private bool ItMustAddCompanyName = true;
+
+    private string VersionInformation;
+    private Rect Position = new Rect( 0, 0, 300, 20 );
+
+    // -- UNITY
 
     void Start()
     {
         DontDestroyOnLoad( this );
 
-        // Log current version in log file
         Debug.Log( string.Format( "Currently running version is {0}", Version ) );
 
         if ( ShowVersionForSeconds >= 0.0f )
@@ -32,9 +46,8 @@ public class VersionNumber : MonoBehaviour
             Destroy( this, ShowVersionForSeconds );
         }
 
-        position.x = 10f;
-        position.y = Screen.height - position.height - 10f;
-
+        Position.x = 10f;
+        Position.y = Screen.height - Position.height - 10f;
     }
 
     void OnGUI()
@@ -45,6 +58,6 @@ public class VersionNumber : MonoBehaviour
         }
 
         GUI.contentColor = Color.gray;
-        GUI.Label( position, string.Format( "v{0}", Version ) );
+        GUI.Label( Position, Version );
     }
 }

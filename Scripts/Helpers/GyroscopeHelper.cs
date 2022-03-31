@@ -4,6 +4,7 @@ namespace FishingCactus
 {
     public class GyroscopeHelper
     {
+#if UNITYCOMMONCODE_USE_GYROSCOPE
         public Vector3 ManualRotation = Vector3.zero;
 
         public void Enable()
@@ -88,5 +89,6 @@ namespace FishingCactus
         private Quaternion baseOrientationRotationFix = Quaternion.identity;
         private Quaternion referenceRotation = Quaternion.identity;
         private bool canUseGyroscope = false;
+#endif
     }
 }

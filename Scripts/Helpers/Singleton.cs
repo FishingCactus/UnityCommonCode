@@ -12,16 +12,14 @@ namespace FishingCactus
                 if ( instance == null )
                 {
                     instance = FindObjectOfType<_INSTANCE_>();
-
-                    if ( instance == null )
-                    {
-                        GameObject obj = new GameObject();
-                        obj.hideFlags = HideFlags.HideAndDontSave;
-                        instance = obj.AddComponent<_INSTANCE_>();
-                    }
                 }
                 return instance;
             }
+        }
+
+        public static bool HasInstance
+        {
+            get{ return instance != null; }
         }
 
         private static _INSTANCE_ instance;
@@ -34,9 +32,11 @@ namespace FishingCactus
             {
                 instance = this as _INSTANCE_;
             }
-            else
+            else if(instance != this)
             {
-                Destroy( gameObject );
+                Debug.LogError( $"{instance.name} is added two times.", this );
+
+                Destroy( this );
             }
         }
     }
