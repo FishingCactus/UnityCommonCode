@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using Cinemachine;
+#if CINEMACHINE_AVAILABLE
+    using Cinemachine;
+#endif
 
 namespace FishingCactus
 {
@@ -405,30 +407,32 @@ namespace FishingCactus
                 }
             }
 
-            GUILayout.Label( "Camera --------------", EditorStyles.boldLabel );
+            #if CINEMACHINE_AVAILABLE
+                GUILayout.Label( "Camera --------------", EditorStyles.boldLabel );
 
-            CinemachineVirtualCamera cinemachine_camera = null;
-            Camera classic_camera = null;
+                CinemachineVirtualCamera cinemachine_camera = null;
+                Camera classic_camera = null;
 
-            if( Selection.gameObjects.Length == 1 )
-            {
-                cinemachine_camera = Selection.gameObjects[0].GetComponent<CinemachineVirtualCamera>();
-                classic_camera = Selection.gameObjects[0].GetComponent<Camera>();
-            }
-
-            GUI.enabled = cinemachine_camera != null || classic_camera != null;
-
-            if( GUILayout.Button( "Setup view camera" ) )
-            {
-                if( cinemachine_camera != null )
+                if( Selection.gameObjects.Length == 1 )
                 {
-                    SetupViewCamera( cinemachine_camera.transform, cinemachine_camera.m_Lens.FieldOfView );
+                    cinemachine_camera = Selection.gameObjects[0].GetComponent<CinemachineVirtualCamera>();
+                    classic_camera = Selection.gameObjects[0].GetComponent<Camera>();
                 }
-                else if( classic_camera != null )
+
+                GUI.enabled = cinemachine_camera != null || classic_camera != null;
+
+                if( GUILayout.Button( "Setup view camera" ) )
                 {
-                    SetupViewCamera( classic_camera.transform, classic_camera.fieldOfView );
+                    if( cinemachine_camera != null )
+                    {
+                        SetupViewCamera( cinemachine_camera.transform, cinemachine_camera.m_Lens.FieldOfView );
+                    }
+                    else if( classic_camera != null )
+                    {
+                        SetupViewCamera( classic_camera.transform, classic_camera.fieldOfView );
+                    }
                 }
-            }
+            #endif
 
             GUI.enabled = true;
 

@@ -4,19 +4,14 @@
   "displayName": "Common Code",
   "description": "Shared features for FC Games.",
   "unity": "2021.2",
-  "unityRelease": "16f1",
+  "unityRelease": "7f1",
   "author": {
     "name": "FishingCactus",
     "email": "contact@fishingcactus.com",
     "url": "https://www.fishingcactus.com"
   },
-  "dependencies": {
-    "com.unity.cinemachine": "2.8.4"
-    },
   "references": [
-        "FishingCactus.CommonCode.Editor",
-        "FishingCactus.CommonCode.Runtime",
-        "com.unity.cinemachine",
-        "com.unity.cinemachine.Editor"
-    ]
+    "FishingCactus.CommonCode.Editor",
+    "FishingCactus.CommonCode.Runtime"
+  ]
 }
