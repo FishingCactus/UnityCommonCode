@@ -92,5 +92,24 @@ namespace FishingCactus
         {
             return game_object.GetComponent( component_type ) ?? game_object.AddComponent( component_type );
         }
+
+        public static void SafeDestroy(
+            this GameObject game_object_instance
+            )
+        {
+            if( game_object_instance )
+            {
+                if( Application.isPlaying )
+                {
+                    Object.Destroy( game_object_instance );
+                }
+                else
+                {
+                    Object.DestroyImmediate( game_object_instance );
+                }
+
+                game_object_instance = null;
+            }
+        }
     }
 }
