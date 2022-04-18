@@ -1,0 +1,17 @@
+{
+  "name": "com.fishingcactus.common-code",
+  "version": "1.0.0",
+  "displayName": "FC - Common Code",
+  "description": "Code, Extensions and extra features  for Fishing Cactus Games.",
+  "unity": "2020.3",
+  "unityRelease": "18f1",
+  "author": {
+    "name": "FishingCactus",
+    "email": "contact@fishingcactus.com",
+    "url": "https://www.fishingcactus.com"
+  },
+  "references": [
+    "FishingCactus.CommonCode.Editor",
+    "FishingCactus.CommonCode.Runtime"
+  ]
+}
