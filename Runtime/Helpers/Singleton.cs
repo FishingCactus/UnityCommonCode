@@ -5,6 +5,12 @@ namespace FishingCactus
     public class Singleton<_INSTANCE_> : MonoBehaviour
         where _INSTANCE_ : Singleton<_INSTANCE_>
     {
+        // -- FIELDS
+
+        private static _INSTANCE_ instance;
+
+        // -- METHODS
+
         public static _INSTANCE_ Instance
         {
             get
@@ -22,11 +28,16 @@ namespace FishingCactus
             get{ return instance != null; }
         }
 
-        private static _INSTANCE_ instance;
+        protected virtual bool IsPersistentSingleton{ get{ return true; } }
+
+        // -- UNITY
 
         public virtual void Awake()
         {
-            DontDestroyOnLoad( gameObject );
+            if( IsPersistentSingleton )
+            {
+                DontDestroyOnLoad( gameObject );
+            }
 
             if ( instance == null )
             {
