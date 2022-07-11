@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DGamesCore
+namespace FishingCactus.UnityCommonCode
 {
     public class WizzardUtils
     {
