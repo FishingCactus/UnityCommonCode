@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.3] - 2022-08-09
+### Fix
+- Fix SerializableDictionary setter bug for existing keys
+
 ## [1.0.2] - 2022-05-25
 ### Added
 - Add WizzardUtils.DisplayPathSelector().

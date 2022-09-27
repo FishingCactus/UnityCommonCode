@@ -60,7 +60,9 @@ public class SerializableDictionary<TKey, TValue> :
         {
             if( KeyPositions.TryGetValue( key, out uint index ) )
             {
-                KeyValueList[ ( int )index ].SetValue( value );
+                var keyValuePair = KeyValueList[ ( int )index ];
+                keyValuePair.SetValue( value );
+                KeyValueList[ ( int )index ] = keyValuePair;
             }
             else
             {
