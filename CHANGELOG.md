@@ -2,7 +2,7 @@
 
 ## [1.0.4] - 2022-01-27
 ### Fix
-- Add Max attribute for integer and float fields
+- Add Max attribute for integer and float fields and Optional helper struct
 
 ## [1.0.3] - 2022-08-09
 ### Fix
