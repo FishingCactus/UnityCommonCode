@@ -1,37 +1,40 @@
 using UnityEngine;
 
-[System.Serializable]
-public struct Optional<T>
+namespace FishingCactus
 {
-    // -- FIELDS
-
-    [SerializeField] private bool _Enabled;
-    [SerializeField] private T _Value;
-
-    // -- PROPERTIES
-
-    public bool Enabled => _Enabled;
-    public T Value => _Value;
-
-    // -- CONSTRUCTORS
-
-    public Optional(
-        bool enabled,
-        T value
-        )
+    [System.Serializable]
+    public struct Optional<T>
     {
-        _Enabled = enabled;
-        _Value = value;
-    }
+        // -- FIELDS
 
-    // -- METHODS
+        [SerializeField] private bool _Enabled;
+        [SerializeField] private T _Value;
 
-    public bool HasValue(
-        out T value
-        )
-    {
-        value = _Value;
+        // -- PROPERTIES
 
-        return Enabled;
+        public bool Enabled => _Enabled;
+        public T Value => _Value;
+
+        // -- CONSTRUCTORS
+
+        public Optional(
+            bool enabled,
+            T value
+            )
+        {
+            _Enabled = enabled;
+            _Value = value;
+        }
+
+        // -- METHODS
+
+        public bool HasValue(
+            out T value
+            )
+        {
+            value = _Value;
+
+            return Enabled;
+        }
     }
 }

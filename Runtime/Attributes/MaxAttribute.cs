@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public sealed class MaxAttribute : PropertyAttribute
+namespace FishingCactus
 {
-    public readonly float Max;
-
-    public MaxAttribute(
-        float max
-        )
+    public sealed class MaxAttribute : PropertyAttribute
     {
-        Max = max;
+        public readonly float Max;
+
+        public MaxAttribute(
+            float max
+            )
+        {
+            Max = max;
+        }
     }
 }
