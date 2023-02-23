@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.5] - 2023-02-23
+### Fix
+- Remove Task delegate because useless and was preventing System.Threading.Tasks.Task to be used in FishingCactus without specifying the whole path.
+
 ## [1.0.4] - 2022-01-27
 ### Added
 - Add Max attribute for integer and float fields and Optional helper struct
