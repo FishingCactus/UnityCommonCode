@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.6] - 2023-03-10
+### Fix
+- Fix EnumDictionary foldout & position.
+
+
 ## [1.0.5] - 2023-02-23
 ### Fix
 - Remove Task delegate because useless and was preventing System.Threading.Tasks.Task to be used in FishingCactus without specifying the whole path.
