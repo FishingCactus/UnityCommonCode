@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.7] - 2023-04-26
+### Added
+- Add method to EnumHelper to get a random value in a specific range
+
 ## [1.0.6] - 2023-03-10
 ### Fix
 - Fix EnumDictionary foldout & position.
