@@ -15,20 +15,19 @@ public class EnumDictionaryPropertyDrawer : PropertyDrawer
         GUIContent label
         )
     {
-        Rect gui_rectangle;
         SerializedProperty type_property = property.FindPropertyRelative("EnumNameTable");
         SerializedProperty values_property = property.FindPropertyRelative("ValueTable");
 
         Debug.Assert( type_property.arraySize == values_property.arraySize, "EnumDictionary array sizes mismatched." );
 
-        gui_rectangle = position;
+        Rect gui_rectangle = new Rect( position );
+        gui_rectangle.x += IndentationWidth;
+        gui_rectangle.width -= IndentationWidth;
+        gui_rectangle.height = EditorGUIUtility.singleLineHeight;
 
-        EditorGUI.BeginProperty( position, label, property );
+        EditorGUI.BeginProperty( gui_rectangle, label, property );
 
-        gui_rectangle = position;
-        gui_rectangle.height = 18.0f;
-
-        property.isExpanded = EditorGUI.Foldout( gui_rectangle, property.isExpanded, label, InternalEditorStyle.BlueFoldout );
+        property.isExpanded = EditorGUI.Foldout( gui_rectangle, property.isExpanded, label, true );
 
         if( property.isExpanded )
         {

@@ -1,9 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace FishingCactus
 {
-    public delegate void Task();
-
     public static class MonoBehaviourExtensions
     {
         public static void SetParent(
@@ -19,21 +18,21 @@ namespace FishingCactus
 
         public static void Invoke(
             this MonoBehaviour mono_behaviour,
-            Task task,
+            Action action,
             float time
             )
         {
-            mono_behaviour.Invoke( task.Method.Name, time );
+            mono_behaviour.Invoke( action.Method.Name, time );
         }
 
         public static void InvokeRepeating(
             this MonoBehaviour mono_behaviour,
-            Task task,
+            Action action,
             float time,
             float repeat_rate
             )
         {
-            mono_behaviour.InvokeRepeating( task.Method.Name, time, repeat_rate );
+            mono_behaviour.InvokeRepeating( action.Method.Name, time, repeat_rate );
         }
 
         public static T GetOrAddComponent<T>(
@@ -45,7 +44,7 @@ namespace FishingCactus
 
         public static Component GetOrAddComponent(
             this MonoBehaviour mono_behaviour,
-            System.Type component_type
+            Type component_type
             )
         {
             return mono_behaviour.GetComponent( component_type ) ?? mono_behaviour.gameObject.AddComponent( component_type );
