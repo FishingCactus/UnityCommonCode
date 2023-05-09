@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.8] - 2023-05-09
+### Added
+- Add implicit operator to create an enabled Optional<T> from a T value
+
 ## [1.0.7] - 2023-04-26
 ### Added
 - Add method to EnumHelper to get a random value in a specific range
