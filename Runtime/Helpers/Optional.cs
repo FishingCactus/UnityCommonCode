@@ -12,7 +12,7 @@ namespace FishingCactus
 
         // -- OPERATORS
 
-        public static implicit operator Optional<T>(T value) => new Optional<T>(enabled: true, value);
+        public static implicit operator Optional<T>( T value ) => new Optional<T>( enabled: true, value );
 
         // -- PROPERTIES
 
