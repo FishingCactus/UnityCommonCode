@@ -10,12 +10,24 @@ namespace FishingCactus
         [SerializeField] private bool _Enabled;
         [SerializeField] private T _Value;
 
+        // -- OPERATORS
+
+        public static implicit operator Optional<T>(T value) => new Optional<T>(enabled: true, value);
+
         // -- PROPERTIES
 
         public bool Enabled => _Enabled;
         public T Value => _Value;
 
         // -- CONSTRUCTORS
+
+        public Optional(
+            bool enabled
+            )
+        {
+            _Enabled = enabled;
+            _Value = default;
+        }
 
         public Optional(
             bool enabled,
