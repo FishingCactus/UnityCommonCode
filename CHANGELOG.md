@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.9] - 2023-05-11
+### Added
+- SerializableDictionary: add explicit implementation of IReadOnlyDictionary
+
 ## [1.0.8] - 2023-05-09
 ### Added
 - Add implicit operator to create an enabled Optional<T> from a T value
@@ -11,7 +15,6 @@
 ## [1.0.6] - 2023-03-10
 ### Fix
 - Fix EnumDictionary foldout & position.
-
 
 ## [1.0.5] - 2023-02-23
 ### Fix
