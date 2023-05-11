@@ -12,6 +12,7 @@ public class SerializableDictionary
 public class SerializableDictionary<TKey, TValue> :
     SerializableDictionary,
     IDictionary<TKey, TValue>,
+    IReadOnlyDictionary<TKey, TValue>,
     ISerializationCallbackReceiver
 {
     // -- TYPES
@@ -47,6 +48,8 @@ public class SerializableDictionary<TKey, TValue> :
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public ICollection<TKey> Keys => KeyValueList.Select( tuple => tuple.Key ).ToArray();
     public ICollection<TValue> Values => KeyValueList.Select( tuple => tuple.Value ).ToArray();
+    IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => KeyValueList.Select(tuple => tuple.Key);
+    IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => KeyValueList.Select(tuple => tuple.Value);
     public int Count => KeyValueList.Count;
     public bool IsReadOnly => false;
 
