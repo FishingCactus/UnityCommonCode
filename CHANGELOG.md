@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.10] - 2023-05-12
+### Added
+- Remap function in Math
+
 ## [1.0.9] - 2023-05-11
 ### Added
 - SerializableDictionary: add explicit implementation of IReadOnlyDictionary

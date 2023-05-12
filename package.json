@@ -1,8 +1,8 @@
 {
   "name": "com.fishingcactus.common-code",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "displayName": "FC - Common Code",
-  "description": "Code, Extensions and extra features  for Fishing Cactus Games.",
+  "description": "Code, Extensions and extra features for Fishing Cactus Games.",
   "unity": "2020.3",
   "unityRelease": "18f1",
   "author": {
