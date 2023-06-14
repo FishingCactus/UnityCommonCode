@@ -3,7 +3,27 @@ using UnityEditor;
 
 public class CreateNewPrefab : EditorWindow
 {
-    // -- PRIVATE
+    // -- TYPES
+
+    private enum VariantMode
+    {
+        Enabled = 0,
+        Disabled
+    }
+
+    private enum ParentMode
+    {
+        Free = 0,
+        Attached
+    }
+
+    private enum PathSelection
+    {
+        Default = 0,
+        DisplayDialog
+    }
+
+    // -- FIELDS
 
     static string PrefabPathLocalKey = "FC/CommonCode/NewPrefabPath";
 
@@ -11,16 +31,18 @@ public class CreateNewPrefab : EditorWindow
     static string PrefabPrefix = "P_";
     static string PrefabExtension = ".prefab";
 
-    static void CreatePrefabs(
-        bool can_be_variant,
-        bool put_in_empty_parent,
-        bool it_must_propose_path_selection
+    // -- METHODS
+
+    static private void CreatePrefabs(
+        VariantMode variant_mode,
+        ParentMode parent_mode,
+        PathSelection path_mode
         )
     {
         string previous_path = EditorPrefs.GetString( PrefabPathLocalKey, PrefabExtension );
         string destination_path = string.Empty;
 
-        if( it_must_propose_path_selection )
+        if( path_mode == PathSelection.DisplayDialog )
         {
             destination_path = EditorUtility.OpenFolderPanel( "Destination Path :", PrefabCreationPath, "" );
 
@@ -53,7 +75,7 @@ public class CreateNewPrefab : EditorWindow
         {
             GameObject new_prefab;
 
-            if( put_in_empty_parent )
+            if( parent_mode == ParentMode.Attached )
             {
                 new_prefab = new GameObject( game_object.name );
                 new_prefab.name = game_object.name.Replace( "(Clone)", "" );
@@ -84,7 +106,7 @@ public class CreateNewPrefab : EditorWindow
                 }
             }
 
-            if( can_be_variant )
+            if( variant_mode == VariantMode.Enabled )
             {
                 Debug.Log( new_prefab.name + " prefab variant created" );
                 CreateVariant( new_prefab, local_path );
@@ -95,7 +117,7 @@ public class CreateNewPrefab : EditorWindow
                 CreateNew( new_prefab, local_path );
             }
 
-            if( put_in_empty_parent )
+            if( parent_mode == ParentMode.Attached )
             {
                 new_prefab.transform.position = game_object.transform.position;
                  
@@ -104,7 +126,7 @@ public class CreateNewPrefab : EditorWindow
         }
     }
 
-    static void CreateNew( 
+    static private void CreateNew( 
         GameObject new_object, 
         string local_path 
         )
@@ -112,7 +134,7 @@ public class CreateNewPrefab : EditorWindow
         PrefabUtility.SaveAsPrefabAsset(new_object, local_path);
     }
 
-    static void CreateVariant(
+    static private void CreateVariant(
         GameObject new_object,
         string local_path
         )
@@ -120,41 +142,39 @@ public class CreateNewPrefab : EditorWindow
         PrefabUtility.SaveAsPrefabAssetAndConnect( new_object, local_path, InteractionMode.UserAction );
     }
 
-    // -- UNITY
-
     [MenuItem("FishingCactus/Tools/Create New Prefab/New or Variant", true)]
-    static bool ValidateCreatePrefabOrVariant()
+    static private bool ValidateCreatePrefabOrVariant()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New or Variant")]
-    static void CreatePrefabOrVariant()
+    static private void CreatePrefabOrVariant()
     {
-        CreatePrefabs( true, false, true );
+        CreatePrefabs( VariantMode.Enabled, ParentMode.Free, PathSelection.DisplayDialog );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)", true)]
-    static bool ValidateCreatePrefab()
+    static private bool ValidateCreatePrefab()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)")]
-    static void CreatePrefab()
+    static private void CreatePrefab()
     {
-        CreatePrefabs( false, false, true );
+        CreatePrefabs( VariantMode.Disabled, ParentMode.Free, PathSelection.DisplayDialog );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent", true)]
-    static bool ValidateCreateEmptyParentPrefab()
+    static private bool ValidateCreateEmptyParentPrefab()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent")]
-    static void CreateEmptyParentPrefab()
+    static private void CreateEmptyParentPrefab()
     {
-        CreatePrefabs( false, true, true );
+        CreatePrefabs( VariantMode.Disabled, ParentMode.Attached, PathSelection.DisplayDialog );
     }
 }
