@@ -5,14 +5,48 @@ public class CreateNewPrefab : EditorWindow
 {
     // -- PRIVATE
 
-    //static string PrefabCreationPath = "Assets/__Content/Prefabs/";
-    static string PrefabCreationPath = "Assets/__Epistory2/Prefabs/Assets/";
+    static string PrefabPathLocalKey = "FC/CommonCode/NewPrefabPath";
+
+    static string PrefabCreationPath = "Assets/_Content/Prefabs/Assets/";
     static string PrefabPrefix = "P_";
     static string PrefabExtension = ".prefab";
 
-
-    static void CreatePrefabs( bool can_be_variant, bool put_in_empty_parent )
+    static void CreatePrefabs(
+        bool can_be_variant,
+        bool put_in_empty_parent,
+        bool it_must_propose_path_selection
+        )
     {
+        string previous_path = EditorPrefs.GetString( PrefabPathLocalKey, PrefabExtension );
+        string destination_path = string.Empty;
+
+        if( it_must_propose_path_selection )
+        {
+            destination_path = EditorUtility.OpenFolderPanel( "Destination Path :", PrefabCreationPath, "" );
+
+            if( string.IsNullOrEmpty( destination_path )
+                || AssetDatabase.IsValidFolder( destination_path )
+                )
+            {
+                Debug.LogWarning( $"[CreatePrefabs] : Invalid path : \"{destination_path}\"." );
+
+                return;
+            }
+
+            if( destination_path.StartsWith( Application.dataPath ) )
+            {
+                destination_path = "Assets" + destination_path.Substring( Application.dataPath.Length );
+            }
+
+            destination_path += "/";
+
+            EditorPrefs.SetString( PrefabPathLocalKey, destination_path );
+        }
+        else
+        {
+            destination_path = PrefabCreationPath;
+        }
+
         GameObject[] object_table = Selection.gameObjects;
 
         foreach( GameObject game_object in object_table )
@@ -40,7 +74,7 @@ public class CreateNewPrefab : EditorWindow
                 new_prefab.name = PrefabPrefix + game_object.name;
             }
 
-            string local_path = PrefabCreationPath + new_prefab.name + PrefabExtension;
+            string local_path = destination_path + new_prefab.name + PrefabExtension;
 
             if( AssetDatabase.LoadAssetAtPath( local_path, typeof(GameObject)) )
             {
@@ -91,7 +125,7 @@ public class CreateNewPrefab : EditorWindow
     [MenuItem("FishingCactus/Tools/Create New Prefab/New or Variant")]
     static void CreatePrefabOrVariant()
     {
-        CreatePrefabs(true, false);
+        CreatePrefabs( true, false, true );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)", true)]
@@ -103,7 +137,7 @@ public class CreateNewPrefab : EditorWindow
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)")]
     static void CreatePrefab()
     {
-        CreatePrefabs( false, false );
+        CreatePrefabs( false, false, true );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent", true)]
@@ -115,6 +149,6 @@ public class CreateNewPrefab : EditorWindow
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent")]
     static void CreateEmptyParentPrefab()
     {
-        CreatePrefabs( false, true );
+        CreatePrefabs( false, true, true );
     }
 }
