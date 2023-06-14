@@ -25,7 +25,7 @@ public class CreateNewPrefab : EditorWindow
             destination_path = EditorUtility.OpenFolderPanel( "Destination Path :", PrefabCreationPath, "" );
 
             if( string.IsNullOrEmpty( destination_path )
-                || AssetDatabase.IsValidFolder( destination_path )
+                || !AssetDatabase.IsValidFolder( destination_path )
                 )
             {
                 Debug.LogWarning( $"[CreatePrefabs] : Invalid path : \"{destination_path}\"." );
@@ -104,12 +104,18 @@ public class CreateNewPrefab : EditorWindow
         }
     }
 
-    static void CreateNew( GameObject new_object, string local_path )
+    static void CreateNew( 
+        GameObject new_object, 
+        string local_path 
+        )
     {
         PrefabUtility.SaveAsPrefabAsset(new_object, local_path);
     }
 
-    static void CreateVariant( GameObject new_object, string local_path)
+    static void CreateVariant(
+        GameObject new_object,
+        string local_path
+        )
     {
         PrefabUtility.SaveAsPrefabAssetAndConnect( new_object, local_path, InteractionMode.UserAction );
     }
