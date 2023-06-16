@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.10] - 2023-06-14
+### Updated
+- CreateNewPrefab tools : folder selection added, last used folder path stored in EditorPlayerPrefs.
+
 ## [1.0.9] - 2023-05-11
 ### Added
 - SerializableDictionary: add explicit implementation of IReadOnlyDictionary

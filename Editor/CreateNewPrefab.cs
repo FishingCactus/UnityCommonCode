@@ -3,23 +3,79 @@ using UnityEditor;
 
 public class CreateNewPrefab : EditorWindow
 {
-    // -- PRIVATE
+    // -- TYPES
 
-    //static string PrefabCreationPath = "Assets/__Content/Prefabs/";
-    static string PrefabCreationPath = "Assets/__Epistory2/Prefabs/Assets/";
+    private enum VariantMode
+    {
+        Enabled = 0,
+        Disabled
+    }
+
+    private enum ParentMode
+    {
+        Free = 0,
+        Attached
+    }
+
+    private enum PathSelection
+    {
+        Default = 0,
+        DisplayDialog
+    }
+
+    // -- FIELDS
+
+    static string PrefabPathLocalKey = "FC/CommonCode/NewPrefabPath";
+
+    static string PrefabCreationPath = "Assets/_Content/Prefabs/Assets/";
     static string PrefabPrefix = "P_";
     static string PrefabExtension = ".prefab";
 
+    // -- METHODS
 
-    static void CreatePrefabs( bool can_be_variant, bool put_in_empty_parent )
+    static private void CreatePrefabs(
+        VariantMode variant_mode,
+        ParentMode parent_mode,
+        PathSelection path_mode
+        )
     {
+        string previous_path = EditorPrefs.GetString( PrefabPathLocalKey, PrefabExtension );
+        string destination_path = string.Empty;
+
+        if( path_mode == PathSelection.DisplayDialog )
+        {
+            destination_path = EditorUtility.OpenFolderPanel( "Destination Path :", PrefabCreationPath, "" );
+
+            if( string.IsNullOrEmpty( destination_path )
+                || !AssetDatabase.IsValidFolder( destination_path )
+                )
+            {
+                Debug.LogWarning( $"[CreatePrefabs] : Invalid path : \"{destination_path}\"." );
+
+                return;
+            }
+
+            if( destination_path.StartsWith( Application.dataPath ) )
+            {
+                destination_path = "Assets" + destination_path.Substring( Application.dataPath.Length );
+            }
+
+            destination_path += "/";
+
+            EditorPrefs.SetString( PrefabPathLocalKey, destination_path );
+        }
+        else
+        {
+            destination_path = PrefabCreationPath;
+        }
+
         GameObject[] object_table = Selection.gameObjects;
 
         foreach( GameObject game_object in object_table )
         {
             GameObject new_prefab;
 
-            if( put_in_empty_parent )
+            if( parent_mode == ParentMode.Attached )
             {
                 new_prefab = new GameObject( game_object.name );
                 new_prefab.name = game_object.name.Replace( "(Clone)", "" );
@@ -40,7 +96,7 @@ public class CreateNewPrefab : EditorWindow
                 new_prefab.name = PrefabPrefix + game_object.name;
             }
 
-            string local_path = PrefabCreationPath + new_prefab.name + PrefabExtension;
+            string local_path = destination_path + new_prefab.name + PrefabExtension;
 
             if( AssetDatabase.LoadAssetAtPath( local_path, typeof(GameObject)) )
             {
@@ -50,7 +106,7 @@ public class CreateNewPrefab : EditorWindow
                 }
             }
 
-            if( can_be_variant )
+            if( variant_mode == VariantMode.Enabled )
             {
                 Debug.Log( new_prefab.name + " prefab variant created" );
                 CreateVariant( new_prefab, local_path );
@@ -61,7 +117,7 @@ public class CreateNewPrefab : EditorWindow
                 CreateNew( new_prefab, local_path );
             }
 
-            if( put_in_empty_parent )
+            if( parent_mode == ParentMode.Attached )
             {
                 new_prefab.transform.position = game_object.transform.position;
                  
@@ -70,51 +126,55 @@ public class CreateNewPrefab : EditorWindow
         }
     }
 
-    static void CreateNew( GameObject new_object, string local_path )
+    static private void CreateNew( 
+        GameObject new_object, 
+        string local_path 
+        )
     {
         PrefabUtility.SaveAsPrefabAsset(new_object, local_path);
     }
 
-    static void CreateVariant( GameObject new_object, string local_path)
+    static private void CreateVariant(
+        GameObject new_object,
+        string local_path
+        )
     {
         PrefabUtility.SaveAsPrefabAssetAndConnect( new_object, local_path, InteractionMode.UserAction );
     }
 
-    // -- UNITY
-
     [MenuItem("FishingCactus/Tools/Create New Prefab/New or Variant", true)]
-    static bool ValidateCreatePrefabOrVariant()
+    static private bool ValidateCreatePrefabOrVariant()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New or Variant")]
-    static void CreatePrefabOrVariant()
+    static private void CreatePrefabOrVariant()
     {
-        CreatePrefabs(true, false);
+        CreatePrefabs( VariantMode.Enabled, ParentMode.Free, PathSelection.DisplayDialog );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)", true)]
-    static bool ValidateCreatePrefab()
+    static private bool ValidateCreatePrefab()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/Force new (no variant)")]
-    static void CreatePrefab()
+    static private void CreatePrefab()
     {
-        CreatePrefabs( false, false );
+        CreatePrefabs( VariantMode.Disabled, ParentMode.Free, PathSelection.DisplayDialog );
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent", true)]
-    static bool ValidateCreateEmptyParentPrefab()
+    static private bool ValidateCreateEmptyParentPrefab()
     {
         return Selection.activeGameObject != null;
     }
 
     [MenuItem("FishingCactus/Tools/Create New Prefab/New within an Empty Parent")]
-    static void CreateEmptyParentPrefab()
+    static private void CreateEmptyParentPrefab()
     {
-        CreatePrefabs( false, true );
+        CreatePrefabs( VariantMode.Disabled, ParentMode.Attached, PathSelection.DisplayDialog );
     }
 }
