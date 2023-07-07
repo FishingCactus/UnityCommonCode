@@ -46,5 +46,22 @@ namespace FishingCactus
 
             return ( T )array.GetValue( UnityEngine.Random.Range( min_index, max_index + 1 ) );
         }
+
+        public static uint GetToggledFlagsCount<T>(
+            T flags
+            ) where T : Enum
+        {
+            long flags_as_long = Convert.ToInt64( flags );
+            uint count = 0;
+
+            while( flags_as_long != 0 )
+            {
+                flags_as_long &= flags_as_long - 1;
+
+                ++count;
+            }
+
+            return count;
+        }
     }
 }
