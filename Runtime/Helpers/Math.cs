@@ -35,5 +35,17 @@ namespace FishingCactus
                 || ( first_value < 0.0f && second_value < 0.0f )
                 || ( first_value == 0.0f && second_value == 0.0f );
         }
+
+        //:NOTE: this ensures to always have a positive result:
+        //MathMod( 1, 3 ) returns 2
+        //MathMod( -1, 3 ) returns 2
+        //This can be used to have the same behaviour than Mathf.Repeat but with integers
+        public static int MathMod(
+            int dividend,
+            int modulus
+            )
+        {
+            return ( dividend % modulus + modulus ) % modulus;
+        }
     }
 }
