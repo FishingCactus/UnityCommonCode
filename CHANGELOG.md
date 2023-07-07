@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.11] - 2023-07-07
+### Added
+- Add mathmod function.
+
 ## [1.0.10] - 2023-06-14
 ### Updated
 - CreateNewPrefab tools : folder selection added, last used folder path stored in EditorPlayerPrefs.

@@ -35,5 +35,13 @@ namespace FishingCactus
                 || ( first_value < 0.0f && second_value < 0.0f )
                 || ( first_value == 0.0f && second_value == 0.0f );
         }
+
+        public static int MathMod(
+            int dividend,
+            int modulus
+            )
+        {
+            return ( dividend % modulus + modulus ) % modulus;
+        }
     }
 }
