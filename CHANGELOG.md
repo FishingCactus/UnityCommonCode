@@ -1,8 +1,12 @@
 # Changelog
 
+## [1.0.13] - 2023-07-10
+### Added
+- Add EnumHelper Clamp function.
+
 ## [1.0.12] - 2023-07-07
 ### Added
-- Add GetToggledFlagsCount function.
+- Add EnumHelper GetToggledFlagsCount function.
 
 ## [1.0.11] - 2023-07-07
 ### Added

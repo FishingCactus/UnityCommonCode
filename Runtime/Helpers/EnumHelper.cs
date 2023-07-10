@@ -63,5 +63,29 @@ namespace FishingCactus
 
             return count;
         }
+
+        public static T Clamp<T>(
+            T value,
+            T min,
+            T max
+            ) where T : Enum
+        {
+            T clamped;
+
+            if( value.CompareTo( min ) < 0 )
+            {
+                clamped = min;
+            }
+            else if( value.CompareTo( max ) > 0 )
+            {
+                clamped = max;
+            }
+            else
+            {
+                clamped = value;
+            }
+
+            return clamped;
+        }
     }
 }
