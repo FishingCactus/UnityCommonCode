@@ -6,13 +6,6 @@ namespace FishingCactus
 {
     public class EnumHelper
     {
-        // -- FIELDS
-
-        private static int int_all_flags = ~0;
-        private static long long_all_flags = ~0;
-
-        // -- METHODS
-
         public static T ParseEnum<T>( string value ) where T : Enum
         {
             return ( T )Enum.Parse( typeof( T ), value, true );
@@ -59,19 +52,19 @@ namespace FishingCactus
             ) where T : Enum
         {
             long flags_as_long = Convert.ToInt64( flags );
-            uint count = 0;
 
-            if( flags_as_long == int_all_flags
-                || flags_as_long == long_all_flags
-                )
+            if( flags_as_long == -1 )
             {
-                return ( uint )EnumHelper.GetValueTable<T>().Count() - 1;
+                return ( uint )GetValueTable<T>().Count() - 1;
             }
 
-            while( flags_as_long != 0 )
+            ulong flags_as_ulong = ( ulong )flags_as_long;
+            uint count = 0;
+
+            while( flags_as_ulong != 0 )
             {
-                count += ( uint )flags_as_long & 1;
-                flags_as_long >>= 1;
+                count += ( uint )flags_as_ulong & 1;
+                flags_as_ulong >>= 1;
             }
 
             return count;
