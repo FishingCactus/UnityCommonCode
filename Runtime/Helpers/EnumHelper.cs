@@ -65,12 +65,12 @@ namespace FishingCactus
                 || flags_as_long == long_all_flags
                 )
             {
-                count = T.GetValues( typeof( T ) ).Length;
+                count = ( uint )EnumHelper.GetValueTable<T>().Count();
             }
 
             while( flags_as_long != 0 )
             {
-                count += flags_as_long & 1;
+                count += ( uint )flags_as_long & 1;
                 flags_as_long >>= 1;
             }
 
