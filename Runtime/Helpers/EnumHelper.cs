@@ -51,7 +51,7 @@ namespace FishingCactus
             T value,
             T min,
             T max
-            ) where T : Enum
+            ) where T : IComparable
         {
             T clamped;
 
