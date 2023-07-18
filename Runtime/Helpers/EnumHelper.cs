@@ -51,24 +51,24 @@ namespace FishingCactus
             T value,
             T min,
             T max
-            ) where T : IComparable
+            ) where T : Enum
         {
-            T clamped;
+            T clamped_value;
 
             if( value.CompareTo( min ) < 0 )
             {
-                clamped = min;
+                clamped_value = min;
             }
             else if( value.CompareTo( max ) > 0 )
             {
-                clamped = max;
+                clamped_value = max;
             }
             else
             {
-                clamped = value;
+                clamped_value = value;
             }
 
-            return clamped;
+            return clamped_value;
         }
     }
 }
