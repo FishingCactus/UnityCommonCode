@@ -2,7 +2,7 @@
 
 ## [1.0.12] - 2023-07-12
 ### Added
-- Add EnumHelper GetToggledFlagsCount & Clamp IComparable functions.
+- Add EnumHelper GetToggledFlagsCount & Clamp functions.
 
 ## [1.0.11] - 2023-07-07
 ### Added
