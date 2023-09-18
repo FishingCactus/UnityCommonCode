@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.13] - 2023-09-13
+### Updated
+- Singleton: add option for destroy on load.
+
 ## [1.0.12] - 2023-07-12
 ### Added
 - Add EnumHelper GetToggledFlagsCount & Clamp IComparable functions.
