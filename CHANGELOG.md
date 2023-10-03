@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.14] - 2023-10-03
+### Updated
+- Add missing namespace around SerializableDictionary class.
+
 ## [1.0.13] - 2023-09-13
 ### Updated
 - Singleton: add option for destroy on load.
