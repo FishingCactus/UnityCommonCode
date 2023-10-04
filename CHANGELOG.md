@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.15] - 2023-10-04
+### Added
+- Add NetworkStatusChecker to check for Internet availability
+
 ## [1.0.14] - 2023-10-03
 ### Updated
 - Add missing namespace around SerializableDictionary class.
