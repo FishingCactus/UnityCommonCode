@@ -13,7 +13,7 @@ namespace FishingCactus
         private const string ChinaUrl = "http://www.baidu.com";
         private const string IranUrl = "http://www.aparat.com";
 
-        private static string CurrentTestUrl = string.Empty;
+        private static string CurrentTestUrl = DefaultUrl;
 
         // -- METHODS
 
@@ -45,10 +45,10 @@ namespace FishingCactus
         {
             try
             {
-                using( var httpClient = new HttpClient() )
+                using( var http_client = new HttpClient() )
                 {
-                    httpClient.Timeout = TimeSpan.FromMilliseconds( timeout_in_ms );
-                    var response = await httpClient.GetAsync( CurrentTestUrl );
+                    http_client.Timeout = TimeSpan.FromMilliseconds( timeout_in_ms );
+                    var response = await http_client.GetAsync( CurrentTestUrl );
                     return response.IsSuccessStatusCode;
                 }
             }
