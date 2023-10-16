@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+[CustomPropertyDrawer(typeof(EnumDictionary<,>),true)]
 public class EnumDictionaryPropertyDrawer : PropertyDrawer
 {
     // -- FIELDS

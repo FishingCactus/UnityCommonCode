@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.16] - 2023-10-16
+### Added
+- Add CustomPropertyDrawer attribute to EnumDictionary's property drawer
+
 ## [1.0.15] - 2023-10-04
 ### Added
 - Add NetworkStatusChecker to check for Internet availability
