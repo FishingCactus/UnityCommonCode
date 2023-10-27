@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.17] - 2023-10-27
+### Updated
+- Doc comment for MathMod + rectify the example
+
 ## [1.0.16] - 2023-10-16
 ### Added
 - Add CustomPropertyDrawer attribute to EnumDictionary's property drawer
