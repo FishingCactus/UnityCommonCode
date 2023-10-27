@@ -40,7 +40,7 @@ namespace FishingCactus
         /// This ensures to always have a positive result:<br/>
         /// MathMod( 8, 3 ) returns 2<br/>
         /// MathMod( -8, 3 ) returns 2<br/>
-        /// This can be used to have the same behaviour than Mathf.Repeat() but with integers.
+        /// This can be used to have the same behaviour as Mathf.Repeat() but with integers.
         /// </summary>
         public static int MathMod(
             int dividend,
