@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.18] - 2023-11-13
+###Added
+- Add SubClassPicker attribute
+
 ## [1.0.17] - 2023-10-27
 ### Updated
 - Doc comment for MathMod + rectify the example
