@@ -1,7 +1,11 @@
 # Changelog
 
+## [1.0.19] - 2024-01-05
+### Added
+- Add Optional::TryGetValueOrDefault function
+
 ## [1.0.18] - 2023-11-13
-###Added
+### Added
 - Add SubClassPicker attribute
 
 ## [1.0.17] - 2023-10-27
