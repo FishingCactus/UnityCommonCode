@@ -3,6 +3,7 @@
 ## [1.0.19] - 2024-01-05
 ### Added
 - Add Optional::TryGetValueOrDefault function
+- Add .editorconfig for VS users
 
 ## [1.0.18] - 2023-11-13
 ### Added
