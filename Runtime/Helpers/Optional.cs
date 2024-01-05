@@ -16,8 +16,8 @@ namespace FishingCactus
 
         // -- PROPERTIES
 
-        public bool Enabled => _Enabled;
-        public T Value => _Value;
+        public readonly bool Enabled => _Enabled;
+        public readonly T Value => _Value;
 
         // -- CONSTRUCTORS
 
@@ -40,13 +40,25 @@ namespace FishingCactus
 
         // -- METHODS
 
-        public bool HasValue(
+        public readonly bool HasValue(
             out T value
             )
         {
             value = _Value;
 
             return Enabled;
+        }
+
+        public readonly T TryGetValueOrDefault(
+            T default_value
+            )
+        {
+            if( Enabled )
+            {
+                return _Value;
+            }
+
+            return default_value;
         }
     }
 }
