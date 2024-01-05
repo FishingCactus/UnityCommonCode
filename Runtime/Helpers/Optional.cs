@@ -48,5 +48,17 @@ namespace FishingCactus
 
             return Enabled;
         }
+
+        public readonly T TryGetValueOrDefault(
+            T default_value
+            )
+        {
+            if( Enabled )
+            {
+                return _Value;
+            }
+
+            return default_value;
+        }
     }
 }
