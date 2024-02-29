@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.20] - 2024-02-29
+### Updated
+- FloatRange and IntegerRange drawers: toggle on label click
+
 ## [1.0.19] - 2024-01-05
 ### Added
 - Add Optional::TryGetValueOrDefault function
