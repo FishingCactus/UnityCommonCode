@@ -39,7 +39,8 @@ namespace FishingCactus
                 property.isExpanded = EditorGUI.Foldout(
                     local_rectangle,
                     property.isExpanded,
-                    $"{label.text}   [{minimum_value_property.intValue};{maximum_value_property.intValue}["
+                    $"{label.text}   [{minimum_value_property.intValue};{maximum_value_property.intValue}[",
+                    toggleOnLabelClick: true
                     );
             }
             else
@@ -47,7 +48,8 @@ namespace FishingCactus
                 property.isExpanded = EditorGUI.Foldout(
                     local_rectangle,
                     property.isExpanded,
-                    $"{label.text}   [{minimum_value_property.floatValue};{maximum_value_property.floatValue}]"
+                    $"{label.text}   [{minimum_value_property.floatValue};{maximum_value_property.floatValue}]",
+                    toggleOnLabelClick: true
                     );
             }
 
